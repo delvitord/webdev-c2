@@ -12,6 +12,9 @@ import {
     getPendidikanById, 
     updatePendidikan
 } from "../controllers/PendidikanController.js";
+import { Login, Logout, Register, getAccount } from "../controllers/AccountController.js";
+import { verifyToken } from "../middleware/VerifyToken.js";
+import { refreshToken } from "../controllers/RefreshToken.js";
 
 const router = express.Router()
 
@@ -29,6 +32,14 @@ router.get("/pendidikan/:id", getPendidikanById);
 router.post("/pendidikan", createPendidikan);
 router.patch("/pendidikan:id", updatePendidikan);
 router.delete("/pendidikan:id", updatePendidikan);
+
+
+// LOGIN
+router.get('/admin', verifyToken, getAccount)
+router.post('/admin', Register)
+router.post('/login', Login)
+router.get('/token', refreshToken)
+router.delete('/logout', Logout)
 
 
 
