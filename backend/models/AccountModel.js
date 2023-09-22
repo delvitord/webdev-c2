@@ -5,7 +5,7 @@ const Account = db.sequelize.define(
   "account",
   {
     username: DataTypes.STRING,
-    password: DataTypes.STRING,
+    password: DataTypes.STRING
   },
   {
     freezeTableName: true,
