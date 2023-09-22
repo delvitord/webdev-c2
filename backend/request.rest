@@ -21,3 +21,23 @@ Content-Type: application/json
     "x": "asdd",
     "github": "asdd"
 }
+
+
+###
+GET http://localhost:5000/pendidikan
+
+###
+GET http://localhost:5000/pendidikan/1
+
+###
+POST http://localhost:5000/pendidikan
+Content-Type: application/json
+
+{
+    "nama_instansi": "SDN 1 Payakumbuh",
+    "awal_periode": "2018-09-22T14:30:00Z",
+    "akhir_periode": "2021-09-22T14:30:00Z",
+    "jurusan": "MIPA"
+}
+
+

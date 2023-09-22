@@ -24,6 +24,7 @@ const Data_diri = db.sequelize.define(
   },
   {
     freezeTableName: true,
+    sequenceName: "id_data_diri",
   }
 );
 
