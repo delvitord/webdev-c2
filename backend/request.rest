@@ -1,0 +1,23 @@
+GET http://localhost:5000/data_diri
+
+###
+GET http://localhost:5000/data_diri/1
+
+###
+POST http://localhost:5000/data_diri
+Content-Type: application/json
+
+{
+    "nama": "Gian Sandrova",
+    "tempat_lahir": "Payakumbuh",
+    "tanggal_lahir": "2023-09-22T14:30:00Z",
+    "alamat": "Serra Valley",
+    "email": "gian@gmail.com",
+    "no_telp": "03984989348",
+    "foto": "asdd",
+    "deskripsi": "asdd",
+    "linkedin": "asdd",
+    "instagram": "asdd",
+    "x": "asdd",
+    "github": "asdd"
+}

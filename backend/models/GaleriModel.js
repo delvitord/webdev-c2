@@ -1,0 +1,20 @@
+import { Sequelize, DataTypes } from "sequelize";
+import db from "../config/Database.js";
+
+const Galeri = db.sequelize.define(
+  "galeri",
+  {
+    nama_skill: DataTypes.STRING,
+    image: DataTypes.STRING,
+    deskripsi: DataTypes.TEXT
+  },
+  {
+    freezeTableName: true,
+  }
+);
+
+export default Galeri;
+
+(async () => {
+  await db.sequelize.sync();
+})();
