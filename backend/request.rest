@@ -1,7 +1,7 @@
 GET http://localhost:5000/data_diri
 
 ###
-GET http://localhost:5000/data_diri/1
+GET http://localhost:5000/data_diri/4
 
 ###
 POST http://localhost:5000/data_diri
@@ -22,6 +22,28 @@ Content-Type: application/json
     "github": "asdd"
 }
 
+###
+PATCH http://localhost:5000/data_diri5
+Content-Type: application/json
+
+{
+    "nama": "Gian Sandrova",
+    "tempat_lahir": "Payakumbuh",
+    "tanggal_lahir": "2023-09-22T14:30:00Z",
+    "alamat": "Serra Valley",
+    "email": "gian@gmail.com",
+    "no_telp": "03984989348",
+    "foto": "gian.jpg",
+    "deskripsi": "asdd",
+    "linkedin": "asdd",
+    "instagram": "asdd",
+    "x": "asdd",
+    "github": "asdd"
+}
+
+###
+DELETE http://localhost:5000/data_diri5
+Content-Type: application/json
 
 ###
 GET http://localhost:5000/pendidikan
@@ -37,8 +59,26 @@ Content-Type: application/json
     "nama_instansi": "SDN 1 Payakumbuh",
     "awal_periode": "2018-09-22T14:30:00Z",
     "akhir_periode": "2021-09-22T14:30:00Z",
-    "jurusan": "MIPA"
+    "jurusan": "MIPA", 
+    "dataDiriId": 
 }
+
+###
+PATCH http://localhost:5000/pendidikan4
+Content-Type: application/json
+
+{
+    "nama_instansi": "SDN 1 Payakumbuh",
+    "awal_periode": "2018-09-22T14:30:00Z",
+    "akhir_periode": "2021-09-22T14:30:00Z",
+    "jurusan": "IPS", 
+    "dataDiriId": 4
+}
+
+###
+DELETE http://localhost:5000/pendidikan4
+Content-Type: application/json
+
 ###
 POST http://localhost:5000/admin
 Content-Type: application/json
@@ -67,3 +107,67 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEsInVzZXJu
 GET http://localhost:5000/token
 ###
 DELETE  http://localhost:5000/logout
+
+
+###
+GET http://localhost:5000/skill
+
+###
+GET http://localhost:5000/skill/7
+
+###
+POST http://localhost:5000/skill
+Content-Type: application/json
+
+{
+    "nama_skill": "MS Word",
+    "level_keahlian": 4, 
+    "dataDiriId": 4
+}
+
+###
+PATCH http://localhost:5000/skill/9
+Content-Type: application/json
+
+{
+    "nama_skill": "MS Excel",
+    "level_keahlian": 4, 
+     "dataDiriId": 4
+}
+
+###
+DELETE http://localhost:5000/skill/7
+Content-Type: application/json
+
+
+###
+GET http://localhost:5000/galeri
+
+###
+GET http://localhost:5000/galeri/1
+
+###
+POST http://localhost:5000/galeri
+Content-Type: application/json
+
+{
+    "nama_kegiatan": "Kegiata Apa",
+    "image": ["img-1.jpg", "img-2.jpg", "img-3.jpg"],
+    "deskripsi": "Kegiatan ini dilakukan di koriya",
+    "dataDiriId": 4
+}
+
+###
+PATCH http://localhost:5000/galeri/4
+Content-Type: application/json
+
+{
+    "nama_kegiatan": "Kegiatan Apa",
+    "image": ["img-1.jpg", "img-2.jpg", "img-3.jpg", "img-4.jpg"],
+    "deskripsi": "Kegiatan ini dilakukan di koriya",
+    "dataDiriId": 4
+}
+
+###
+DELETE http://localhost:5000/galeri/2
+Content-Type: application/json
