@@ -45,3 +45,6 @@ router.patch("/galeri/:id", updateGaleri);
 router.delete("/galeri/:id", deleteGaleri);
 
 export default router;
+
+
+//tes
