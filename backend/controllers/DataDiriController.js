@@ -1,4 +1,4 @@
-import Data_diri from "../models/DataDiriModel.js";
+import Data_diri from "../models/DataDiriModel.js"; //Tambah komentar
 
 
 export const getData_diri = async(req, res) =>{
