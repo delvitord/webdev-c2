@@ -4,6 +4,7 @@ import { createPendidikan, deletePendidikan, getPendidikan, getPendidikanById, u
 import { createSkill, deleteSkill, getSkill, getSkillById, updateSkill } from "../controllers/SkillController.js";
 import { createGaleri, deleteGaleri, getGaleri, getGaleriById, updateGaleri } from "../controllers/GaleriController.js";
 import { createOrganisasi, deleteOrganisasi, getOrganisasi, updateOrganisasi, getOrganisasiById } from "../controllers/OrganisasiController.js";
+import { createPortofolio, deletePortofolio, getPortofolio, getPortofolioById, updatePortofolio } from "../controllers/PortofolioController.js";
 import { Login, Logout, Register, getAccount } from "../controllers/AccountController.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
@@ -51,5 +52,12 @@ router.get("/galeri/:id", getGaleriById);
 router.post("/galeri", createGaleri);
 router.patch("/galeri/:id", updateGaleri);
 router.delete("/galeri/:id", deleteGaleri);
+
+// Portofolio
+router.get("/Portofolio", getPortofolio);
+router.get("/Portofolio/:id", getPortofolioById);
+router.post("/Portofolio", createPortofolio);
+router.patch("/Portofolio/:id", updatePortofolio);
+router.delete("/Portofolio/:id", deletePortofolio);
 
 export default router;

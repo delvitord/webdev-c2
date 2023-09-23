@@ -36,7 +36,7 @@ export const createGaleri = async (req, res) => {
       nama_kegiatan,
       image, // Menyimpan array gambar langsung ke dalam kolom "image"
       deskripsi,
-      dataDiriId,
+      dataDiriId
     });
 
     res.status(201).json({ msg: "Galeri Created" });
