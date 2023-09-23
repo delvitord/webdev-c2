@@ -5,7 +5,7 @@ const Skill = db.sequelize.define(
   "skill",
   {
     nama_skill: DataTypes.STRING,
-    level_keahlian: DataTypes.INTEGER
+    level_keahlian: DataTypes.INTEGER,
   },
   {
     freezeTableName: true,
