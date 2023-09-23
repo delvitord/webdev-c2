@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes } from "sequelize";
+import { Sequelize, DataTypes } from "sequelize"; //ss
 import db from "../config/Database.js";
 
 const Galeri = db.sequelize.define(
