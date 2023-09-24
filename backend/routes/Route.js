@@ -15,22 +15,22 @@ const router = express.Router();
 router.get("/data_diri", getData_diri);
 router.get("/data_diri/:id", getData_diriById);
 router.post("/data_diri", createData_diri);
-router.patch("/data_diri:id", updateData_diri);
-router.delete("/data_diri:id", deleteData_diri);
+router.patch("/data_diri/:id", updateData_diri);
+router.delete("/data_diri/:id", deleteData_diri);
 
 // CRUD PENDIDIKAN
 router.get("/pendidikan", getPendidikan);
 router.get("/pendidikan/:id", getPendidikanById);
 router.post("/pendidikan", createPendidikan);
-router.patch("/pendidikan:id", updatePendidikan);
-router.delete("/pendidikan:id", deletePendidikan);
+router.patch("/pendidikan/:id", updatePendidikan);
+router.delete("/pendidikan/:id", deletePendidikan);
 
 // CRUD ORGANISASI
 router.get("/organisasi", getOrganisasi);
 router.get("/organisasi/:id", getOrganisasiById);
 router.post("/organisasi", createOrganisasi);
-router.patch("/organisasi:id", updateOrganisasi);
-router.delete("/organisasi:id", deleteOrganisasi);
+router.patch("/organisasi/:id", updateOrganisasi);
+router.delete("/organisasi/:id", deleteOrganisasi);
 
 // LOGIN
 router.get("/admin", verifyToken, getAccount);
@@ -54,10 +54,10 @@ router.patch("/galeri/:id", updateGaleri);
 router.delete("/galeri/:id", deleteGaleri);
 
 // Portofolio
-router.get("/Portofolio", getPortofolio);
-router.get("/Portofolio/:id", getPortofolioById);
-router.post("/Portofolio", createPortofolio);
-router.patch("/Portofolio/:id", updatePortofolio);
-router.delete("/Portofolio/:id", deletePortofolio);
+router.get("/portofolio", getPortofolio);
+router.get("/portofolio/:id", getPortofolioById);
+router.post("/portofolio", createPortofolio);
+router.patch("/portofolio/:id", updatePortofolio);
+router.delete("/portofolio/:id", deletePortofolio);
 
 export default router;
