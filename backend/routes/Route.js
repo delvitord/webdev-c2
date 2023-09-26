@@ -19,18 +19,18 @@ router.patch("/data_diri/:id", updateData_diri);
 router.delete("/data_diri/:id", deleteData_diri);
 
 // CRUD PENDIDIKAN
-router.get("/datadiri/:dataDiriI/pendidikan", getPendidikan);
-router.get("/datadiri/:dataDiriI/pendidikan/:id", getPendidikanById);
-router.post("/datadiri/:dataDiriI/pendidikan", createPendidikan);
-router.patch("/datadiri/:dataDiriI/pendidikan/:id", updatePendidikan);
-router.delete("/datadiri/:dataDiriI/pendidikan/:id", deletePendidikan);
+router.get("/datadiri/:dataDiriId/pendidikan", getPendidikan);
+router.get("/datadiri/:dataDiriId/pendidikan/:id", getPendidikanById);
+router.post("/datadiri/:dataDiriId/pendidikan", createPendidikan);
+router.patch("/datadiri/:dataDiriId/pendidikan/:id", updatePendidikan);
+router.delete("/datadiri/:dataDiriId/pendidikan/:id", deletePendidikan);
 
 // CRUD ORGANISASI
-router.get("/datadiri/:dataDiriI/organisasi", getOrganisasi);
-router.get("/datadiri/:dataDiriI/organisasi/:id", getOrganisasiById);
-router.post("/datadiri/:dataDiriI/organisasi", createOrganisasi);
-router.patch("/datadiri/:dataDiriI/organisasi/:id", updateOrganisasi);
-router.delete("/datadiri/:dataDiriI/organisasi/:id", deleteOrganisasi);
+router.get("/datadiri/:dataDiriId/organisasi", getOrganisasi);
+router.get("/datadiri/:dataDiriId/organisasi/:id", getOrganisasiById);
+router.post("/datadiri/:dataDiriId/organisasi", createOrganisasi);
+router.patch("/datadiri/:dataDiriId/organisasi/:id", updateOrganisasi);
+router.delete("/datadiri/:dataDiriId/organisasi/:id", deleteOrganisasi);
 
 // LOGIN
 router.get("/admin", verifyToken, getAccount);
@@ -47,17 +47,17 @@ router.patch("/datadiri/:dataDiriId/skill/:id", updateSkill);
 router.delete("/datadiri/:dataDiriId/skill/:id", deleteSkill);
 
 // GALERI
-router.get("/datadiri/:dataDiriI/galeri", getGaleri);
-router.get("/datadiri/:dataDiriI/galeri/:id", getGaleriById);
-router.post("/datadiri/:dataDiriI/galeri", createGaleri);
-router.patch("/datadiri/:dataDiriI/galeri/:id", updateGaleri);
-router.delete("/datadiri/:dataDiriI/galeri/:id", deleteGaleri);
+router.get("/datadiri/:dataDiriId/galeri", getGaleri);
+router.get("/datadiri/:dataDiriId/galeri/:id", getGaleriById);
+router.post("/datadiri/:dataDiriId/galeri", createGaleri);
+router.patch("/datadiri/:dataDiriId/galeri/:id", updateGaleri);
+router.delete("/datadiri/:dataDiriId/galeri/:id", deleteGaleri);
 
 // Portofolio
-router.get("/datadiri/:dataDiriI/portofolio", getPortofolio);
-router.get("/datadiri/:dataDiriI/portofolio/:id", getPortofolioById);
-router.post("/datadiri/:dataDiriI/portofolio", createPortofolio);
-router.patch("/datadiri/:dataDiriI/portofolio/:id", updatePortofolio);
-router.delete("/datadiri/:dataDiriI/portofolio/:id", deletePortofolio);
+router.get("/datadiri/:dataDiriId/portofolio", getPortofolio);
+router.get("/datadiri/:dataDiriId/portofolio/:id", getPortofolioById);
+router.post("/datadiri/:dataDiriId/portofolio", createPortofolio);
+router.patch("/datadiri/:dataDiriId/portofolio/:id", updatePortofolio);
+router.delete("/datadiri/:dataDiriId/portofolio/:id", deletePortofolio);
 
 export default router;
