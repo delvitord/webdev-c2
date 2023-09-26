@@ -1,12 +1,12 @@
-import { Sequelize, DataTypes } from "sequelize";
+import { Sequelize, DataTypes } from "sequelize"; //ssss
 import db from "../config/Database.js";
 
 const Galeri = db.sequelize.define(
   "galeri",
   {
-    nama_skill: DataTypes.STRING,
-    image: DataTypes.STRING,
-    deskripsi: DataTypes.TEXT
+    nama_kegiatan: DataTypes.STRING,
+    image: DataTypes.ARRAY(DataTypes.STRING),
+    deskripsi: DataTypes.TEXT,
   },
   {
     freezeTableName: true,

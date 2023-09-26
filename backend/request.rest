@@ -1,20 +1,24 @@
+####-DATA DIRI-####
 GET http://localhost:5000/data_diri
 
 ###
-GET http://localhost:5000/data_diri/1
+GET http://localhost:5000/data_diri/5
+
+###
+GET http://localhost:5000/data_diri_full/5
 
 ###
 POST http://localhost:5000/data_diri
 Content-Type: application/json
 
 {
-    "nama": "Gian Sandrova",
-    "tempat_lahir": "Payakumbuh",
-    "tanggal_lahir": "2023-09-22T14:30:00Z",
-    "alamat": "Serra Valley",
-    "email": "gian@gmail.com",
+    "nama": "Delvito Rahim Derivansyah",
+    "tempat_lahir": "Bandung",
+    "tanggal_lahir": "2003-10-09T09:30:00Z",
+    "alamat": "Sukasari",
+    "email": "vitorahim@gmail.com",
     "no_telp": "03984989348",
-    "foto": "asdd",
+    "foto": "ada aja",
     "deskripsi": "asdd",
     "linkedin": "asdd",
     "instagram": "asdd",
@@ -22,24 +26,35 @@ Content-Type: application/json
     "github": "asdd"
 }
 
-
 ###
-GET http://localhost:5000/pendidikan
-
-###
-GET http://localhost:5000/pendidikan/1
-
-###
-POST http://localhost:5000/pendidikan
+PATCH http://localhost:5000/data_diri/5
 Content-Type: application/json
 
 {
-    "nama_instansi": "SDN 1 Payakumbuh",
-    "awal_periode": "2018-09-22T14:30:00Z",
-    "akhir_periode": "2021-09-22T14:30:00Z",
-    "jurusan": "MIPA"
+    "nama": "Delvito Rahim Derivansyah",
+    "tempat_lahir": "Bandung",
+    "tanggal_lahir": "2003-10-09T09:30:00Z",
+    "alamat": "Sukasari IV",
+    "email": "vitorahim@gmail.com",
+    "no_telp": "081919191919",
+    "foto": "ada ada aja",
+    "deskripsi": "weis weis",
+    "linkedin": "asdd",
+    "instagram": "asdd",
+    "x": "asdd",
+    "github": "asdd"
 }
+
 ###
+DELETE http://localhost:5000/data_diri/6
+Content-Type: application/json
+
+
+
+######################################################################
+
+
+####-ACCOUNT-####
 POST http://localhost:5000/admin
 Content-Type: application/json
 
@@ -67,3 +82,186 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEsInVzZXJu
 GET http://localhost:5000/token
 ###
 DELETE  http://localhost:5000/logout
+
+
+
+######################################################################
+
+
+####-GALERI-####
+GET http://localhost:5000/datadiri/5/galeri
+
+###
+GET http://localhost:5000/datadiri/5/galeri/8
+
+###
+POST http://localhost:5000/datadiri/3/galeri
+Content-Type: application/json
+
+{
+    "nama_kegiatan": "Kegiatan Gian yang kedua",
+    "image": ["img-1.jpg", "img-2.jpg", "img-3.jpg"],
+    "deskripsi": "Kegiatan ini dilakukan di Pangelengan" 
+}
+
+###
+PATCH http://localhost:5000/datadiri/5/galeri/8
+Content-Type: application/json
+
+{
+    "nama_kegiatan": "Kegiatan DRD dua",
+    "image": ["img-1.jpg", "img-2.jpg", "img-3.jpg", "img-4.jpg"],
+    "deskripsi": "Kegiatan ini dilakukan di Ciwidey" 
+}
+
+###
+DELETE http://localhost:5000/datadiri/3/galeri/6
+Content-Type: application/json
+
+
+
+######################################################################
+
+
+
+####-ORGANISASI-####
+GET http://localhost:5000/datadiri/3/organisasi
+
+###
+GET http://localhost:5000/datadiri/5/organisasi/5
+
+###
+POST http://localhost:5000/datadiri/5/organisasi
+Content-Type: application/json
+
+{
+    "nama_organisasi": "HIMAKOM",
+    "jabatan": "Wakadep Rohis",
+    "awal_periode": "2003-01-01T00:00:00Z",
+    "akhir_periode": "2023-12-31T23:59:59Z",
+    "deskripsi": "" 
+}
+
+###
+PATCH http://localhost:5000/datadiri/3/organisasi/5
+Content-Type: application/json
+
+{
+    "nama_organisasi": "HIMAKOM",
+    "jabatan": "Wakadep Rohis",
+    "awal_periode": "2003-01-01T00:00:00Z",
+    "akhir_periode": "2023-12-31T23:59:59Z",
+    "deskripsi": ""   
+}
+
+###
+DELETE http://localhost:5000/datadiri/3/organisasi/3
+Content-Type: application/json
+
+
+
+######################################################################
+
+
+####-PENDIDIKAN-####
+GET http://localhost:5000/datadiri/5/pendidikan
+
+###
+GET http://localhost:5000/datadiri/3/pendidikan/3
+
+###
+POST http://localhost:5000/datadiri/5/pendidikan
+Content-Type: application/json
+
+{
+    "nama_instansi": "SMPN 1 Bandung",
+    "awal_periode": "2018-09-22T14:30:00Z",
+    "akhir_periode": "2021-09-22T14:30:00Z",
+    "jurusan": ""
+}
+
+###
+PATCH http://localhost:5000/datadiri/3/pendidikan/3
+Content-Type: application/json
+
+{
+    "nama_instansi": "SMAN 1 Payakumbuh",
+    "awal_periode": "2018-09-22T14:30:00Z",
+    "akhir_periode": "2021-09-22T14:30:00Z",
+    "jurusan": "IPS"
+}
+
+###
+DELETE http://localhost:5000/datadiri/3/pendidikan/5
+Content-Type: application/json
+
+
+
+######################################################################
+
+
+####-PORTOFOLIO-####
+GET http://localhost:5000/datadiri/3/portofolio
+
+###
+GET http://localhost:5000/datadiri/3/portofolio/5
+
+###
+POST http://localhost:5000/datadiri/3/portofolio
+Content-Type: application/json
+
+{
+    "judul": "PORTOFOLIYO",
+    "deskripsi": "Deskripsi Portofoliooo",
+    "file": "Nama Fileeee",
+    "image": ["Image1.jpg", "Image2.jpg", "Image2.jpg", "Image3.jpg", "Image4.jpg"],
+    "link": "https://www.contohlink.com" 
+}
+
+###
+PATCH http://localhost:5000/datadiri/3/portofolio/6
+Content-Type: application/json
+
+{
+    "judul": "PORTOFOLIYO",
+    "deskripsi": "Deskripsi PRTFL",
+    "file": "Nama FILE",
+    "image": ["Image3.jpg", "Image4.jpg"],
+    "link": "https://www.contohling.com" 
+}
+
+###
+DELETE http://localhost:5000/datadiri/3/portofolio/4
+Content-Type: application/json
+
+
+######################################################################
+
+
+####-SKILL-####
+GET http://localhost:5000/datadiri/3/skill
+
+###
+GET http://localhost:5000/datadiri/3/skill/2
+
+###
+POST http://localhost:5000/datadiri/3/skill
+Content-Type: application/json
+
+{
+    "nama_skill": "MS Teams",
+    "level_keahlian": 5
+}
+
+###
+PATCH http://localhost:5000/datadiri/3/skill/2
+Content-Type: application/json
+
+{
+    "nama_skill": "MS Excel",
+    "level_keahlian": 4
+}
+
+###
+DELETE http://localhost:5000/datadiri/3/skill/7
+Content-Type: application/json

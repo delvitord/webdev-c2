@@ -1,0 +1,87 @@
+import Organisasi from "../models/OrganisasiModel.js";
+
+// Mendapatkan semua organisasi berdasarkan dataDiriId
+export const getOrganisasi = async (req, res) => {
+  try {
+    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const response = await Organisasi.findAll({
+      where: {
+        dataDiriId: dataDiriId, // Menggunakan dataDiriId dari URL
+      },
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// Mendapatkan organisasi berdasarkan ID
+export const getOrganisasiById = async (req, res) => {
+  try {
+    const { dataDiriId, id } = req.params; // Mengambil dataDiriId dan ID dari URL
+    const response = await Organisasi.findOne({
+      where: {
+        id: id, // Menggunakan ID dari URL
+        dataDiriId: dataDiriId, // Juga memeriksa dataDiriId
+      },
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+// Membuat organisasi untuk dataDiriId tertentu
+export const createOrganisasi = async (req, res) => {
+  try {
+    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const { nama_organisasi, jabatan, awal_periode, akhir_periode, deskripsi } = req.body;
+
+    await Organisasi.create({
+      nama_organisasi,
+      jabatan,
+      awal_periode,
+      akhir_periode,
+      deskripsi,
+      dataDiriId, // Menggunakan dataDiriId dari URL
+    });
+
+    res.status(201).json({ msg: "Organisasi Created" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Memperbarui organisasi berdasarkan ID
+export const updateOrganisasi = async (req, res) => {
+  try {
+    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    await Organisasi.update(req.body, {
+      where: {
+        id: id, // Menggunakan ID dari URL
+        dataDiriId: dataDiriId, // Juga memeriksa dataDiriId
+      },
+    });
+    res.status(200).json({ msg: "Organisasi Updated" });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// Menghapus organisasi berdasarkan ID
+export const deleteOrganisasi = async (req, res) => {
+  try {
+    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    await Organisasi.destroy({
+      where: {
+        id: id, // Menggunakan ID dari URL
+        dataDiriId: dataDiriId, // Juga memeriksa dataDiriId
+      },
+    });
+    res.status(200).json({ msg: "Organisasi Deleted" });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
