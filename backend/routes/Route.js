@@ -41,11 +41,19 @@ router.get("/token", refreshToken);
 router.delete("/logout", Logout);
 
 // SKILL
+<<<<<<< HEAD
 router.get("/datadiri/:dataDiriId/skill", getSkill); 
 router.get("/datadiri/:dataDiriId/skill/:id", getSkillById);
 router.post("/datadiri/:dataDiriId/skill", createSkill); 
 router.patch("/datadiri/:dataDiriId/skill/:id", updateSkill);
 router.delete("/datadiri/:dataDiriId/skill/:id", deleteSkill);
+=======
+router.get("/skill", getSkill);
+router.get("/skill/:id", getSkillById);
+router.post("/datadiri/:dataDiriId/skill", createSkill);
+router.patch("/skill/:id", updateSkill);
+router.delete("/skill/:id", deleteSkill);
+>>>>>>> ca53ff76 (update amel)
 
 // GALERI
 router.get("/datadiri/:dataDiriId/galeri", getGaleri);

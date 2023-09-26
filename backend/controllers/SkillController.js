@@ -34,6 +34,7 @@ export const getSkillById = async (req, res) => {
 // Membuat skill untuk dataDiriId tertentu
 export const createSkill = async (req, res) => {
   try {
+<<<<<<< HEAD
     const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
     const skillData = {
       nama_skill: req.body.nama_skill,
@@ -41,6 +42,15 @@ export const createSkill = async (req, res) => {
       dataDiriId: dataDiriId, // Menggunakan dataDiriId dari URL
     };
 
+=======
+    const dataDiriId = req.params.dataDiriId;
+    if (req.files === null) return res.status(400).json({ msg: "No File Uploaded" });
+    const skillData = {
+      nama_skill: req.body.nama_skill,
+      level_keahlian: req.body.level_keahlian,
+      dataDiriId: dataDiriId,
+    };
+>>>>>>> ca53ff76 (update amel)
     await Skill.create(skillData);
     res.status(201).json({ msg: "Skill Created" });
   } catch (error) {

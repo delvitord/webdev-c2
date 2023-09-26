@@ -1,3 +1,4 @@
+import Data_diri from "../models/DataDiriModel.js";
 import Pendidikan from "../models/PendidikanModel.js";
 
 // Mendapatkan semua pendidikan berdasarkan dataDiriId
@@ -18,6 +19,7 @@ export const getPendidikan = async (req, res) => {
 // Mendapatkan pendidikan berdasarkan ID
 export const getPendidikanById = async (req, res) => {
   try {
+<<<<<<< HEAD
     const { dataDiriId, id } = req.params; // Mengambil ID dari URL
     const response = await Pendidikan.findOne({
       where: {
@@ -26,6 +28,19 @@ export const getPendidikanById = async (req, res) => {
       },
     });
     res.status(200).json(response);
+=======
+    const { nama_instansi, awal_periode, akhir_periode, jurusan, id_datadiri } = req.body;
+    const dataDiri = await Data_diri.findByPk(id_datadiri);
+    const pendidikanBaru = await Pendidikan.create({
+      nama_instansi,
+      awal_periode,
+      akhir_periode,
+      jurusan,
+      datadiriId: datadiriId,
+    });
+    await pendidikanBaru.setData_diri(dataDiri);
+    res.status(201).json({ msg: "Pendidikan Created" });
+>>>>>>> ca53ff76 (update amel)
   } catch (error) {
     console.log(error.message);
   }

@@ -61,7 +61,22 @@ PATCH http://localhost:5000/pendidikan/3
 Content-Type: application/json
 
 {
+<<<<<<< HEAD
     "nama_instansi": "SMAN 1 Payakumbuh",
+=======
+    "nama_instansi": "SDN 1 Payakumbuh",
+    "awal_periode": "2018-09-22T14:30:00Z",
+    "akhir_periode": "2021-09-22T14:30:00Z",
+    "jurusan": "MIPA"
+}
+
+###
+PATCH http://localhost:5000/pendidikan4
+Content-Type: application/json
+
+{
+    "nama_instansi": "SDN 1 Payakumbuh",
+>>>>>>> ca53ff76 (update amel)
     "awal_periode": "2018-09-22T14:30:00Z",
     "akhir_periode": "2021-09-22T14:30:00Z",
     "jurusan": "IPS", 
@@ -121,6 +136,7 @@ GET http://localhost:5000/datadiri/5/galeri
 GET http://localhost:5000/datadiri/5/galeri/8
 
 ###
+<<<<<<< HEAD
 POST http://localhost:5000/datadiri/3/galeri
 Content-Type: application/json
 
@@ -281,6 +297,18 @@ Content-Type: application/json
 
 ###
 PATCH http://localhost:5000/datadiri/3/skill/2
+=======
+POST http://localhost:5000/datadiri/6/skill
+Content-Type: application/json
+
+{
+    "nama_skill": "MS Word",
+    "level_keahlian": 4
+}
+
+###
+PATCH http://localhost:5000/skill/10
+>>>>>>> ca53ff76 (update amel)
 Content-Type: application/json
 
 {
@@ -289,5 +317,42 @@ Content-Type: application/json
 }
 
 ###
+<<<<<<< HEAD
 DELETE http://localhost:5000/datadiri/3/skill/7
+=======
+DELETE http://localhost:5000/skill/10
+Content-Type: application/json
+
+
+###
+GET http://localhost:5000/galeri
+
+###
+GET http://localhost:5000/galeri/1
+
+###
+POST http://localhost:5000/galeri
+Content-Type: application/json
+
+{
+    "nama_kegiatan": "Kegiata Apa",
+    "image": ["img-1.jpg", "img-2.jpg", "img-3.jpg"],
+    "deskripsi": "Kegiatan ini dilakukan di koriya",
+    "dataDiriId": 4
+}
+
+###
+PATCH http://localhost:5000/galeri/4
+Content-Type: application/json
+
+{
+    "nama_kegiatan": "Kegiatan Apa",
+    "image": ["img-1.jpg", "img-2.jpg", "img-3.jpg", "img-4.jpg"],
+    "deskripsi": "Kegiatan ini dilakukan di koriya",
+    "dataDiriId": 4
+}
+
+###
+DELETE http://localhost:5000/galeri/2
+>>>>>>> ca53ff76 (update amel)
 Content-Type: application/json
