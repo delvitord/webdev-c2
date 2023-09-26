@@ -29,11 +29,11 @@ const Data_diri = db.sequelize.define(
 );
 
 // Hubungan
-Data_diri.hasMany(Pendidikan);
-Data_diri.hasMany(Organisasi);
-Data_diri.hasMany(Skill);
-Data_diri.hasMany(Portofolio);
-Data_diri.hasMany(Galeri);
+Data_diri.hasMany(Pendidikan, { as: 'pendidikan' });
+Data_diri.hasMany(Organisasi, { as: 'organisasi' });
+Data_diri.hasMany(Skill, { as: 'skill' });
+Data_diri.hasMany(Portofolio, { as: 'portofolio' });
+Data_diri.hasMany(Galeri, { as: 'galeri' });
 
 Pendidikan.belongsTo(Data_diri);
 Galeri.belongsTo(Data_diri);

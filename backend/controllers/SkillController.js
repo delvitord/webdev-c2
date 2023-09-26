@@ -18,10 +18,11 @@ export const getSkill = async (req, res) => {
 // Mendapatkan skill berdasarkan ID
 export const getSkillById = async (req, res) => {
   try {
-    const { id } = req.params; // Mengambil ID dari URL
+    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
     const response = await Skill.findOne({
       where: {
         id: id, // Menggunakan ID dari URL
+        dataDiriId: dataDiriId,
       },
     });
     res.status(200).json(response);
@@ -50,10 +51,11 @@ export const createSkill = async (req, res) => {
 // Memperbarui skill berdasarkan ID
 export const updateSkill = async (req, res) => {
   try {
-    const { id } = req.params; // Mengambil ID dari URL
+    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
     await Skill.update(req.body, {
       where: {
         id: id, // Menggunakan ID dari URL
+        dataDiriId: dataDiriId,
       },
     });
     res.status(200).json({ msg: "Skill Updated" });
@@ -65,10 +67,11 @@ export const updateSkill = async (req, res) => {
 // Menghapus skill berdasarkan ID
 export const deleteSkill = async (req, res) => {
   try {
-    const { id } = req.params; // Mengambil ID dari URL
+    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
     await Skill.destroy({
       where: {
         id: id, // Menggunakan ID dari URL
+        dataDiriId: dataDiriId,
       },
     });
     res.status(200).json({ msg: "Skill Deleted" });

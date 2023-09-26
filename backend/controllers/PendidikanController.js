@@ -1,19 +1,12 @@
 import Pendidikan from "../models/PendidikanModel.js";
 
+// Mendapatkan semua pendidikan berdasarkan dataDiriId
 export const getPendidikan = async (req, res) => {
   try {
-    const response = await Pendidikan.findAll();
-    res.status(200).json(response);
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-export const getPendidikanById = async (req, res) => {
-  try {
-    const response = await Pendidikan.findOne({
+    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const response = await Pendidikan.findAll({
       where: {
-        id: req.params.id,
+        dataDiriId: dataDiriId, // Menggunakan dataDiriId dari URL
       },
     });
     res.status(200).json(response);
@@ -22,20 +15,51 @@ export const getPendidikanById = async (req, res) => {
   }
 };
 
-export const createPendidikan = async (req, res) => {
+// Mendapatkan pendidikan berdasarkan ID
+export const getPendidikanById = async (req, res) => {
   try {
-    await Pendidikan.create(req.body);
-    res.status(201).json({ msg: "Pendidikan Created" });
+    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    const response = await Pendidikan.findOne({
+      where: {
+        id: id, // Menggunakan ID dari URL
+        dataDiriId: dataDiriId,
+      },
+    });
+    res.status(200).json(response);
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
+// Membuat pendidikan untuk dataDiriId tertentu
+export const createPendidikan = async (req, res) => {
+  try {
+    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const { nama_instansi, awal_periode, akhir_periode, jurusan } = req.body;
+
+    await Pendidikan.create({
+      nama_instansi,
+      awal_periode,
+      akhir_periode,
+      jurusan,
+      dataDiriId, // Menggunakan dataDiriId dari URL
+    });
+
+    res.status(201).json({ msg: "Pendidikan Created" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Memperbarui pendidikan berdasarkan ID
 export const updatePendidikan = async (req, res) => {
   try {
+    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
     await Pendidikan.update(req.body, {
       where: {
-        id: req.params.id,
+        id: id, // Menggunakan ID dari URL
+        dataDiriId: dataDiriId,
       },
     });
     res.status(200).json({ msg: "Pendidikan Updated" });
@@ -44,11 +68,14 @@ export const updatePendidikan = async (req, res) => {
   }
 };
 
+// Menghapus pendidikan berdasarkan ID
 export const deletePendidikan = async (req, res) => {
   try {
+    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
     await Pendidikan.destroy({
       where: {
-        id: req.params.id,
+        id: id, // Menggunakan ID dari URL
+        dataDiriId: dataDiriId,
       },
     });
     res.status(200).json({ msg: "Pendidikan Deleted" });
