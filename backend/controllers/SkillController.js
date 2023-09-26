@@ -1,19 +1,12 @@
 import Skill from "../models/SkillModel.js";
 
+// Mendapatkan semua skill berdasarkan dataDiriId
 export const getSkill = async (req, res) => {
   try {
-    const response = await Skill.findAll();
-    res.status(200).json(response);
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-export const getSkillById = async (req, res) => {
-  try {
-    const response = await Skill.findOne({
+    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const response = await Skill.findAll({
       where: {
-        id: req.params.id,
+        dataDiriId: dataDiriId, // Menggunakan dataDiriId dari URL
       },
     });
     res.status(200).json(response);
@@ -22,20 +15,45 @@ export const getSkillById = async (req, res) => {
   }
 };
 
+// Mendapatkan skill berdasarkan ID
+export const getSkillById = async (req, res) => {
+  try {
+    const { id } = req.params; // Mengambil ID dari URL
+    const response = await Skill.findOne({
+      where: {
+        id: id, // Menggunakan ID dari URL
+      },
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// Membuat skill untuk dataDiriId tertentu
 export const createSkill = async (req, res) => {
   try {
-    await Skill.create(req.body);
+    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const skillData = {
+      nama_skill: req.body.nama_skill,
+      level_keahlian: req.body.level_keahlian,
+      dataDiriId: dataDiriId, // Menggunakan dataDiriId dari URL
+    };
+
+    await Skill.create(skillData);
     res.status(201).json({ msg: "Skill Created" });
   } catch (error) {
     console.log(error.message);
   }
 };
 
+// Memperbarui skill berdasarkan ID
 export const updateSkill = async (req, res) => {
   try {
+    const { id } = req.params; // Mengambil ID dari URL
     await Skill.update(req.body, {
       where: {
-        id: req.params.id,
+        id: id, // Menggunakan ID dari URL
       },
     });
     res.status(200).json({ msg: "Skill Updated" });
@@ -44,14 +62,16 @@ export const updateSkill = async (req, res) => {
   }
 };
 
+// Menghapus skill berdasarkan ID
 export const deleteSkill = async (req, res) => {
   try {
+    const { id } = req.params; // Mengambil ID dari URL
     await Skill.destroy({
       where: {
-        id: req.params.id,
+        id: id, // Menggunakan ID dari URL
       },
     });
-    res.console(200).json({ msg: "Skill Deleted" });
+    res.status(200).json({ msg: "Skill Deleted" });
   } catch (error) {
     console.log(error.message);
   }
