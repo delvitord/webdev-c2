@@ -56,6 +56,9 @@ Content-Type: application/json
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 08c68728 (commit)
 ###
 PATCH http://localhost:5000/pendidikan/3
 Content-Type: application/json
@@ -78,9 +81,12 @@ GET  http://localhost:5000/admin
 =======
 ####-ACCOUNT-####
 >>>>>>> fe49875e3e1bb4b71061bb4a3d807166d1be3818
+<<<<<<< HEAD
 =======
 ####-ACCOUNT-####
 >>>>>>> 54245fe504cc734a9a0cb11a1cf82bf153d9fe33
+=======
+>>>>>>> 08c68728 (commit)
 POST http://localhost:5000/admin
 Content-Type: application/json
 
