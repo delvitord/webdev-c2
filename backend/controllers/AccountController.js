@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 export const getAccount = async (req, res) => {
   try {
     const response = await Account.findAll({
-        attributes: ['id', 'name', 'email']
+        attributes: ['id', 'username', 'email']
     });
     res.status(200).json(response);
   } catch (error) {

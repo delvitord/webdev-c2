@@ -11,40 +11,52 @@ const Dashboard = () => {
   const history = useHistory()
   
   useEffect(() => {
-    refreshToken()
-    getAccount()
-  }, [])
+    refreshToken();
+    getAccount();
+  }, []);
 
-  const refreshToken = async() =>{
+  const refreshToken = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/token')
-        setToken(response.data.accessToken)
-        const decoded = jwt_decode(response.data.accessToken)
-        setUsername(decoded.username)
-        setExpire(decoded.exp)
+      const response = await axios.get("http://localhost:5000/admin/token");
+      setToken(response.data.accessToken);
+      const decoded = jwt_decode(response.data.accessToken);
+      setUsername(decoded.username);
+
+      // Periksa waktu kedaluwarsa token di sini
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (decoded.exp < currentTime) {
+        // Token sudah kedaluwarsa, mungkin perlu refresh
+        // atau tindakan lain sesuai kebijakan Anda.
+      }
+
+      setExpire(decoded.exp);
     } catch (error) {
-        if(error.response){
-            history.push("/")
-        }
+      if (error.response) {
+        history.push("/");
+      }
     }
-  }
+  };
+
 
   const axiosJwt = axios.create()
 
-  axiosJwt.interceptors.request.use(async(config) =>{
-    const currentDate = new Date()
-    if(expire * 1000 < currentDate.getTime()){
-        const response = await axios.get('http://localhost:5000/token')
-        config.headers.Authorization = `Bearer ${response.data.accessToken}`
-        setToken(response.data.accessToken)
+  axiosJwt.interceptors.request.use(
+    async (config) => {
+      const currentDate = new Date();
+      if (expire * 1000 < currentDate.getTime()) {
+        const response = await axios.get("http://localhost:5000/admin/token");
+        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+        setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
         setUsername(decoded.username);
         setExpire(decoded.exp);
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
     }
-    return config
-  }, (error)=> {
-    return Promise.reject(error)
-  })
+  );
 
   const getAccount = async() =>{
     const response = await axiosJwt.get('http://localhost:5000/admin',{
@@ -56,29 +68,31 @@ const Dashboard = () => {
   }
 
   return (
-    <div className='container mt-5'>
-        <h1 className='title'>Welcome Back: {username}</h1>
-        <button onClick={getAccount} className='button is-info '>Get User</button>
-        <table className='table is-striped is-fullwidth'>
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                { account.map((account, index) => {
-                    <tr key={account.id}>
-                        <td>{index + 1}</td>
-                        <td>{account.username}</td>
-                        <td>{account.email}</td>
-                    </tr>
-                })}
-            </tbody>
-        </table>
+    <div className="container mt-5">
+      <h1 className="title">Welcome Back: {username}</h1>
+      <button onClick={getAccount} className="button is-info ">
+        Get User
+      </button>
+      <table className="table is-striped is-fullwidth">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {account.map((account, index) => (
+            <tr key={account.id}>
+              <td>{index + 1}</td>
+              <td>{account.username}</td>
+              <td>{account.email}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
-  )
+  );
 }
 
 export default Dashboard
