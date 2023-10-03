@@ -8,7 +8,7 @@ GET http://localhost:5000/1/data_diri/3
 GET http://localhost:5000/1/data_diri_full/3
 
 ###
-POST http://localhost:5000/1/data_diri
+POST http://localhost:5000/2/data_diri
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:5000/1/data_diri/1
+PATCH http://localhost:5000/1/data_diri/3
 Content-Type: application/json
 
 {
@@ -46,7 +46,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/1/data_diri/2
+DELETE http://localhost:5000/1/data_diri/13
 Content-Type: application/json
 
 
@@ -95,13 +95,13 @@ DELETE  http://localhost:5000/logout
 
 
 ####-GALERI-####
-GET http://localhost:5000/datadiri/5/galeri
+GET http://localhost:5000/datadiri/16/galeri
 
 ###
-GET http://localhost:5000/datadiri/5/galeri/8
+GET http://localhost:5000/datadiri/10/galeri/1
 
 ###
-POST http://localhost:5000/datadiri/3/galeri
+POST http://localhost:5000/datadiri/16/galeri
 Content-Type: application/json
 
 {

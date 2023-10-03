@@ -54,34 +54,46 @@ export const createOrganisasi = async (req, res) => {
   }
 };
 
-// Memperbarui organisasi berdasarkan ID
+// Memperbarui organisasi berdasarkan ID dan dataDiriId
 export const updateOrganisasi = async (req, res) => {
   try {
     const { dataDiriId, id } = req.params; // Mengambil ID dari URL
-    await Organisasi.update(req.body, {
+    const [updatedRowCount] = await Organisasi.update(req.body, {
       where: {
         id: id, // Menggunakan ID dari URL
         dataDiriId: dataDiriId, // Juga memeriksa dataDiriId
       },
     });
-    res.status(200).json({ msg: "Organisasi Updated" });
+
+    if (updatedRowCount === 0) {
+      res.status(404).json({ error: "Organisasi not found" });
+    } else {
+      res.status(200).json({ msg: "Organisasi Updated" });
+    }
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// Menghapus organisasi berdasarkan ID
+// Menghapus organisasi berdasarkan ID dan dataDiriId
 export const deleteOrganisasi = async (req, res) => {
   try {
     const { dataDiriId, id } = req.params; // Mengambil ID dari URL
-    await Organisasi.destroy({
+    const result = await Organisasi.destroy({
       where: {
         id: id, // Menggunakan ID dari URL
         dataDiriId: dataDiriId, // Juga memeriksa dataDiriId
       },
     });
-    res.status(200).json({ msg: "Organisasi Deleted" });
+
+    if (result === 0) {
+      res.status(404).json({ error: "Organisasi not found" });
+    } else {
+      res.status(200).json({ msg: "Organisasi Deleted" });
+    }
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

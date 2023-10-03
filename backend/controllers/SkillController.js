@@ -48,34 +48,47 @@ export const createSkill = async (req, res) => {
   }
 };
 
-// Memperbarui skill berdasarkan ID
+// Memperbarui skill berdasarkan ID dan dataDiriId
 export const updateSkill = async (req, res) => {
   try {
     const { dataDiriId, id } = req.params; // Mengambil ID dari URL
-    await Skill.update(req.body, {
+    const [updatedRowCount] = await Skill.update(req.body, {
       where: {
         id: id, // Menggunakan ID dari URL
         dataDiriId: dataDiriId,
       },
     });
-    res.status(200).json({ msg: "Skill Updated" });
+
+    if (updatedRowCount === 0) {
+      res.status(404).json({ error: "Skill not found" });
+    } else {
+      res.status(200).json({ msg: "Skill Updated" });
+    }
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// Menghapus skill berdasarkan ID
+// Menghapus skill berdasarkan ID dan dataDiriId
 export const deleteSkill = async (req, res) => {
   try {
     const { dataDiriId, id } = req.params; // Mengambil ID dari URL
-    await Skill.destroy({
+    const result = await Skill.destroy({
       where: {
         id: id, // Menggunakan ID dari URL
         dataDiriId: dataDiriId,
       },
     });
-    res.status(200).json({ msg: "Skill Deleted" });
+
+    if (result === 0) {
+      res.status(404).json({ error: "Skill not found" });
+    } else {
+      res.status(200).json({ msg: "Skill Deleted" });
+    }
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+

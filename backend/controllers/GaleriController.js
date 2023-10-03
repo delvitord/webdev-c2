@@ -61,15 +61,21 @@ export const createGaleri = async (req, res) => {
 export const updateGaleri = async (req, res) => {
   try {
     const { dataDiriId, id } = req.params; // Mengambil ID dari URL
-    await Galeri.update(req.body, {
+    const [updatedRowCount] = await Galeri.update(req.body, {
       where: {
         id: id, // Menggunakan ID dari URL
         dataDiriId: dataDiriId, // Juga memeriksa dataDiriId
       },
     });
-    res.status(200).json({ msg: "Galeri Updated" });
+
+    if (updatedRowCount === 0) {
+      res.status(404).json({ error: "Galeri not found" });
+    } else {
+      res.status(200).json({ msg: "Galeri Updated" });
+    }
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -77,14 +83,22 @@ export const updateGaleri = async (req, res) => {
 export const deleteGaleri = async (req, res) => {
   try {
     const { dataDiriId, id } = req.params; // Mengambil ID dari URL
-    await Galeri.destroy({
+    const result = await Galeri.destroy({
       where: {
         id: id, // Menggunakan ID dari URL
         dataDiriId: dataDiriId, // Juga memeriksa dataDiriId
       },
     });
-    res.status(200).json({ msg: "Galeri Deleted" });
+
+    if (result === 0) {
+      res.status(404).json({ error: "Galeri not found" });
+    } else {
+      res.status(200).json({ msg: "Galeri Deleted" });
+    }
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+

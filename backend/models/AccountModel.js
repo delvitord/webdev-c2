@@ -15,8 +15,7 @@ const Account = db.sequelize.define(
   }
 );
 
-Account.hasOne(DataDiri, { as: 'data_diri' });
-
+Account.hasOne(DataDiri, { foreignKey: 'accountId' }, { as: 'data_diri' });
 DataDiri.belongsTo(Account);
 
 export default Account;
