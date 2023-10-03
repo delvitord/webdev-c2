@@ -21,12 +21,8 @@ const Dashboard = () => {
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setUsername(decoded.username);
-
-      // Periksa waktu kedaluwarsa token di sini
       const currentTime = Math.floor(Date.now() / 1000);
       if (decoded.exp < currentTime) {
-        // Token sudah kedaluwarsa, mungkin perlu refresh
-        // atau tindakan lain sesuai kebijakan Anda.
       }
 
       setExpire(decoded.exp);
