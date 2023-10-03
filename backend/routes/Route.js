@@ -37,7 +37,7 @@ router.delete("/datadiri/:dataDiriId/organisasi/:id", deleteOrganisasi);
 router.get("/admin", verifyToken, getAccount);
 router.post("/admin", Register);
 router.post("/login", Login);
-router.get("/token", refreshToken);
+router.get("/admin/token", refreshToken);
 router.delete("/logout", Logout);
 
 // SKILL
