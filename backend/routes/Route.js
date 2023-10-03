@@ -12,12 +12,12 @@ import { refreshToken } from "../controllers/RefreshToken.js";
 const router = express.Router();
 
 // CRUD DATA DIRI
-router.get("/data_diri", getData_diri);
-router.get("/data_diri/:id", getData_diriById);
-router.get("/data_diri_full/:id", getData_diriByIdWithChild);
-router.post("/data_diri", createData_diri);
-router.patch("/data_diri/:id", updateData_diri);
-router.delete("/data_diri/:id", deleteData_diri);
+router.get("/:accountId/data_diri", getData_diri);
+router.get("/:accountId/data_diri/:id", getData_diriById);
+router.get("/:accountId/data_diri_full/:id", getData_diriByIdWithChild);
+router.post("/:accountId/data_diri", createData_diri);
+router.patch("/:accountId/data_diri/:id", updateData_diri);
+router.delete("/:accountId/data_diri/:id", deleteData_diri);
 
 // CRUD PENDIDIKAN
 router.get("/datadiri/:dataDiriId/pendidikan", getPendidikan);

@@ -1,14 +1,14 @@
 ####-DATA DIRI-####
-GET http://localhost:5000/data_diri
+GET http://localhost:5000/2/data_diri
 
 ###
-GET http://localhost:5000/data_diri/5
+GET http://localhost:5000/1/data_diri/3
 
 ###
-GET http://localhost:5000/data_diri_full/5
+GET http://localhost:5000/1/data_diri_full/3
 
 ###
-POST http://localhost:5000/data_diri
+POST http://localhost:5000/1/data_diri
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:5000/data_diri/5
+PATCH http://localhost:5000/1/data_diri/1
 Content-Type: application/json
 
 {
@@ -46,7 +46,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/data_diri/6
+DELETE http://localhost:5000/1/data_diri/2
 Content-Type: application/json
 
 
@@ -54,39 +54,13 @@ Content-Type: application/json
 ######################################################################
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 08c68728 (commit)
-###
-PATCH http://localhost:5000/pendidikan/3
-Content-Type: application/json
-
-{
-    "nama_instansi": "SMAN 1 Payakumbuh",
-    "awal_periode": "2018-09-22T14:30:00Z",
-    "akhir_periode": "2021-09-22T14:30:00Z",
-    "jurusan": "IPS", 
-    "dataDiriId": 3
-}
-
-###
-DELETE http://localhost:5000/pendidikan/3
-Content-Type: application/json
-
 ###
 GET  http://localhost:5000/admin
 ###
 =======
 ####-ACCOUNT-####
 >>>>>>> fe49875e3e1bb4b71061bb4a3d807166d1be3818
-<<<<<<< HEAD
 =======
-####-ACCOUNT-####
->>>>>>> 54245fe504cc734a9a0cb11a1cf82bf153d9fe33
-=======
->>>>>>> 08c68728 (commit)
 POST http://localhost:5000/admin
 Content-Type: application/json
 

@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes } from "sequelize";
 import db from "../config/Database.js";
+import DataDiri from "./DataDiriModel.js"
 
 const Account = db.sequelize.define(
   "account",
@@ -13,6 +14,10 @@ const Account = db.sequelize.define(
     freezeTableName: true,
   }
 );
+
+Account.hasOne(DataDiri, { as: 'data_diri' });
+
+DataDiri.belongsTo(Account);
 
 export default Account;
 
