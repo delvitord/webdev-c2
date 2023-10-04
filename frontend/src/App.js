@@ -1,39 +1,55 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom"
-import Login from "./components/Login";
-import Register from "./components/Register";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./components/login/Login";
+import Register from "./components/login/Register";
 import Navbar from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
-import DatadiriList  from "./components/datadiri/Datadiri";
+import DatadiriList from "./components/datadiri/Datadiri";
 import AddDatadiri from "./components/datadiri/AddDatadiri";
 import UpdateDatadiri from "./components/datadiri/EditDatadiri";
 
 function App() {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route exact path="/login">
-          <Login />
-        </Route>
-        <Route path="/register">
-          <Register />
-        </Route>
-        <Route path="/dashboard">
-          <Navbar />
-          <Dashboard />
-        </Route>
-        <Route path="/data-diri">
-          <Navbar />
-          <DatadiriList />
-        </Route>
-        <Route path="/add">
-          <Navbar />
-          <AddDatadiri />
-        </Route>
-        <Route path="/edit/:id">
-          <Navbar />
-          <UpdateDatadiri />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/dashboard"
+          element={
+            <>
+              <Navbar />
+              <Dashboard />
+            </>
+          }
+        />
+        <Route
+          path="/data-diri"
+          element={
+            <>
+              <Navbar />
+              <DatadiriList />
+            </>
+          }
+        />
+        <Route
+          path="/add"
+          element={
+            <>
+              <Navbar />
+              <AddDatadiri />
+            </>
+          }
+        />
+        <Route
+          path="/edit/:id"
+          element={
+            <>
+              <Navbar />
+              <UpdateDatadiri />
+            </>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }

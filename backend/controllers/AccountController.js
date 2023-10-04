@@ -15,7 +15,7 @@ export const getAccount = async (req, res) => {
 
 export const Register = async(req, res)=> {
     const { username, email, password, confPassword } = req.body
-    if(password != confPassword) return res.status(400).json({msg: "Password dan Confirm Password tidak sesuai!"})
+    if(password != confPassword) return res.status(400).json({msg: "Password dan Confirm Password tidak sesuai!!"})
     const salt = await bcrypt.genSalt()
     const hashPass = await bcrypt.hash(password ,salt )
     try {
@@ -38,7 +38,7 @@ export const Login = async(req, res)=>{
             }
         })
         const match = await bcrypt.compare(req.body.password, account[0].password)
-        if(!match) return res.status(400).json({msg: "Wrong Password"})
+        if(!match) return res.status(400).json({msg: "Password Salah!!"})
         const accountId = account[0].id
         const username = account[0].username
         const email = account[0].email
@@ -59,7 +59,7 @@ export const Login = async(req, res)=>{
         })
         res.json({ accessToken })
     } catch (error) {
-        res.status(404).json({msg:"Email tidak ditemukan"})
+        res.status(404).json({msg:"Email belum terdaftar!!"})
     }
 }
 

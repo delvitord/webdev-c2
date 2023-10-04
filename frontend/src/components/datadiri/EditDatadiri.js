@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const UpdateDatadiri = () => {
   const [nama, setNama] = useState("");
@@ -15,7 +15,7 @@ const UpdateDatadiri = () => {
   const [instagram, setInstagram] = useState("");
   const [x, setX] = useState("");
   const [github, setGithub] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
   const {id} = useParams();
   
   useEffect(() => {
@@ -39,7 +39,7 @@ const UpdateDatadiri = () => {
         x,
         github,
       });
-      history.push("/data-diri");
+      navigate("/data-diri");
     } catch (error) {
       console.log(error);
     }

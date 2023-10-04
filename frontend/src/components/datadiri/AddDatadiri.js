@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const AddDatadiri = () => {
   const [nama, setNama] = useState("");
@@ -15,7 +15,7 @@ const AddDatadiri = () => {
   const [instagram, setInstagram] = useState("");
   const [x, setX] = useState("");
   const [github, setGithub] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const saveUser = async (e) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ const AddDatadiri = () => {
         x,
         github
       });
-      history.push("/data-diri");
+      navigate("/data-diri");
     } catch (error) {
       console.log(error);
     }

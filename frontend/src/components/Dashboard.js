@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import jwt_decode from "jwt-decode"
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+import { useNavigate } from 'react-router-dom'
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
+import Header from './layout/Header';
+import Footer from './layout/Footer';
+import Sidebar from './layout/Sidebar';
+import Content from './layout/Content';
 
 const Dashboard = () => {
   const [username, setUsername] = useState('')
   const [token, setToken] = useState('')
   const [expire, setExpire] = useState('')
   const [account, setAccount] = useState([])
-  const history = useHistory()
+  const navigate = useNavigate()
   
   useEffect(() => {
     refreshToken();
@@ -28,7 +34,7 @@ const Dashboard = () => {
       setExpire(decoded.exp);
     } catch (error) {
       if (error.response) {
-        history.push("/");
+        navigate("/");
       }
     }
   };
@@ -63,31 +69,45 @@ const Dashboard = () => {
     setAccount(response.data)
   }
 
+  const [open, setOpen] = React.useState(true);
+
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
+
   return (
-    <div className="container mt-5">
-      <h1 className="title">Welcome Back: {username}</h1>
-      <button onClick={getAccount} className="button is-info ">
-        Get User
-      </button>
-      <table className="table is-striped is-fullwidth">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Name</th>
-            <th>Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          {account.map((account, index) => (
-            <tr key={account.id}>
-              <td>{index + 1}</td>
-              <td>{account.username}</td>
-              <td>{account.email}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <Header open={open} toggleDrawer={toggleDrawer} />
+      <Sidebar open={open} toggleDrawer={toggleDrawer} />
+      <Content open={open}>
+        <div className="container mt-5">
+          <h1 className="title">Welcome Back: {username}</h1>
+          <button onClick={getAccount} className="button is-info">
+            Get User
+          </button>
+          <table className="table is-striped is-fullwidth">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {account.map((account, index) => (
+                <tr key={account.id}>
+                  <td>{index + 1}</td>
+                  <td>{account.username}</td>
+                  <td>{account.email}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Content>
+      <Footer />
+    </Box>
   );
 }
 
