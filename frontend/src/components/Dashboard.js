@@ -4,10 +4,11 @@ import jwt_decode from "jwt-decode"
 import { useNavigate } from 'react-router-dom'
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-import Header from './layout/Header';
+import Navbar from './layout/Navbar';
 import Footer from './layout/Footer';
 import Sidebar from './layout/Sidebar';
 import Content from './layout/Content';
+import { Card } from '@mui/material';
 
 const Dashboard = () => {
   const [username, setUsername] = useState('')
@@ -69,45 +70,47 @@ const Dashboard = () => {
     setAccount(response.data)
   }
 
-  const [open, setOpen] = React.useState(true);
+  const [open] = React.useState(true);
 
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <Header open={open} toggleDrawer={toggleDrawer} />
-      <Sidebar open={open} toggleDrawer={toggleDrawer} />
-      <Content open={open}>
-        <div className="container mt-5">
-          <h1 className="title">Welcome Back: {username}</h1>
-          <button onClick={getAccount} className="button is-info">
-            Get User
-          </button>
-          <table className="table is-striped is-fullwidth">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Name</th>
-                <th>Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              {account.map((account, index) => (
-                <tr key={account.id}>
-                  <td>{index + 1}</td>
-                  <td>{account.username}</td>
-                  <td>{account.email}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Content>
-      <Footer />
-    </Box>
+    <>
+    <Navbar />
+    <Box height={50}/>
+      <Box sx={{ display: "flex" }}>
+        <Sidebar />
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <CssBaseline />
+          <Content open={open}>
+            <div className="container mt-5">
+              <h1 className="title">Welcome Back: {username}</h1>
+              <button onClick={getAccount} className="button is-info">
+                Get User
+              </button>
+              <table className="table is-striped is-fullwidth">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {account.map((account, index) => (
+                    <tr key={account.id}>
+                      <td>{index + 1}</td>
+                      <td>{account.username}</td>
+                      <td>{account.email}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Content>
+          <Footer />
+        </Box>
+      </Box>
+    </>
   );
 }
 

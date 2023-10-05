@@ -1,5 +1,5 @@
 ####-DATA DIRI-####
-GET http://localhost:5000/2/data_diri
+GET http://localhost:5000/3/data_diri
 
 ###
 GET http://localhost:5000/1/data_diri/3

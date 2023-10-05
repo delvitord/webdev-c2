@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken"
 
 export const getAccount = async (req, res) => {
   try {
+    const { accountId } = req.params; 
     const response = await Account.findAll({
         attributes: ['id', 'username', 'email']
     });
@@ -12,6 +13,26 @@ export const getAccount = async (req, res) => {
     console.log(error.message);
   }
 };
+
+export const getAccountById = async (req, res) => {
+  try {
+    const { accountId } = req.params;
+    const account = await Account.findOne({
+      where: { id: accountId },
+      attributes: ["id", "username", "email"],
+    });
+
+    if (!account) {
+      return res.status(404).json({ msg: "Akun tidak ditemukan" });
+    }
+
+    res.status(200).json(account);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: "Terjadi kesalahan pada server" });
+  }
+};
+
 
 export const Register = async(req, res)=> {
     const { username, email, password, confPassword } = req.body

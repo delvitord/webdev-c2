@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./components/login/Login";
 import Register from "./components/login/Register";
-import Navbar from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import DatadiriList from "./components/datadiri/Datadiri";
 import AddDatadiri from "./components/datadiri/AddDatadiri";
@@ -17,7 +16,6 @@ function App() {
           path="/dashboard"
           element={
             <>
-              <Navbar />
               <Dashboard />
             </>
           }
@@ -26,7 +24,6 @@ function App() {
           path="/data-diri"
           element={
             <>
-              <Navbar />
               <DatadiriList />
             </>
           }
@@ -35,7 +32,6 @@ function App() {
           path="/add"
           element={
             <>
-              <Navbar />
               <AddDatadiri />
             </>
           }
@@ -44,7 +40,6 @@ function App() {
           path="/edit/:id"
           element={
             <>
-              <Navbar />
               <UpdateDatadiri />
             </>
           }
