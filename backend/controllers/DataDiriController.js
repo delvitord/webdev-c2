@@ -6,75 +6,73 @@ import Skill from "../models/SkillModel.js";
 import Portofolio from "../models/PortofolioModel.js";
 import Galeri from "../models/GaleriModel.js";
 import path from "path";
+import fs from "fs"; // Menggunakan fs.promises untuk menghindari callback hell
+
+const allowedType = [".jpg", ".jpeg", ".png", ".gif"];
 
 export const getData_diri = async (req, res) => {
   try {
-    const { accountId } = req.params; // Mengambil dataDiriId dari URL
+    const { accountId } = req.params;
     const response = await Data_diri.findAll({
-      where: {
-        accountId: accountId, // Menggunakan dataDiriId dari URL
-      },
+      where: { accountId },
     });
     res.status(200).json(response);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 export const getData_diriById = async (req, res) => {
   try {
-    const { accountId, id } = req.params; // Mengambil ID dari URL
+    const { accountId, id } = req.params;
     const response = await Data_diri.findOne({
-      where: {
-        id: id, // Menggunakan ID dari URL
-        accountId: accountId, // Juga memeriksa dataDiriId
-      },
+      where: { id, accountId },
     });
+    if (!response) {
+      return res.status(404).json({ error: "Data Diri Not Found" });
+    }
     res.status(200).json(response);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 export const getData_diriByIdWithChild = async (req, res) => {
   try {
-    const { accountId, id } = req.params; // Mengambil ID dari URL
+    const { accountId, id } = req.params;
     const response = await Data_diri.findOne({
-      where: {
-        id: id,
-        accountId: accountId,
-      },
+      where: { id, accountId },
       include: [
         {
           model: Pendidikan,
-          as: "pendidikan", // Gunakan alias yang sesuai
+          as: "pendidikan",
         },
         {
           model: Organisasi,
-          as: "organisasi", // Gunakan alias yang sesuai
+          as: "organisasi",
         },
         {
           model: Skill,
-          as: "skill", // Gunakan alias yang sesuai
+          as: "skill",
         },
         {
           model: Portofolio,
-          as: "portofolio", // Gunakan alias yang sesuai
+          as: "portofolio",
         },
         {
           model: Galeri,
-          as: "galeri", // Gunakan alias yang sesuai
+          as: "galeri",
         },
       ],
     });
-
     if (!response) {
       return res.status(404).json({ error: "Data Diri Not Found" });
     }
-
     res.status(200).json(response);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -90,39 +88,8 @@ export const createData_diri = async (req, res) => {
     });
 
     if (existingDataDiri) {
-      // Jika data diri sudah ada, perbarui data diri yang ada
-      await existingDataDiri.update({
-        nama,
-        tempat_lahir,
-        tanggal_lahir,
-        alamat,
-        email,
-        no_telp,
-        deskripsi,
-        linkedin,
-        instagram,
-        x,
-        github,
-      });
-    } else {
-      // Jika data diri belum ada, buat data diri baru
-      existingDataDiri = await Data_diri.create({
-        nama,
-        tempat_lahir,
-        tanggal_lahir,
-        alamat,
-        email,
-        no_telp,
-        deskripsi,
-        linkedin,
-        instagram,
-        x,
-        github,
-        accountId,
-      });
+      return res.status(422).json({ msg: "Data Diri already exists. Use update instead." });
     }
-
-    const dataDiriId = existingDataDiri.id;
 
     // Mengecek apakah ada file foto yang diunggah
     if (req.files && req.files.foto) {
@@ -131,7 +98,6 @@ export const createData_diri = async (req, res) => {
       const ext = path.extname(file.name);
       const fileName = file.md5 + ext;
       const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
-      const allowedType = [".png", ".jpg", ".jpeg"];
 
       if (!allowedType.includes(ext.toLowerCase())) {
         return res.status(422).json({ msg: "Invalid Image Type" });
@@ -146,16 +112,43 @@ export const createData_diri = async (req, res) => {
           return res.status(500).json({ msg: "Server Error" });
         }
 
-        // Mengupdate data diri dengan URL foto
-        await existingDataDiri.update({
+        // Membuat data diri baru dengan URL foto
+        const newDataDiri = await Data_diri.create({
+          nama,
+          tempat_lahir,
+          tanggal_lahir,
+          alamat,
+          email,
+          no_telp,
+          deskripsi,
+          linkedin,
+          instagram,
+          x,
+          github,
           foto: url,
+          accountId,
         });
 
-        res.status(201).json({ msg: "Data Diri Created/Updated", dataDiriId });
+        res.status(201).json({ msg: "Data Diri Created", dataDiriId: newDataDiri.id });
       });
     } else {
-      // Jika tidak ada foto yang diunggah, hanya mengirimkan respons tanpa perubahan foto
-      res.status(201).json({ msg: "Data Diri Created/Updated", dataDiriId });
+      // Jika tidak ada foto yang diunggah, hanya membuat data diri tanpa foto
+      const newDataDiri = await Data_diri.create({
+        nama,
+        tempat_lahir,
+        tanggal_lahir,
+        alamat,
+        email,
+        no_telp,
+        deskripsi,
+        linkedin,
+        instagram,
+        x,
+        github,
+        accountId,
+      });
+
+      res.status(201).json({ msg: "Data Diri Created", dataDiriId: newDataDiri.id });
     }
   } catch (error) {
     console.error(error);
@@ -163,82 +156,101 @@ export const createData_diri = async (req, res) => {
   }
 };
 
-// Mengupdate data diri berdasarkan ID dan accountId
-const allowedType = [".jpg", ".jpeg", ".png", ".gif"];
-
+// Fungsi untuk mengupdate data_diri
 export const updateData_diri = async (req, res) => {
   try {
-    const { accountId, id } = req.params; // Mengambil ID dari URL
-    const data_diri = await Data_diri.findByPk(id);
+    const { accountId } = req.params; // Mengambil AccoundId dari URL
+    const { nama, tempat_lahir, tanggal_lahir, alamat, email, no_telp, deskripsi, linkedin, instagram, x, github } = req.body;
 
-    if (!data_diri) {
-      return res.status(404).json({ error: "Data Diri not found" });
+    // Mencari data_diri yang sesuai dengan accountId
+    let dataDiri = await Data_diri.findOne({
+      where: { accountId },
+    });
+
+    if (!dataDiri) {
+      return res.status(404).json({ msg: "Data Diri not found" });
     }
 
+    let fotoUrl = dataDiri.foto;
+
+    // Mengecek apakah ada file foto yang diunggah
     if (req.files && req.files.foto) {
       const file = req.files.foto;
       const ext = path.extname(file.name);
+      const fileName = file.md5 + ext;
+      const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
 
       if (!allowedType.includes(ext.toLowerCase())) {
-        return res.status(422).json({ error: "Invalid Image Type" });
+        return res.status(422).json({ msg: "Invalid Image Type" });
       }
       if (file.size > 5000000) {
-        return res.status(422).json({ error: "Image must be less than 5 MB" });
+        return res.status(422).json({ msg: "Image must be less than 5 MB" });
       }
 
-      // Hapus gambar lama jika ada
-      if (data_diri.foto) {
-        const oldFilePath = `./public/images/${data_diri.foto}`;
+      // Menghapus foto lama (jika ada)
+      if (dataDiri.foto) {
+        const oldFilePath = path.join(process.cwd(), "public", "images", path.basename(dataDiri.foto));
         fs.unlinkSync(oldFilePath);
       }
 
-      // Simpan gambar baru dengan nama yang unik
-      const fileName = `${file.md5}${ext}`;
-      file.mv(`./public/images/${fileName}`, (err) => {
+      // Memindahkan foto baru ke direktori
+      file.mv(path.join(process.cwd(), "public", "images", fileName), async (err) => {
         if (err) {
-          console.error(err.message);
-          return res.status(500).json({ error: "File Upload Failed" });
+          console.error(err);
+          return res.status(500).json({ msg: "Server Error" });
         }
+
+        // Set fotoUrl ke URL foto yang baru
+        fotoUrl = url;
+
+        // Mengupdate data_diri dengan URL foto yang baru
+        await dataDiri.update({
+          nama,
+          tempat_lahir,
+          tanggal_lahir,
+          alamat,
+          email,
+          no_telp,
+          deskripsi,
+          linkedin,
+          instagram,
+          x,
+          github,
+          foto: fotoUrl,
+        });
+
+        res.status(200).json({ msg: "Data Diri Updated Successfully" });
+      });
+    } else {
+      // Jika tidak ada foto yang diunggah, hanya mengupdate data_diri tanpa foto
+      await dataDiri.update({
+        nama,
+        tempat_lahir,
+        tanggal_lahir,
+        alamat,
+        email,
+        no_telp,
+        deskripsi,
+        linkedin,
+        instagram,
+        x,
+        github,
+        foto: fotoUrl,
       });
 
-      // Update data diri dengan nama file yang baru
-      await data_diri.update({
-        foto: fileName,
-      });
+      res.status(200).json({ msg: "Data Diri Updated Successfully" });
     }
-
-    const { nama, tempat_lahir, tanggal_lahir, alamat, email, no_telp, deskripsi, linkedin, instagram, x, github } = req.body;
-
-    await data_diri.update({
-      nama,
-      tempat_lahir,
-      tanggal_lahir,
-      alamat,
-      email,
-      no_telp,
-      deskripsi,
-      linkedin,
-      instagram,
-      x,
-      github,
-    });
-
-    res.status(200).json({ success: "Data Diri Updated Successfully" });
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// Menghapus data diri berdasarkan ID dan accountId
 export const deleteData_diri = async (req, res) => {
   try {
-    const { accountId, id } = req.params; // Mengambil ID dari URL
+    const { accountId, id } = req.params;
     const result = await Data_diri.destroy({
-      where: {
-        id: id, // Menggunakan ID dari URL
-        accountId: accountId, // Juga memeriksa accountId
-      },
+      where: { id, accountId },
     });
 
     if (result === 0) {
@@ -247,7 +259,7 @@ export const deleteData_diri = async (req, res) => {
       res.status(200).json({ msg: "Data Diri Deleted" });
     }
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
