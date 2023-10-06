@@ -38,11 +38,6 @@ const Login = () => {
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    Auth(event);
-  };
-
   const theme = createTheme();
 
   return (
@@ -65,7 +60,7 @@ const Login = () => {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={Auth}
             noValidate
             sx={{ mt: 1 }}
           >

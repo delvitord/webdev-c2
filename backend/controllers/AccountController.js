@@ -58,8 +58,12 @@ export const Login = async(req, res)=>{
                 email: req.body.email
             }
         })
+        if(!account){
+            return  res.status(401).json({msg: "Akun tidak terdaftar!!"})
+        }
+
         const match = await bcrypt.compare(req.body.password, account[0].password)
-        if(!match) return res.status(400).json({msg: "Password Salah!!"})
+        if(!match) return res.status(400).json({msg: "Username atau password salah"})
         const accountId = account[0].id
         const username = account[0].username
         const email = account[0].email
@@ -78,9 +82,9 @@ export const Login = async(req, res)=>{
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000
         })
-        res.json({ accessToken })
+        res.status(200).json({ msg: 'Login Berhasil', access_token: accessToken, account_info: account })
     } catch (error) {
-        res.status(404).json({msg:"Email belum terdaftar!!"})
+        res.status(500).json({msg:"Terjadi kesalahan saat Login!!"})
     }
 }
 

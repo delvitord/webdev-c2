@@ -8,7 +8,6 @@ import Navbar from './layout/Navbar';
 import Footer from './layout/Footer';
 import Sidebar from './layout/Sidebar';
 import Content from './layout/Content';
-import { Card } from '@mui/material';
 
 const Dashboard = () => {
   const [username, setUsername] = useState('')
@@ -22,32 +21,40 @@ const Dashboard = () => {
     getAccount();
   }, []);
 
+  const Logout = async()=>{
+    try {
+      await axios.delete('http://localhost:5000/logout')
+      navigate('/')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const refreshToken = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/admin/token");
+      const response = await axios.get("http://localhost:5000/token");
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setUsername(decoded.username);
       const currentTime = Math.floor(Date.now() / 1000);
       if (decoded.exp < currentTime) {
       }
-
       setExpire(decoded.exp);
     } catch (error) {
       if (error.response) {
-        navigate("/");
+        navigate("/login");
       }
     }
   };
 
-
+  
   const axiosJwt = axios.create()
 
   axiosJwt.interceptors.request.use(
     async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("http://localhost:5000/admin/token");
+        const response = await axios.get("http://localhost:5000/token");
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
