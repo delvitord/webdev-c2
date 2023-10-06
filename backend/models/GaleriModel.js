@@ -5,7 +5,7 @@ const Galeri = db.sequelize.define(
   "galeri",
   {
     nama_kegiatan: DataTypes.STRING,
-    image: DataTypes.ARRAY(DataTypes.STRING),
+    image: DataTypes.STRING,
     deskripsi: DataTypes.TEXT,
   },
   {

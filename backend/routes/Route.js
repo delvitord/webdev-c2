@@ -42,9 +42,9 @@ router.get("/admin/token", refreshToken);
 router.delete("/logout", Logout);
 
 // SKILL
-router.get("/datadiri/:dataDiriId/skill", getSkill); 
+router.get("/datadiri/:dataDiriId/skill", getSkill);
 router.get("/datadiri/:dataDiriId/skill/:id", getSkillById);
-router.post("/datadiri/:dataDiriId/skill", createSkill); 
+router.post("/datadiri/:dataDiriId/skill", createSkill);
 router.patch("/datadiri/:dataDiriId/skill/:id", updateSkill);
 router.delete("/datadiri/:dataDiriId/skill/:id", deleteSkill);
 
