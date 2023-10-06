@@ -5,19 +5,19 @@ import { createSkill, deleteSkill, getSkill, getSkillById, updateSkill } from ".
 import { createGaleri, deleteGaleri, getGaleri, getGaleriById, updateGaleri } from "../controllers/GaleriController.js";
 import { createOrganisasi, deleteOrganisasi, getOrganisasi, updateOrganisasi, getOrganisasiById } from "../controllers/OrganisasiController.js";
 import { createPortofolio, deletePortofolio, getPortofolio, getPortofolioById, updatePortofolio } from "../controllers/PortofolioController.js";
-import { Login, Logout, Register, getAccount } from "../controllers/AccountController.js";
+import { Login, Logout, Register, getAccount} from "../controllers/AccountController.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 
 const router = express.Router();
 
 // CRUD DATA DIRI
-router.get("/:accountId/data_diri", getData_diri);
-router.get("/:accountId/data_diri/:id", getData_diriById);
-router.get("/:accountId/data_diri_full/:id", getData_diriByIdWithChild);
-router.post("/:accountId/data_diri", createData_diri);
-router.patch("/:accountId/data_diri/:id", updateData_diri);
-router.delete("/:accountId/data_diri/:id", deleteData_diri);
+router.get("/:account/data_diri", getData_diri);
+router.get("/:account/data_diri/:id", getData_diriById);
+router.get("/:account/data_diri_full/:id", getData_diriByIdWithChild);
+router.post("/:account/data_diri", createData_diri);
+router.patch("/:account/data_diri/:id", updateData_diri);
+router.delete("/:account/data_diri/:id", deleteData_diri);
 
 // CRUD PENDIDIKAN
 router.get("/datadiri/:dataDiriId/pendidikan", getPendidikan);
@@ -35,6 +35,7 @@ router.delete("/datadiri/:dataDiriId/organisasi/:id", deleteOrganisasi);
 
 // LOGIN
 router.get("/admin", verifyToken, getAccount);
+router.get("/admin/:id", getAccount);
 router.post("/admin", Register);
 router.post("/login", Login);
 router.get("/admin/token", refreshToken);

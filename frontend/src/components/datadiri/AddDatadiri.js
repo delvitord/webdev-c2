@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const AddDatadiri = () => {
   const [nama, setNama] = useState("");
@@ -15,12 +15,19 @@ const AddDatadiri = () => {
   const [instagram, setInstagram] = useState("");
   const [x, setX] = useState("");
   const [github, setGithub] = useState("");
+  const [accountId, setAccountId] = useState("");
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const getAccountId = async(e)=>{
+    const response = await axios.get(`http://localhost:5000/admin/${id}`)
+    setAccountId(response.data.id)
+  }
 
   const saveUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/data_diri", {
+      await axios.post(`http://localhost:5000/${accountId}/data_diri`, {
         nama,
         tempat_lahir,
         tanggal_lahir,
@@ -32,7 +39,7 @@ const AddDatadiri = () => {
         linkedin,
         instagram,
         x,
-        github
+        github,
       });
       navigate("/data-diri");
     } catch (error) {
@@ -72,7 +79,7 @@ const AddDatadiri = () => {
             <label className="label">Tanggal Lahir</label>
             <div className="control">
               <input
-                type="text"
+                type="date"
                 className="input"
                 value={tanggal_lahir}
                 onChange={(e) => setTanggalLahir(e.target.value)}
@@ -96,7 +103,7 @@ const AddDatadiri = () => {
             <label className="label">Email</label>
             <div className="control">
               <input
-                type="text"
+                type="email"
                 className="input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

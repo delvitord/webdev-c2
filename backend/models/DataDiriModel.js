@@ -24,16 +24,35 @@ const Data_diri = db.sequelize.define(
   },
   {
     freezeTableName: true,
-    sequenceName: "id_data_diri",
   }
 );
 
 // Hubungan
-Data_diri.hasMany(Pendidikan, { as: 'pendidikan' });
-Data_diri.hasMany(Organisasi, { as: 'organisasi' });
-Data_diri.hasMany(Skill, { as: 'skill' });
-Data_diri.hasMany(Portofolio, { as: 'portofolio' });
-Data_diri.hasMany(Galeri, { as: 'galeri' });
+Data_diri.hasMany(
+  Pendidikan,
+  { foreignKey: "dataDiriId", onDelete: 'CASCADE' },
+  { as: "pendidikan" }
+);
+Data_diri.hasMany(
+  Organisasi,
+  { foreignKey: "dataDiriId", onDelete: "CASCADE" },
+  { as: "organisasi" }
+);
+Data_diri.hasMany(
+  Skill,
+  { foreignKey: "dataDiriId", onDelete: "CASCADE" },
+  { as: "skill" }
+);
+Data_diri.hasMany(
+  Portofolio,
+  { foreignKey: "dataDiriId", onDelete: "CASCADE" },
+  { as: "portofolio" }
+);
+Data_diri.hasMany(
+  Galeri,
+  { foreignKey: "dataDiriId", onDelete: "CASCADE" },
+  { as: "galeri" }
+);
 
 Pendidikan.belongsTo(Data_diri);
 Galeri.belongsTo(Data_diri);

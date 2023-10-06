@@ -25,7 +25,7 @@ const UpdateDatadiri = () => {
   const updateDatadiri = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/data_diri/${id}`, {
+      await axios.patch(`http://localhost:5000/:account/data_diri/${id}`, {
         nama,
         tempat_lahir,
         tanggal_lahir,
