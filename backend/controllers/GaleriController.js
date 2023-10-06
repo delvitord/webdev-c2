@@ -1,14 +1,17 @@
 import Galeri from "../models/GaleriModel.js";
 import path from "path";
 import fs from "fs";
+import Data_diri from "../models/DataDiriModel.js"; 
 
 // Mendapatkan semua galeri berdasarkan dataDiriId
 export const getGaleri = async (req, res) => {
   try {
-    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const response = await Galeri.findAll({
       where: {
-        dataDiriId: dataDiriId, // Menggunakan dataDiriId dari URL
+        dataDiriId: dataDiriId, 
       },
     });
     res.status(200).json(response);
@@ -20,11 +23,14 @@ export const getGaleri = async (req, res) => {
 // Mendapatkan galeri berdasarkan ID
 export const getGaleriById = async (req, res) => {
   try {
-    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    const { id } = req.params; 
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const response = await Galeri.findOne({
       where: {
-        id: id, // Menggunakan ID dari URL
-        dataDiriId: dataDiriId, // Juga memeriksa dataDiriId
+        id: id, 
+        dataDiriId: dataDiriId, 
       },
     });
     res.status(200).json(response);
@@ -36,7 +42,9 @@ export const getGaleriById = async (req, res) => {
 // Membuat galeri untuk dataDiriId tertentu
 export const createGaleri = async (req, res) => {
   if (req.files === null) return res.status(400).json({ msg: "No File Uploaded" });
-  const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+  const { accountId } = req.user; 
+  const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+  const dataDiriId = userData.id;
   const { nama_kegiatan, deskripsi } = req.body;
   const file = req.files.file;
   const fileSize = file.data.length;
@@ -114,11 +122,14 @@ export const updateGaleri = async (req, res) => {
 // Menghapus galeri berdasarkan ID
 export const deleteGaleri = async (req, res) => {
   try {
-    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    const { id } = req.params; 
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const result = await Galeri.destroy({
       where: {
-        id: id, // Menggunakan ID dari URL
-        dataDiriId: dataDiriId, // Juga memeriksa dataDiriId
+        id: id, 
+        dataDiriId: dataDiriId, 
       },
     });
 

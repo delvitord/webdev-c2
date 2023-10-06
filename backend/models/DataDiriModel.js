@@ -28,30 +28,27 @@ const Data_diri = db.sequelize.define(
 );
 
 // Hubungan
+// ...
+
 Data_diri.hasMany(
-  Pendidikan,
-  { foreignKey: "dataDiriId", onDelete: 'CASCADE' },
-  { as: "pendidikan" }
+  Pendidikan, 
+  { foreignKey: "dataDiriId", onDelete: 'CASCADE'}
 );
 Data_diri.hasMany(
-  Organisasi,
-  { foreignKey: "dataDiriId", onDelete: "CASCADE" },
-  { as: "organisasi" }
+  Organisasi, 
+  { foreignKey: "dataDiriId", onDelete: "CASCADE"}
 );
 Data_diri.hasMany(
-  Skill,
-  { foreignKey: "dataDiriId", onDelete: "CASCADE" },
-  { as: "skill" }
+  Skill, 
+  { foreignKey: "dataDiriId", onDelete: "CASCADE" }
 );
 Data_diri.hasMany(
-  Portofolio,
-  { foreignKey: "dataDiriId", onDelete: "CASCADE" },
-  { as: "portofolio" }
+  Portofolio, 
+  { foreignKey: "dataDiriId", onDelete: "CASCADE"}
 );
 Data_diri.hasMany(
-  Galeri,
-  { foreignKey: "dataDiriId", onDelete: "CASCADE" },
-  { as: "galeri" }
+  Galeri, 
+  { foreignKey: "dataDiriId", onDelete: "CASCADE"}
 );
 
 Pendidikan.belongsTo(Data_diri);
@@ -59,6 +56,7 @@ Galeri.belongsTo(Data_diri);
 Organisasi.belongsTo(Data_diri);
 Portofolio.belongsTo(Data_diri);
 Skill.belongsTo(Data_diri);
+
 
 export default Data_diri;
 

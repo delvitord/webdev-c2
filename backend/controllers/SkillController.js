@@ -1,12 +1,15 @@
 import Skill from "../models/SkillModel.js";
+import Data_diri from "../models/DataDiriModel.js"; 
 
 // Mendapatkan semua skill berdasarkan dataDiriId
 export const getSkill = async (req, res) => {
   try {
-    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const response = await Skill.findAll({
       where: {
-        dataDiriId: dataDiriId, // Menggunakan dataDiriId dari URL
+        dataDiriId: dataDiriId, 
       },
     });
     res.status(200).json(response);
@@ -18,10 +21,13 @@ export const getSkill = async (req, res) => {
 // Mendapatkan skill berdasarkan ID
 export const getSkillById = async (req, res) => {
   try {
-    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    const { id } = req.params; 
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const response = await Skill.findOne({
       where: {
-        id: id, // Menggunakan ID dari URL
+        id: id, 
         dataDiriId: dataDiriId,
       },
     });
@@ -34,11 +40,13 @@ export const getSkillById = async (req, res) => {
 // Membuat skill untuk dataDiriId tertentu
 export const createSkill = async (req, res) => {
   try {
-    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const skillData = {
       nama_skill: req.body.nama_skill,
       level_keahlian: req.body.level_keahlian,
-      dataDiriId: dataDiriId, // Menggunakan dataDiriId dari URL
+      dataDiriId: dataDiriId, 
     };
 
     await Skill.create(skillData);
@@ -51,10 +59,13 @@ export const createSkill = async (req, res) => {
 // Memperbarui skill berdasarkan ID dan dataDiriId
 export const updateSkill = async (req, res) => {
   try {
-    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    const { id } = req.params; 
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const [updatedRowCount] = await Skill.update(req.body, {
       where: {
-        id: id, // Menggunakan ID dari URL
+        id: id,
         dataDiriId: dataDiriId,
       },
     });
@@ -73,10 +84,13 @@ export const updateSkill = async (req, res) => {
 // Menghapus skill berdasarkan ID dan dataDiriId
 export const deleteSkill = async (req, res) => {
   try {
-    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    const { id } = req.params; 
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const result = await Skill.destroy({
       where: {
-        id: id, // Menggunakan ID dari URL
+        id: id, 
         dataDiriId: dataDiriId,
       },
     });

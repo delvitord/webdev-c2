@@ -1,12 +1,15 @@
 import Portofolio from "../models/PortofolioModel.js";
+import Data_diri from "../models/DataDiriModel.js"; 
 
 // Mendapatkan semua portofolio berdasarkan dataDiriId
 export const getPortofolio = async (req, res) => {
   try {
-    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const response = await Portofolio.findAll({
       where: {
-        dataDiriId: dataDiriId, // Menggunakan dataDiriId dari URL
+        dataDiriId: dataDiriId, 
       },
     });
     res.status(200).json(response);
@@ -18,10 +21,13 @@ export const getPortofolio = async (req, res) => {
 // Mendapatkan portofolio berdasarkan ID
 export const getPortofolioById = async (req, res) => {
   try {
-    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    const { id } = req.params; 
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const response = await Portofolio.findOne({
       where: {
-        id: id, // Menggunakan ID dari URL
+        id: id, 
         dataDiriId: dataDiriId,
       },
     });
@@ -34,7 +40,9 @@ export const getPortofolioById = async (req, res) => {
 // Membuat portofolio untuk dataDiriId tertentu
 export const createPortofolio = async (req, res) => {
   try {
-    const { dataDiriId } = req.params; // Mengambil dataDiriId dari URL
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const { judul, deskripsi, file, image, link } = req.body;
 
     // Periksa apakah "image" adalah sebuah array
@@ -49,7 +57,7 @@ export const createPortofolio = async (req, res) => {
       file,
       image, // Menyimpan array gambar langsung ke dalam kolom "image"
       link,
-      dataDiriId, // Menggunakan dataDiriId dari URL
+      dataDiriId, 
     });
 
     res.status(201).json({ msg: "Portofolio Created" });
@@ -62,10 +70,13 @@ export const createPortofolio = async (req, res) => {
 // Memperbarui portofolio berdasarkan ID dan dataDiriId
 export const updatePortofolio = async (req, res) => {
   try {
-    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    const { id } = req.params; 
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const [updatedRowCount] = await Portofolio.update(req.body, {
       where: {
-        id: id, // Menggunakan ID dari URL
+        id: id, 
         dataDiriId: dataDiriId,
       },
     });
@@ -84,10 +95,13 @@ export const updatePortofolio = async (req, res) => {
 // Menghapus portofolio berdasarkan ID dan dataDiriId
 export const deletePortofolio = async (req, res) => {
   try {
-    const { dataDiriId, id } = req.params; // Mengambil ID dari URL
+    const { id } = req.params; 
+    const { accountId } = req.user; 
+    const userData = await Data_diri.findOne({ where: { accountId: accountId } });
+    const dataDiriId = userData.id;
     const result = await Portofolio.destroy({
       where: {
-        id: id, // Menggunakan ID dari URL
+        id: id, 
         dataDiriId: dataDiriId,
       },
     });
