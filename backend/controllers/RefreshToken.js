@@ -34,7 +34,7 @@ export const refreshToken = async (req, res) => {
           }
         );
 
-        res.json({ accessToken });
+        res.json({ accessToken: accessToken });
       }
     );
   } catch (error) {

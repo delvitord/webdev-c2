@@ -6,6 +6,10 @@ import DatadiriList from "./components/datadiri/Datadiri";
 import AddDatadiri from "./components/datadiri/AddDatadiri";
 import UpdateDatadiri from "./components/datadiri/EditDatadiri";
 
+import AddPendidikan from "./components/pendidikan/AddPendidikan";
+import UpdatePendidikan from "./components/pendidikan/EditPendidikan";
+import PendidikanList from "./components/pendidikan/Pendidikan";
+
 function App() {
   return (
     <BrowserRouter>
@@ -21,7 +25,7 @@ function App() {
           }
         />
         <Route
-          path="/data-diri"
+          path="/datadiri"
           element={
             <>
               <DatadiriList />
@@ -29,7 +33,7 @@ function App() {
           }
         />
         <Route
-          path="/add"
+          path="/add-datadiri"
           element={
             <>
               <AddDatadiri />
@@ -41,6 +45,30 @@ function App() {
           element={
             <>
               <UpdateDatadiri />
+            </>
+          }
+        />
+        <Route
+          path="/pendidikan"
+          element={
+            <>
+              <PendidikanList />
+            </>
+          }
+        />
+        <Route
+          path="/add-pendidikan"
+          element={
+            <>
+              <AddPendidikan />
+            </>
+          }
+        />
+        <Route
+          path="/edit-pendidikan/:id"
+          element={
+            <>
+              <UpdatePendidikan />
             </>
           }
         />
