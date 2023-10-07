@@ -6,6 +6,9 @@ import Skill from "../models/SkillModel.js";
 import Portofolio from "../models/PortofolioModel.js";
 import Galeri from "../models/GaleriModel.js";
 import path from "path";
+import fs from "fs"; // Menggunakan fs.promises untuk menghindari callback hell
+
+const allowedType = [".jpg", ".jpeg", ".png", ".gif"];
 
 export const getData_diri = async(req, res) =>{
     try {
@@ -17,7 +20,8 @@ export const getData_diri = async(req, res) =>{
         });
         res.status(200).json(response);
     } catch (error) {
-        console.log(error.message)
+      console.error(error.message);
+      res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
@@ -69,93 +73,183 @@ export const createData_diri = async (req, res) => {
             where: { accountId }
         });
 
-        if (existingDataDiri) {
-            // Jika data diri sudah ada, perbarui data diri yang ada
-            await existingDataDiri.update({
-                nama,
-                tempat_lahir,
-                tanggal_lahir,
-                alamat,
-                email,
-                no_telp,
-                foto,
-                deskripsi,
-                linkedin,
-                instagram,
-                x,
-                github
-            });
-        } else {
-            // Jika data diri belum ada, buat data diri baru
-            existingDataDiri = await Data_diri.create({
-                nama,
-                tempat_lahir,
-                tanggal_lahir,
-                alamat,
-                email,
-                no_telp,
-                foto,
-                deskripsi,
-                linkedin,
-                instagram,
-                x,
-                github,
-                accountId,
-            });
+    if (existingDataDiri) {
+      return res.status(422).json({ msg: "Data Diri already exists. Use update instead." });
+    }
+
+    // Mengecek apakah ada file foto yang diunggah
+    if (req.files && req.files.foto) {
+      const file = req.files.foto;
+      const fileSize = file.data.length;
+      const ext = path.extname(file.name);
+      const fileName = file.md5 + ext;
+      const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+
+      if (!allowedType.includes(ext.toLowerCase())) {
+        return res.status(422).json({ msg: "Invalid Image Type" });
+      }
+      if (fileSize > 5000000) {
+        return res.status(422).json({ msg: "Image must be less than 5 MB" });
+      }
+
+      file.mv(`./public/images/${fileName}`, async (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ msg: "Server Error" });
         }
 
-        const dataDiriId = existingDataDiri.id;
+        // Membuat data diri baru dengan URL foto
+        const newDataDiri = await Data_diri.create({
+          nama,
+          tempat_lahir,
+          tanggal_lahir,
+          alamat,
+          email,
+          no_telp,
+          deskripsi,
+          linkedin,
+          instagram,
+          x,
+          github,
+          foto: url,
+          accountId,
+        });
 
-        // Mengirimkan respons dengan status 201 dan ID data diri yang baru saja dibuat/diperbarui
-        res.status(201).json({ msg: "Data Diri Created/Updated", dataDiriId });
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(201).json({ msg: "Data Diri Created", dataDiriId: newDataDiri.id });
+      });
+    } else {
+      // Jika tidak ada foto yang diunggah, hanya membuat data diri tanpa foto
+      const newDataDiri = await Data_diri.create({
+        nama,
+        tempat_lahir,
+        tanggal_lahir,
+        alamat,
+        email,
+        no_telp,
+        deskripsi,
+        linkedin,
+        instagram,
+        x,
+        github,
+        accountId,
+      });
+
+      res.status(201).json({ msg: "Data Diri Created", dataDiriId: newDataDiri.id });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
-
 
 // Mengupdate data diri berdasarkan ID dan accountId
 const allowedType = [".jpg", ".jpeg", ".png", ".gif"];
 
 export const updateData_diri = async (req, res) => {
-    try {
-      const { accountId} = req.user 
-      const [updatedRowCount] = await Data_diri.update(req.body, {
-        where: {
-          accountId: accountId, 
-        },
-      });
-  
-      if (updatedRowCount === 0) {
-        res.status(404).json({ error: "Data Diri not found" });
-      } else {
-        res.status(200).json({ msg: "Data Diri Updated" });
-      }
-    } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ error: "Internal Server Error" });
+  try {
+    const { accountId} = req.user 
+    const { nama, tempat_lahir, tanggal_lahir, alamat, email, no_telp, deskripsi, linkedin, instagram, x, github } = req.body;
+
+    // Mencari data_diri yang sesuai dengan accountId
+    let dataDiri = await Data_diri.findOne({
+      where: { accountId },
+    });
+
+    if (!dataDiri) {
+      return res.status(404).json({ msg: "Data Diri not found" });
     }
-  };
-  
-  // Menghapus data diri berdasarkan ID dan accountId
-  export const deleteData_diri = async (req, res) => {
-    try {
-      const { accountId } = req.user
-      const result = await Data_diri.destroy({
-        where: {
-          accountId: accountId, 
-        },
-      });
-  
-      if (result === 0) {
-        res.status(404).json({ error: "Data Diri not found" });
-      } else {
-        res.status(200).json({ msg: "Data Diri Deleted" });
+
+    let fotoUrl = dataDiri.foto;
+
+    // Mengecek apakah ada file foto yang diunggah
+    if (req.files && req.files.foto) {
+      const file = req.files.foto;
+      const ext = path.extname(file.name);
+      const fileName = file.md5 + ext;
+      const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+
+      if (!allowedType.includes(ext.toLowerCase())) {
+        return res.status(422).json({ msg: "Invalid Image Type" });
       }
-    } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ error: "Internal Server Error" });
+      if (file.size > 5000000) {
+        return res.status(422).json({ msg: "Image must be less than 5 MB" });
+      }
+
+      // Menghapus foto lama (jika ada)
+      if (dataDiri.foto) {
+        const oldFilePath = path.join(process.cwd(), "public", "images", path.basename(dataDiri.foto));
+        fs.unlinkSync(oldFilePath);
+      }
+
+      // Memindahkan foto baru ke direktori
+      file.mv(path.join(process.cwd(), "public", "images", fileName), async (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ msg: "Server Error" });
+        }
+
+        // Set fotoUrl ke URL foto yang baru
+        fotoUrl = url;
+
+        // Mengupdate data_diri dengan URL foto yang baru
+        await dataDiri.update({
+          nama,
+          tempat_lahir,
+          tanggal_lahir,
+          alamat,
+          email,
+          no_telp,
+          deskripsi,
+          linkedin,
+          instagram,
+          x,
+          github,
+          foto: fotoUrl,
+        });
+
+        res.status(200).json({ msg: "Data Diri Updated Successfully" });
+      });
+    } else {
+      // Jika tidak ada foto yang diunggah, hanya mengupdate data_diri tanpa foto
+      await dataDiri.update({
+        nama,
+        tempat_lahir,
+        tanggal_lahir,
+        alamat,
+        email,
+        no_telp,
+        deskripsi,
+        linkedin,
+        instagram,
+        x,
+        github,
+        foto: fotoUrl,
+      });
+
+      res.status(200).json({ msg: "Data Diri Updated Successfully" });
     }
-  };
-  
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const deleteData_diri = async (req, res) => {
+  try {
+    const { accountId } = req.user
+    const result = await Data_diri.destroy({
+      where: {
+        accountId: accountId, 
+      },
+    });
+
+    if (result === 0) {
+      res.status(404).json({ error: "Data Diri not found" });
+    } else {
+      res.status(200).json({ msg: "Data Diri Deleted" });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
