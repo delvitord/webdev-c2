@@ -14,12 +14,12 @@ const router = express.Router();
 // LOGIN
 
 router.post("/login", Login);
+router.post("/admin", Register);
 
 
 router.use(verifyToken)
 
 router.get("/admin/:id", getAccount);
-router.post("/admin", Register);
 router.post("/login", Login);
 router.get("/token", refreshToken);
 router.delete("/logout", Logout);

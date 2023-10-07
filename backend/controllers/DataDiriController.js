@@ -66,7 +66,7 @@ export const getData_diriByIdWithChild = async (req, res) => {
 export const createData_diri = async (req, res) => {
     try {
          const {accountId} = req.user
-        const { nama, tempat_lahir, tanggal_lahir, alamat, email, no_telp, foto, deskripsi, linkedin, instagram, x, github } = req.body;
+        const { nama, tempat_lahir, tanggal_lahir, alamat, email, no_telp, deskripsi, linkedin, instagram, x, github } = req.body;
 
         // Cek apakah data diri sudah ada untuk akun dengan accountId yang sama
         let existingDataDiri = await Data_diri.findOne({
@@ -141,9 +141,6 @@ export const createData_diri = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-// Mengupdate data diri berdasarkan ID dan accountId
-const allowedType = [".jpg", ".jpeg", ".png", ".gif"];
 
 export const updateData_diri = async (req, res) => {
   try {
@@ -223,7 +220,6 @@ export const updateData_diri = async (req, res) => {
         instagram,
         x,
         github,
-        foto: fotoUrl,
       });
 
       res.status(200).json({ msg: "Data Diri Updated Successfully" });

@@ -1,5 +1,9 @@
 import Portofolio from "../models/PortofolioModel.js";
 import Data_diri from "../models/DataDiriModel.js"; 
+import path from "path";
+import fs from "fs"; 
+
+const allowedFileType = [".pdf"];
 
 // Mendapatkan semua portofolio berdasarkan dataDiriId
 export const getPortofolio = async (req, res) => {
@@ -43,26 +47,54 @@ export const createPortofolio = async (req, res) => {
     const { accountId } = req.user; 
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
-    const { judul, deskripsi, file, image, link } = req.body;
+    const { judul, deskripsi, image, link } = req.body;
+    // Mengecek apakah ada file  yang diunggah
+    if (req.files && req.files.file) {
+      const file = req.files.file;
+      const fileSize = file.data.length;
+      const ext = path.extname(file.name);
+      const fileName = file.md5 + ext;
+      const url = `${req.protocol}://${req.get("host")}/files/${fileName}`;
 
-    // Periksa apakah "image" adalah sebuah array
-    if (!Array.isArray(image)) {
-      return res.status(400).json({ msg: "Image must be an array" });
+      if (!allowedFileType.includes(ext.toLowerCase())) {
+        return res.status(422).json({ msg: "Invalid File Type" });
+      }
+      if (fileSize > 30000000) {
+        return res.status(422).json({ msg: "File must be less than 30 MB" });
+      }
+
+      file.mv(`./public/files/${fileName}`, async (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ msg: "Server Error" });
+        }
+
+        // Membuat data diri baru dengan URL file
+        const newPortofolio = await Portofolio.create({
+          judul,
+          deskripsi,
+          file: url,
+          image, 
+          link,
+          dataDiriId, 
+        });
+
+        res.status(201).json({ msg: "Portofolio Created", id: newPortofolio.id });
+      });
+    } else {
+      // Jika tidak ada file yang diunggah, tanpa ada file
+      const newPortofolio = await Portofolio.create({
+        judul,
+        deskripsi,
+        image, 
+        link,
+        dataDiriId, 
+      });
+
+      res.status(201).json({ msg: "Portofolio Created", id: newPortofolio.id  });
     }
-
-    // Simpan data ke dalam kolom "image"
-    await Portofolio.create({
-      judul,
-      deskripsi,
-      file,
-      image, // Menyimpan array gambar langsung ke dalam kolom "image"
-      link,
-      dataDiriId, 
-    });
-
-    res.status(201).json({ msg: "Portofolio Created" });
   } catch (error) {
-    console.log(error.message);
+    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -74,20 +106,77 @@ export const updatePortofolio = async (req, res) => {
     const { accountId } = req.user; 
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
-    const [updatedRowCount] = await Portofolio.update(req.body, {
-      where: {
-        id: id, 
-        dataDiriId: dataDiriId,
-      },
+    let portofolio = await Portofolio.findOne({
+      where: { id },
     });
+    const { judul, deskripsi, image, link } = req.body;
 
-    if (updatedRowCount === 0) {
-      res.status(404).json({ error: "Portofolio not found" });
-    } else {
-      res.status(200).json({ msg: "Portofolio Updated" });
+    if (!portofolio) {
+      return res.status(404).json({ error: "Portofolio not found" });
+    }
+
+    if (portofolio.dataDiriId !== dataDiriId) {
+      return res.status(404).json({ error: "Portofolio not found" });
+    }
+
+    let fileUrl = portofolio.file;
+
+     // Mengecek apakah ada file yang diunggah
+    if (req.files && req.files.file) {
+      const file = req.files.file;
+      const ext = path.extname(file.name);
+      const fileName = file.md5 + ext;
+      const url = `${req.protocol}://${req.get("host")}/files/${fileName}`;
+
+      if (!allowedFileType.includes(ext.toLowerCase())) {
+        return res.status(422).json({ msg: "Invalid File Type" });
+      }
+      if (file.size > 30000000) {
+        return res.status(422).json({ msg: "File must be less than 30 MB" });
+      }
+
+      // Menghapus file lama (jika ada)
+      if (portofolio.file) {
+        const oldFilePath = path.join(process.cwd(), "public", "files", path.basename(portofolio.file));
+        fs.unlinkSync(oldFilePath);
+      }
+
+      // Memindahkan file baru ke direktori
+      file.mv(path.join(process.cwd(), "public", "files", fileName), async (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ msg: "Server Error" });
+        }
+
+        // Set fileUrl ke URL file yang baru
+        fileUrl = url;
+
+        // Mengupdate data_diri dengan URL file yang baru
+        await portofolio.update({
+          judul,
+          deskripsi,
+          file: fileUrl,
+          image, 
+          link,
+          dataDiriId, 
+        });
+
+        res.status(200).json({ msg: "Portofolio Updated Successfully" });
+      });
+    }  else {
+      // Jika tidak ada file yang diunggah, hanya mengupdate portofolio tanpa file
+      await portofolio.update({
+        judul,
+        deskripsi,
+        image, 
+        link,
+        dataDiriId, 
+      });
+
+      res.status(200).json({ msg: "Portofolio Updated Successfully" });
     }
   } catch (error) {
-    console.log(error.message);
+    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
