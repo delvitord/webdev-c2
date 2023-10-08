@@ -43,14 +43,14 @@ export const createSkill = async (req, res) => {
     const { accountId } = req.user; 
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
-    const skillData = {
-      nama_skill: req.body.nama_skill,
-      level_keahlian: req.body.level_keahlian,
-      dataDiriId: dataDiriId, 
-    };
+    const { nama_skill, level_keahlian } = req.body;
 
-    await Skill.create(skillData);
-    res.status(201).json({ msg: "Skill Created" });
+    const newSkill = await Skill.create({
+      nama_skill, 
+      level_keahlian,
+      dataDiriId,
+    });
+    res.status(201).json({ msg: "Skill Created", id: newSkill.id  });
   } catch (error) {
     console.log(error.message);
   }

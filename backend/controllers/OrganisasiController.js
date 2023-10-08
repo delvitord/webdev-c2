@@ -46,7 +46,7 @@ export const createOrganisasi = async (req, res) => {
     const dataDiriId = userData.id;
     const { nama_organisasi, jabatan, awal_periode, akhir_periode, deskripsi } = req.body;
 
-    await Organisasi.create({
+    const newOrganisasi = await Organisasi.create({
       nama_organisasi,
       jabatan,
       awal_periode,
@@ -55,7 +55,7 @@ export const createOrganisasi = async (req, res) => {
       dataDiriId, 
     });
 
-    res.status(201).json({ msg: "Organisasi Created" });
+    res.status(201).json({ msg: "Organisasi Created", id: newOrganisasi.id });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ error: "Internal Server Error" });

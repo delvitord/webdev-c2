@@ -45,7 +45,7 @@ export const createPendidikan = async (req, res) => {
     const dataDiriId = userData.id;
     const { nama_instansi, awal_periode, akhir_periode, jurusan } = req.body;
 
-    await Pendidikan.create({
+    const newPendidikan = await Pendidikan.create({
       nama_instansi,
       awal_periode,
       akhir_periode,
@@ -53,7 +53,7 @@ export const createPendidikan = async (req, res) => {
       dataDiriId, 
     });
 
-    res.status(201).json({ msg: "Pendidikan Created" });
+    res.status(201).json({ msg: "Pendidikan Created", id: newPendidikan.id   });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ error: "Internal Server Error" });

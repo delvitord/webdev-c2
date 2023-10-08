@@ -70,13 +70,13 @@ export const createGaleri = async (req, res) => {
       // Jika semua file telah diunggah, simpan array imageUrls ke dalam database
       if (imageUrls.length === imageFiles.length) {
         try {
-          await Galeri.create({
+          const newGaleri = await Galeri.create({
             nama_kegiatan: nama_kegiatan,
             image: imageUrls, // Simpan array URL gambar
             deskripsi: deskripsi,
             dataDiriId,
           });
-          res.status(201).json({ msg: "Galeri Created" });
+          res.status(201).json({ msg: "Galeri Created", id: newGaleri.id  });
         } catch (error) {
           console.log(error.message);
           res.status(500).json({ msg: "Internal Server Error" });
@@ -145,9 +145,6 @@ export const updateGaleri = async (req, res) => {
     });
   }
 };
-
-
-
 
 // Menghapus galeri berdasarkan ID
 export const deleteGaleri = async (req, res) => {
