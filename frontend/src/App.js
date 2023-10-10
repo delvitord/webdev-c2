@@ -5,10 +5,11 @@ import Dashboard from "./components/Dashboard";
 import DatadiriList from "./components/datadiri/Datadiri";
 import AddDatadiri from "./components/datadiri/AddDatadiri";
 import UpdateDatadiri from "./components/datadiri/EditDatadiri";
-
 import AddPendidikan from "./components/pendidikan/AddPendidikan";
 import UpdatePendidikan from "./components/pendidikan/EditPendidikan";
 import PendidikanList from "./components/pendidikan/Pendidikan";
+import PortofolioList from "./components/portofolio/Portofolio"; 
+import AddPortofolio from "./components/portofolio/AddPortofolio";
 
 function App() {
   return (
@@ -69,6 +70,22 @@ function App() {
           element={
             <>
               <UpdatePendidikan />
+            </>
+          }
+        />
+        <Route
+          path="/portofolio"
+          element={
+            <>
+              <PortofolioList />
+            </>
+          }
+        />
+        <Route
+          path="/add-portofolio"
+          element={
+            <>
+              <AddPortofolio />
             </>
           }
         />

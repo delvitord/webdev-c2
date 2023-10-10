@@ -1,18 +1,18 @@
 ####-DATA DIRI-####
 GET http://localhost:5000/data_diri
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 GET http://localhost:5000/data_diri_full
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 POST http://localhost:5000/data_diri
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
-    "nama": "Delvito Rahim Derivansyah",
+    "nama": "Gian",
     "tempat_lahir": "Bandung",
     "tanggal_lahir": "2003-10-09T09:30:00Z",
     "alamat": "Sukasari",
@@ -29,7 +29,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 ###
 PATCH http://localhost:5000/data_diri
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "nama": "Delvito Rahim Derivansyah",
@@ -50,7 +50,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 ###
 DELETE http://localhost:5000/data_diri
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 
 
@@ -84,7 +84,7 @@ Content-Type: application/json
 
 ###
 GET http://localhost:5000/admin
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NTM5NTIzOCwiZXhwIjoxNjk1Mzk1MjU4fQ.EZLXHpTdbN93Wxup-H2wnXq93aUtxx-QI1r2on3ufkk
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 GET http://localhost:5000/token
@@ -99,16 +99,16 @@ DELETE  http://localhost:5000/logout
 
 ####-GALERI-####
 GET http://localhost:5000/datadiri/galeri
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 GET http://localhost:5000/datadiri/galeri/13
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 POST http://localhost:5000/datadiri/galeri
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "nama_kegiatan": "Kegiatan Gian yang kedua",
@@ -119,7 +119,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 ###
 PATCH http://localhost:5000/datadiri/galeri/9
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "nama_kegiatan": "Kegiatan DRD dua",
@@ -130,7 +130,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 ###
 DELETE http://localhost:5000/datadiri/galeri/14
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 
 
@@ -141,16 +141,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 
 ####-ORGANISASI-####
 GET http://localhost:5000/datadiri/organisasi
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 GET http://localhost:5000/datadiri/organisasi/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 POST http://localhost:5000/datadiri/organisasi
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "nama_organisasi": "HIMAJAS",
@@ -161,9 +161,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 }
 
 ###
-PATCH http://localhost:5000/datadiri/organisasi/2
+PATCH http://localhost:5000/datadiri/organisasi/5
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "nama_organisasi": "HIMAJAS",
@@ -176,7 +176,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 ###
 DELETE http://localhost:5000/datadiri/organisasi/2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 
 
@@ -185,16 +185,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 
 ####-PENDIDIKAN-####
 GET http://localhost:5000/datadiri/pendidikan
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 GET http://localhost:5000/datadiri/pendidikan/3
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 POST http://localhost:5000/datadiri/pendidikan
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "nama_instansi": "SMPN 1 Bandung",
@@ -204,9 +204,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 }
 
 ###
-PATCH http://localhost:5000/datadiri/pendidikan/2
+PATCH http://localhost:5000/datadiri/pendidikan/4
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "nama_instansi": "SMAN 1 Payakumbuh",
@@ -216,9 +216,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 }
 
 ###
-DELETE http://localhost:5000/datadiri/pendidikan/3
+DELETE http://localhost:5000/datadiri/pendidikan/4
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 
 ######################################################################
@@ -226,16 +226,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 
 ####-PORTOFOLIO-####
 GET http://localhost:5000/datadiri/portofolio
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
-GET http://localhost:5000/datadiri/portofolio/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+GET http://localhost:5000/datadiri/portofolio/19
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 POST http://localhost:5000/datadiri/portofolio
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "judul": "PORTOFOLIYO",
@@ -246,9 +246,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 }
 
 ###
-PATCH http://localhost:5000/datadiri/portofolio/2
+PATCH http://localhost:5000/datadiri/portofolio/8
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "judul": "PORTOFOLIYO",
@@ -261,7 +261,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 ###
 DELETE http://localhost:5000/datadiri/portofolio/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 
 ######################################################################
@@ -269,16 +269,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 
 ####-SKILL-####
 GET http://localhost:5000/datadiri/skill
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
-GET http://localhost:5000/datadiri/skill/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+GET http://localhost:5000/datadiri/skill/4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 ###
 POST http://localhost:5000/datadiri/skill
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "nama_skill": "MS Teams",
@@ -286,9 +286,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 }
 
 ###
-PATCH http://localhost:5000/datadiri/skill/2
+PATCH http://localhost:5000/datadiri/skill/6
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
 
 {
     "nama_skill": "MS Excel",
@@ -298,4 +298,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsI
 ###
 DELETE http://localhost:5000/datadiri/skill/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjY5MjMyNywiZXhwIjoxNjk2Njk1OTI3fQ.wnKypUZbpSkx_lL4DA49uZ6hqj4gdZwHWkL-qj9ciz4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjMsInVzZXJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY5NjkyNzU0MywiZXhwIjoxNjk2OTMxMTQzfQ.l60gzM-Sa3lgJ9kZ95nL_LZ1De4pFaXQ6MlyCymqahU
