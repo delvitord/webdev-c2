@@ -1,4 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React from "react";
+import "./App.css";
 import Login from "./components/login/Login";
 import Register from "./components/login/Register";
 import Dashboard from "./components/Dashboard";
@@ -10,11 +12,15 @@ import UpdatePendidikan from "./components/pendidikan/EditPendidikan";
 import PendidikanList from "./components/pendidikan/Pendidikan";
 import PortofolioList from "./components/portofolio/Portofolio"; 
 import AddPortofolio from "./components/portofolio/AddPortofolio";
+import SkillList from "./components/skill/Skill";
+import AddSkill from "./components/skill/AddSkill";
+import LandingPage from "./components/landing_page/landing-page";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
@@ -86,6 +92,22 @@ function App() {
           element={
             <>
               <AddPortofolio />
+            </>
+          }
+        />
+        <Route
+          path="/skill"
+          element={
+            <>
+              <SkillList />
+            </>
+          }
+        />
+        <Route
+          path="/add-skill"
+          element={
+            <>
+              <AddSkill />
             </>
           }
         />

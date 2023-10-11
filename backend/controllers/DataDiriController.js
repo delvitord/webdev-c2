@@ -10,68 +10,67 @@ import fs from "fs"; // Menggunakan fs.promises untuk menghindari callback hell
 
 const allowedType = [".jpg", ".jpeg", ".png", ".gif"];
 
-export const getData_diri = async(req, res) =>{
-    try {
-        const {accountId} = req.user
-        const response = await Data_diri.findAll({
-          where: {
-            accountId: accountId, 
-          },
-        });
-        res.status(200).json(response);
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-}
-
+export const getData_diri = async (req, res) => {
+  try {
+    const { accountId } = req.user;
+    const response = await Data_diri.findAll({
+      where: {
+        accountId: accountId,
+      },
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 export const getData_diriByIdWithChild = async (req, res) => {
-    try {
-        const { accountId } = req.user
-        const response = await Data_diri.findOne({
-            where: {
-                accountId: accountId,
-            },
-            include: [
-                {
-                    model: Pendidikan,
-                },
-                {
-                    model: Organisasi,
-                },
-                {
-                    model: Skill,
-                },
-                {
-                    model: Portofolio,
-                },
-                {
-                    model: Galeri,
-                },
-            ],
-        });
+  try {
+    const { accountId } = req.user;
+    const response = await Data_diri.findOne({
+      where: {
+        accountId: accountId,
+      },
+      include: [
+        {
+          model: Pendidikan,
+        },
+        {
+          model: Organisasi,
+        },
+        {
+          model: Skill,
+        },
+        {
+          model: Portofolio,
+        },
+        {
+          model: Galeri,
+        },
+      ],
+    });
 
-        if (!response) {
-            return res.status(404).json({ error: "Data Diri Not Found" });
-        }
-
-        res.status(200).json(response);
-    } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ error: "Internal Server Error" });
+    if (!response) {
+      return res.status(404).json({ error: "Data Diri Not Found" });
     }
-}
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 export const createData_diri = async (req, res) => {
     try {
          const {accountId} = req.user
         const { nama, tempat_lahir, tanggal_lahir, alamat, email, no_telp, deskripsi, linkedin, instagram, x, github } = req.body;
 
-        // Cek apakah data diri sudah ada untuk akun dengan accountId yang sama
-        let existingDataDiri = await Data_diri.findOne({
-            where: { accountId }
-        });
+    // Cek apakah data diri sudah ada untuk akun dengan accountId yang sama
+    let existingDataDiri = await Data_diri.findOne({
+      where: { accountId },
+    });
 
     if (existingDataDiri) {
       return res.status(422).json({ msg: "Data Diri already exists. Use update instead." });
@@ -144,7 +143,7 @@ export const createData_diri = async (req, res) => {
 
 export const updateData_diri = async (req, res) => {
   try {
-    const { accountId} = req.user 
+    const { accountId } = req.user;
     const { nama, tempat_lahir, tanggal_lahir, alamat, email, no_telp, deskripsi, linkedin, instagram, x, github } = req.body;
 
     // Mencari data_diri yang sesuai dengan accountId
@@ -232,10 +231,10 @@ export const updateData_diri = async (req, res) => {
 
 export const deleteData_diri = async (req, res) => {
   try {
-    const { accountId } = req.user
+    const { accountId } = req.user;
     const result = await Data_diri.destroy({
       where: {
-        accountId: accountId, 
+        accountId: accountId,
       },
     });
 
