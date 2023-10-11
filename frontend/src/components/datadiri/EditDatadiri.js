@@ -247,10 +247,20 @@ const UpdateDatadiri = () => {
     x: "",
     github: "",
   });
-
+  // const [nama, setNama] = useState("");
+  // const [tempat_lahir, setTempatLahir] = useState("");
+  // const [tanggal_lahir, setTanggalLahir] = useState("");
+  // const [alamat, setAlamat] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [no_telp, setNoTelp] = useState("");
+  // const [foto, setFoto] = useState("");
+  // const [deskripsi, setDeskripsi] = useState("");
+  // const [linkedin, setLinkedin] = useState("");
+  // const [instagram, setInstagram] = useState("");
+  // const [x, setX] = useState("");
+  // const [github, setGithub] = useState("");
   const navigate = useNavigate();
-  const [token, setToken] = useState(""); // State to store the token
-  const [expire, setExpire] = useState("");
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     refreshToken(); // Refresh the token when the component mounts
@@ -274,50 +284,41 @@ const UpdateDatadiri = () => {
     }
   };
 
-  const axiosJwt = axios.create();
-
-  axiosJwt.interceptors.request.use(
-    async (config) => {
-      const currentDate = new Date();
-      if (expire * 1000 < currentDate.getTime()) {
-        try {
-          const response = await axios.get("http://localhost:5000/token");
-          config.headers.Authorization = `Bearer ${response.data.accessToken}`;
-          setToken(response.data.accessToken);
-          const decoded = jwt_decode(response.data.accessToken);
-          setDataDiri({ ...decoded.dataDiri });
-          setExpire(decoded.exp);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
-
   const getDatadiri = async () => {
     try {
-      const response = await axiosJwt.get(`http://localhost:5000/data_diri`, {
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await axios.get(`http://localhost:5000/data_diri`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
-      setDataDiri(response.data.dataDiri);
+      setDataDiri({
+        nama: response.data.nama,
+        tempat_lahir: response.data.tempat_lahir,
+        tanggal_lahir: response.data.tanggal_lahir,
+        alamat: response.data.alamat,
+        email: response.data.email,
+        no_telp: response.data.no_telp,
+        foto: response.data.foto,
+        deskripsi: response.data.deskripsi,
+        linkedin: response.data.linkedin,
+        instagram: response.data.instagram,
+        x: response.data.x,
+        github: response.data.github,
+      });
+      console.log(response.data)
     } catch (error) {
       console.log(error);
     }
   };
 
-
   const updateDatadiri = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/data_diri`, dataDiri, {
+      const accessToken = localStorage.getItem("accessToken");
+      await axios.patch(`http://localhost:5000/data_diri`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the headers
+          Authorization: `Bearer ${accessToken}`, // Include the token in the headers
         },
       });
       navigate("/datadiri");
@@ -326,10 +327,6 @@ const UpdateDatadiri = () => {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setDataDiri({ ...dataDiri, [name]: value });
-  };
 
   return (
     <>
@@ -343,8 +340,10 @@ const UpdateDatadiri = () => {
                   label="Nama"
                   fullWidth
                   name="nama"
-                  value={dataDiri.nama || " "}
-                  onChange={handleInputChange}
+                  value={dataDiri.nama || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, nama: e.target.value })
+                  }
                   placeholder="Nama"
                   variant="outlined"
                   margin="normal"
@@ -353,8 +352,10 @@ const UpdateDatadiri = () => {
                   label="Tempat Lahir"
                   fullWidth
                   name="tempat_lahir"
-                  value={dataDiri.tempat_lahir}
-                  onChange={handleInputChange}
+                  value={dataDiri.tempat_lahir || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, tempat_lahir: e.target.value })
+                  }
                   placeholder="Tempat Lahir"
                   variant="outlined"
                   margin="normal"
@@ -364,8 +365,10 @@ const UpdateDatadiri = () => {
                   fullWidth
                   type="date"
                   name="tanggal_lahir"
-                  value={dataDiri.tanggal_lahir}
-                  onChange={handleInputChange}
+                  value={dataDiri.tanggal_lahir || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, tanggal_lahir: e.target.value })
+                  }
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -376,8 +379,10 @@ const UpdateDatadiri = () => {
                   label="Alamat"
                   fullWidth
                   name="alamat"
-                  value={dataDiri.alamat}
-                  onChange={handleInputChange}
+                  value={dataDiri.alamat || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, alamat: e.target.value })
+                  }
                   placeholder="Alamat"
                   variant="outlined"
                   margin="normal"
@@ -387,8 +392,10 @@ const UpdateDatadiri = () => {
                   fullWidth
                   type="email"
                   name="email"
-                  value={dataDiri.email}
-                  onChange={handleInputChange}
+                  value={dataDiri.email || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, email: e.target.value })
+                  }
                   placeholder="Email"
                   variant="outlined"
                   margin="normal"
@@ -397,8 +404,10 @@ const UpdateDatadiri = () => {
                   label="No Telepon"
                   fullWidth
                   name="no_telp"
-                  value={dataDiri.no_telp}
-                  onChange={handleInputChange}
+                  value={dataDiri.no_telp || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, no_telp: e.target.value })
+                  }
                   placeholder="No Telepon"
                   variant="outlined"
                   margin="normal"
@@ -408,8 +417,10 @@ const UpdateDatadiri = () => {
                   fullWidth
                   type="file"
                   name="foto"
-                  value={dataDiri.foto}
-                  onChange={handleInputChange}
+                  value={dataDiri.foto || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, nama: e.target.value })
+                  }
                   inputProps={{ accept: "image/*" }}
                   InputLabelProps={{
                     shrink: true,
@@ -421,8 +432,10 @@ const UpdateDatadiri = () => {
                   label="Deskripsi"
                   fullWidth
                   name="deskripsi"
-                  value={dataDiri.deskripsi}
-                  onChange={handleInputChange}
+                  value={dataDiri.deskripsi || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, deskripsi: e.target.value })
+                  }
                   placeholder="Deskripsi"
                   variant="outlined"
                   id="outlined-multiline-flexible"
@@ -434,8 +447,10 @@ const UpdateDatadiri = () => {
                   label="Linkedin"
                   fullWidth
                   name="linkedin"
-                  value={dataDiri.linkedin}
-                  onChange={handleInputChange}
+                  value={dataDiri.linkedin || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, linkedin: e.target.value })
+                  }
                   placeholder="Linkedin"
                   variant="outlined"
                   margin="normal"
@@ -444,8 +459,10 @@ const UpdateDatadiri = () => {
                   label="Instagram"
                   fullWidth
                   name="instagram"
-                  value={dataDiri.instagram}
-                  onChange={handleInputChange}
+                  value={dataDiri.instagram || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, instagram: e.target.value })
+                  }
                   placeholder="Instagram"
                   variant="outlined"
                   margin="normal"
@@ -454,8 +471,10 @@ const UpdateDatadiri = () => {
                   label="X"
                   fullWidth
                   name="x"
-                  value={dataDiri.x}
-                  onChange={handleInputChange}
+                  value={dataDiri.x || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, x: e.target.value })
+                  }
                   placeholder="X"
                   variant="outlined"
                   margin="normal"
@@ -464,8 +483,10 @@ const UpdateDatadiri = () => {
                   label="Github"
                   fullWidth
                   name="github"
-                  value={dataDiri.github}
-                  onChange={handleInputChange}
+                  value={dataDiri.github || ""}
+                  onChange={(e) =>
+                    setDataDiri({ ...dataDiri, github: e.target.value })
+                  }
                   placeholder="Github"
                   variant="outlined"
                   margin="normal"

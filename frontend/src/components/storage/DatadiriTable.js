@@ -53,31 +53,14 @@ const DatadiriTable = () => {
     }
   };
 
-  const axiosJwt = axios.create();
-
-  axiosJwt.interceptors.request.use(
-    async (config) => {
-      const currentDate = new Date();
-      if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get("http://localhost:5000/token");
-        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
-        setToken(response.data.accessToken);
-        const decoded = jwt_decode(response.data.accessToken);
-        setDatadiri(decoded.nama);
-        setExpire(decoded.exp);
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
 
   const getDatadiri = async () => {
     try {
-      const response = await axiosJwt.get("http://localhost:5000/data_diri", {
+      const accessToken = localStorage.getItem("accessToken");
+
+      const response = await axios.get("http://localhost:5000/data_diri", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -97,18 +80,17 @@ const DatadiriTable = () => {
     navigate(`/edit-datadiri`);
   };
 
-  const handleDeleteClick = async (id) => {
+  const handleDeleteClick = async => {
     if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
       try {
+        const accessToken = localStorage.getItem("accessToken");
         // Lakukan permintaan DELETE ke backend untuk menghapus data dengan ID tertentu
-        await axiosJwt.delete(`http://localhost:5000/data_diri`, {
+        axios.delete(`http://localhost:5000/data_diri`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
-
-        // Perbarui data setelah penghapusan berhasil
-        getDatadiri();
+        window.location.reload();
       } catch (error) {
         console.error("Error deleting data:", error);
       }
@@ -135,7 +117,7 @@ const DatadiriTable = () => {
                     </IconButton>
                     <IconButton
                       aria-label="Delete"
-                      color="secondary"
+                      color="error"
                       onClick={() => handleDeleteClick(params.row.id)}
                     >
                       <DeleteIcon />
