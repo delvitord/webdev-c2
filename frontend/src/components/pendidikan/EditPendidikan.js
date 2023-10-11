@@ -6,7 +6,6 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Card, CardContent } from "@mui/material";
 
-
 const UpdatePendidikan = () => {
   const [nama_instansi, setNamaInstansi] = useState("");
   const [awal_periode, setAwalPeriode] = useState("");
@@ -22,12 +21,19 @@ const UpdatePendidikan = () => {
   const updatePendidikan = async (e) => {
     e.preventDefault();
     try {
+      const accessToken = localStorage.getItem("accessToken");
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data',
+      };
+      
       await axios.patch(`http://localhost:5000/pendidikan/${id}`, {
         nama_instansi,
         awal_periode,
         akhir_periode,
         jurusan,
-      });
+      }, { headers });
+      
       navigate("/pendidikan");
     } catch (error) {
       console.log(error);
@@ -35,11 +41,16 @@ const UpdatePendidikan = () => {
   };
 
   const getPendidikanById = async () => {
-    const response = await axios.get(`http://localhost:5000/pendidikan/${id}`);
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    const response = await axios.get(`http://localhost:5000/pendidikan/${id}`, { headers });
     setNamaInstansi(response.data.nama_instansi);
     setAwalPeriode(response.data.awal_periode);
     setAkhirPeriode(response.data.akhir_periode);
-    setJurusan(response.data.jurusant);
+    setJurusan(response.data.jurusan);
   };
 
   return (

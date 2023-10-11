@@ -33,9 +33,18 @@ const PendidikanList = () => {
   }, []);
 
   const getPendidikan = async () => {
-    const response = await axios.get("http://localhost:5000/pendidikan");
-    setPendidikan(response.data);
-    console.log(response.data);
+    const accessToken = localStorage.getItem("accessToken");
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    try {
+      const response = await axios.get("http://localhost:5000/datadiri/pendidikan", { headers });
+      setPendidikan(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
   };
 
   const handleChangePage = (event, newPage) => {
@@ -78,35 +87,30 @@ const PendidikanList = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {pendidikan
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                        .map((data_diri, index) => (
-                          <TableRow key={pendidikan.id}>
-                            {columns.map((column) => {
-                              const value = pendidikan[column.id];
-                              return (
-                                <TableCell key={index + 1} align="left">
-                                  {column.id === "actions" ? (
-                                    <Link to={`/edit/${pendidikan.id}`}>
-                                      <Button
-                                        variant="contained"
-                                        color="info"
-                                        size="small"
-                                      >
-                                        Edit
-                                      </Button>
-                                    </Link>
-                                  ) : (
-                                    value
-                                  )}
-                                </TableCell>
-                              );
-                            })}
-                          </TableRow>
-                        ))}
+                    {pendidikan
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((data_diri, index) => (
+                        <TableRow key={data_diri.id}> {/* Use a unique identifier as the key */}
+                          {columns.map((column) => {
+                            const value = data_diri[column.id];
+                            return (
+                              <TableCell key={column.id} align="left"> {/* Use a unique identifier as the key */}
+                                {column.id === "actions" ? (
+                                  <Link to={`/edit/${data_diri.id}`}>
+                                    <Button variant="contained" color="info" size="small">
+                                      Edit
+                                    </Button>
+                                  </Link>
+                                ) : (
+                                  value
+                                )}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      ))
+                    }
+
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -128,4 +132,4 @@ const PendidikanList = () => {
   );
 };
 
-export default PendidikanList
+export default PendidikanList;

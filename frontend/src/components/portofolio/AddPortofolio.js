@@ -35,6 +35,7 @@ const AddPortofolio = () => {
     // Membuat header dengan otorisasi Bearer
     const headers = {
       Authorization: `Bearer ${accessToken}`,
+      'Content-Type': `multipart/form-data`,
     };
   
     // Membuat FormData untuk mengirim data yang kompleks (file, image) ke server
@@ -44,9 +45,9 @@ const AddPortofolio = () => {
     formData.append("file", file);
     formData.append("link", link);
   
-    // Menambahkan setiap gambar ke FormData
-    images.forEach((image, index) => {
-      formData.append(`image${index}`, image);
+    // Menambahkan setiap gambar ke FormData, bahkan jika tidak ada gambar yang dipilih
+    images.forEach((image) => {
+      formData.append('image', image);
     });
   
     try {
@@ -58,6 +59,7 @@ const AddPortofolio = () => {
       console.log(error);
     }
   };
+  
 
   return (
     <>
@@ -92,6 +94,9 @@ const AddPortofolio = () => {
                   onChange={handleFileChange}
                   variant="outlined"
                   margin="normal"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                 />
                 <input
                   type="file"

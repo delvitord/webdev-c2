@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -12,23 +12,24 @@ const AddPendidikan = () => {
   const [akhir_periode, setAkhirPeriode] = useState("");
   const [jurusan, setJurusan] = useState("");
   const navigate = useNavigate();
-  const { id } = useParams();
-
-  // const getAccountId = async (e) => {
-  //   const response = await axios.get(`http://localhost:5000/admin/${id}`);
-  //   setAccountId(response.data.id);
-  // };
 
   const savePendidikan = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:5000/pedidikan`, {
+      const accessToken = localStorage.getItem("accessToken");
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data',
+      };
+      
+      await axios.post(`http://localhost:5000/datadiri/pendidikan`, {
         nama_instansi,
         awal_periode,
         akhir_periode,
         jurusan,
-      });
-      navigate("/data-diri");
+      }, { headers });
+      
+      navigate("/pendidikan");
     } catch (error) {
       console.log(error);
     }
