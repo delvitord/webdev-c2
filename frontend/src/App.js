@@ -10,6 +10,8 @@ import UpdatePendidikan from "./components/pendidikan/EditPendidikan";
 import PendidikanList from "./components/pendidikan/Pendidikan";
 import PortofolioList from "./components/portofolio/Portofolio"; 
 import AddPortofolio from "./components/portofolio/AddPortofolio";
+import AddOrganisasi from "./components/Organisasi/addOrganisasi";
+import OrganisasiList from "./components/Organisasi/Organisasi";
 
 function App() {
   return (
@@ -86,6 +88,22 @@ function App() {
           element={
             <>
               <AddPortofolio />
+            </>
+          }
+        />
+        <Route
+          path="/organisasi"
+          element={
+            <>
+              <OrganisasiList />
+            </>
+          }
+        />
+        <Route
+          path="/add-organisasi"
+          element={
+            <>
+              <AddOrganisasi />
             </>
           }
         />
