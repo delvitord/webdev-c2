@@ -63,9 +63,21 @@ export const getData_diriByIdWithChild = async (req, res) => {
 };
 
 export const createData_diri = async (req, res) => {
-    try {
-         const {accountId} = req.user
-        const { nama, tempat_lahir, tanggal_lahir, alamat, email, no_telp, deskripsi, linkedin, instagram, x, github } = req.body;
+  try {
+    const { accountId } = req.user;
+    const {
+      nama,
+      tempat_lahir,
+      tanggal_lahir,
+      alamat,
+      email,
+      no_telp,
+      deskripsi,
+      linkedin,
+      instagram,
+      x,
+      github,
+    } = req.body;
 
     // Cek apakah data diri sudah ada untuk akun dengan accountId yang sama
     let existingDataDiri = await Data_diri.findOne({
@@ -73,7 +85,9 @@ export const createData_diri = async (req, res) => {
     });
 
     if (existingDataDiri) {
-      return res.status(422).json({ msg: "Data Diri already exists. Use update instead." });
+      return res
+        .status(422)
+        .json({ msg: "Data Diri already exists. Use update instead." });
     }
 
     // Mengecek apakah ada file foto yang diunggah
@@ -114,7 +128,9 @@ export const createData_diri = async (req, res) => {
           accountId,
         });
 
-        res.status(201).json({ msg: "Data Diri Created", dataDiriId: newDataDiri.id });
+        res
+          .status(201)
+          .json({ msg: "Data Diri Created", dataDiriId: newDataDiri.id });
       });
     } else {
       // Jika tidak ada foto yang diunggah, hanya membuat data diri tanpa foto
@@ -133,7 +149,9 @@ export const createData_diri = async (req, res) => {
         accountId,
       });
 
-      res.status(201).json({ msg: "Data Diri Created", dataDiriId: newDataDiri.id });
+      res
+        .status(201)
+        .json({ msg: "Data Diri Created", dataDiriId: newDataDiri.id });
     }
   } catch (error) {
     console.error(error);

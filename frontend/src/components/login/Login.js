@@ -33,8 +33,7 @@ const Login = () => {
       const accessToken = response.data.access_token;
       // Store the access token in localStorage
       localStorage.setItem("accessToken", accessToken);
-  
-      navigate("/dashboard");
+      navigate("/datadiri");
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);

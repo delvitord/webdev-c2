@@ -15,13 +15,13 @@ const router = express.Router();
 
 router.post("/login", Login);
 router.post("/admin", Register);
+router.get("/token", refreshToken);
 
 
 router.use(verifyToken)
 
 router.get("/admin/:id", getAccount);
 router.post("/login", Login);
-router.get("/token", refreshToken);
 router.delete("/logout", Logout);
 
 // CRUD DATA DIRI
