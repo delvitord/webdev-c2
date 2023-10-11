@@ -69,7 +69,7 @@ const Dashboard = () => {
   );
 
   const getAccount = async() =>{
-    const response = await axiosJwt.get('http://localhost:5000/admin',{
+    const response = await axiosJwt.get('http://localhost:5000/admin/${id}',{
         headers:{
            Authorization: `Bearer ${token}` 
         }

@@ -26,15 +26,11 @@ const Login = () => {
   const Auth = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/login", {
+      await axios.post("http://localhost:5000/login", {
         email: email,
         password: password,
       });
-      const accessToken = response.data.access_token;
-      // Store the access token in localStorage
-      localStorage.setItem("accessToken", accessToken);
-  
-      navigate("/dashboard");
+      navigate("/datadiri");
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);

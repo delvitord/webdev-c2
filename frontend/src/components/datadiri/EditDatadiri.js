@@ -225,69 +225,110 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Card, CardContent } from "@mui/material";
 
 const UpdateDatadiri = () => {
-  const [nama, setNama] = useState("");
-  const [tempat_lahir, setTempatLahir] = useState("");
-  const [tanggal_lahir, setTanggalLahir] = useState("");
-  const [alamat, setAlamat] = useState("");
-  const [email, setEmail] = useState("");
-  const [no_telp, setNoTelp] = useState("");
-  const [foto, setFoto] = useState("");
-  const [deskripsi, setDeskripsi] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [x, setX] = useState("");
-  const [github, setGithub] = useState("");
+  const [dataDiri, setDataDiri] = useState({
+    nama: "",
+    tempat_lahir: "",
+    tanggal_lahir: "",
+    alamat: "",
+    email: "",
+    no_telp: "",
+    foto: "",
+    deskripsi: "",
+    linkedin: "",
+    instagram: "",
+    x: "",
+    github: "",
+  });
+
   const navigate = useNavigate();
-  const { id } = useParams();
+  const [token, setToken] = useState(""); // State to store the token
+  const [expire, setExpire] = useState("");
 
   useEffect(() => {
-    getDatadiriById();
+    refreshToken(); // Refresh the token when the component mounts
+    getDatadiri(); // Fetch data from the server when the component mounts
   }, []);
 
-  const updateDatadiri = async (e) => {
-    e.preventDefault();
+  const refreshToken = async () => {
     try {
-      await axios.patch(`http://localhost:5000/:account/data_diri/${id}`, {
-        nama,
-        tempat_lahir,
-        tanggal_lahir,
-        alamat,
-        email,
-        no_telp,
-        foto,
-        deskripsi,
-        linkedin,
-        instagram,
-        x,
-        github,
+      const response = await axios.get("http://localhost:5000/token");
+      setToken(response.data.accessToken);
+      const decoded = jwt_decode(response.data.accessToken);
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (decoded.exp < currentTime) {
+        // Implement token refresh logic here if needed
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        navigate("/login");
+      }
+    }
+  };
+
+  const axiosJwt = axios.create();
+
+  axiosJwt.interceptors.request.use(
+    async (config) => {
+      const currentDate = new Date();
+      if (expire * 1000 < currentDate.getTime()) {
+        try {
+          const response = await axios.get("http://localhost:5000/token");
+          config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+          setDataDiri({ ...decoded.dataDiri });
+          setExpire(decoded.exp);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  const getDatadiri = async () => {
+    try {
+      const response = await axiosJwt.get(`http://localhost:5000/data_diri`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-      navigate("/data-diri");
+      setDataDiri(response.data.dataDiri);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getDatadiriById = async () => {
-    const response = await axios.get(`http://localhost:5000/data_diri/${id}`);
-    setNama(response.data.nama);
-    setTempatLahir(response.data.tempat_lahir);
-    setTanggalLahir(response.data.tanggal_lahir);
-    setAlamat(response.data.alamat);
-    setEmail(response.data.email);
-    setNoTelp(response.data.no_telp);
-    setFoto(response.data.foto);
-    setDeskripsi(response.data.deskripsi);
-    setLinkedin(response.data.linkedin);
-    setInstagram(response.data.instagram);
-    setX(response.data.x);
-    setGithub(response.data.github);
+
+  const updateDatadiri = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.patch(`http://localhost:5000/data_diri`, dataDiri, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the headers
+        },
+      });
+      navigate("/datadiri");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setDataDiri({ ...dataDiri, [name]: value });
   };
 
   return (
@@ -297,11 +338,13 @@ const UpdateDatadiri = () => {
           <Card sx={{ maxWidth: 450 }}>
             <CardContent>
               <form onSubmit={updateDatadiri}>
+                {/* Render input fields for dataDiri */}
                 <TextField
                   label="Nama"
                   fullWidth
-                  value={nama}
-                  onChange={(e) => setNama(e.target.value)}
+                  name="nama"
+                  value={dataDiri.nama || " "}
+                  onChange={handleInputChange}
                   placeholder="Nama"
                   variant="outlined"
                   margin="normal"
@@ -309,8 +352,9 @@ const UpdateDatadiri = () => {
                 <TextField
                   label="Tempat Lahir"
                   fullWidth
-                  value={tempat_lahir}
-                  onChange={(e) => setTempatLahir(e.target.value)}
+                  name="tempat_lahir"
+                  value={dataDiri.tempat_lahir}
+                  onChange={handleInputChange}
                   placeholder="Tempat Lahir"
                   variant="outlined"
                   margin="normal"
@@ -319,17 +363,21 @@ const UpdateDatadiri = () => {
                   label="Tanggal Lahir"
                   fullWidth
                   type="date"
-                  value={tanggal_lahir}
-                  onChange={(e) => setTanggalLahir(e.target.value)}
-                  placeholder="Tanggal Lahir"
+                  name="tanggal_lahir"
+                  value={dataDiri.tanggal_lahir}
+                  onChange={handleInputChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                   variant="outlined"
                   margin="normal"
                 />
                 <TextField
                   label="Alamat"
                   fullWidth
-                  value={alamat}
-                  onChange={(e) => setAlamat(e.target.value)}
+                  name="alamat"
+                  value={dataDiri.alamat}
+                  onChange={handleInputChange}
                   placeholder="Alamat"
                   variant="outlined"
                   margin="normal"
@@ -338,8 +386,9 @@ const UpdateDatadiri = () => {
                   label="Email"
                   fullWidth
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  value={dataDiri.email}
+                  onChange={handleInputChange}
                   placeholder="Email"
                   variant="outlined"
                   margin="normal"
@@ -347,8 +396,9 @@ const UpdateDatadiri = () => {
                 <TextField
                   label="No Telepon"
                   fullWidth
-                  value={no_telp}
-                  onChange={(e) => setNoTelp(e.target.value)}
+                  name="no_telp"
+                  value={dataDiri.no_telp}
+                  onChange={handleInputChange}
                   placeholder="No Telepon"
                   variant="outlined"
                   margin="normal"
@@ -356,26 +406,36 @@ const UpdateDatadiri = () => {
                 <TextField
                   label="Foto"
                   fullWidth
-                  value={foto}
-                  onChange={(e) => setFoto(e.target.value)}
-                  placeholder="Foto"
+                  type="file"
+                  name="foto"
+                  value={dataDiri.foto}
+                  onChange={handleInputChange}
+                  inputProps={{ accept: "image/*" }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                   variant="outlined"
                   margin="normal"
                 />
                 <TextField
                   label="Deskripsi"
                   fullWidth
-                  value={deskripsi}
-                  onChange={(e) => setDeskripsi(e.target.value)}
+                  name="deskripsi"
+                  value={dataDiri.deskripsi}
+                  onChange={handleInputChange}
                   placeholder="Deskripsi"
                   variant="outlined"
+                  id="outlined-multiline-flexible"
+                  multiline
+                  maxRows={4}
                   margin="normal"
                 />
                 <TextField
                   label="Linkedin"
                   fullWidth
-                  value={linkedin}
-                  onChange={(e) => setLinkedin(e.target.value)}
+                  name="linkedin"
+                  value={dataDiri.linkedin}
+                  onChange={handleInputChange}
                   placeholder="Linkedin"
                   variant="outlined"
                   margin="normal"
@@ -383,8 +443,9 @@ const UpdateDatadiri = () => {
                 <TextField
                   label="Instagram"
                   fullWidth
-                  value={instagram}
-                  onChange={(e) => setInstagram(e.target.value)}
+                  name="instagram"
+                  value={dataDiri.instagram}
+                  onChange={handleInputChange}
                   placeholder="Instagram"
                   variant="outlined"
                   margin="normal"
@@ -392,8 +453,9 @@ const UpdateDatadiri = () => {
                 <TextField
                   label="X"
                   fullWidth
-                  value={x}
-                  onChange={(e) => setX(e.target.value)}
+                  name="x"
+                  value={dataDiri.x}
+                  onChange={handleInputChange}
                   placeholder="X"
                   variant="outlined"
                   margin="normal"
@@ -401,8 +463,9 @@ const UpdateDatadiri = () => {
                 <TextField
                   label="Github"
                   fullWidth
-                  value={github}
-                  onChange={(e) => setGithub(e.target.value)}
+                  name="github"
+                  value={dataDiri.github}
+                  onChange={handleInputChange}
                   placeholder="Github"
                   variant="outlined"
                   margin="normal"

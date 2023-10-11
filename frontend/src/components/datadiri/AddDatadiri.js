@@ -209,54 +209,74 @@
 // export default AddDatadiri;
 
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+import { useNavigate} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Card, CardContent } from "@mui/material";
 
 const AddDatadiri = () => {
-  const [nama, setNama] = useState("");
-  const [tempat_lahir, setTempatLahir] = useState("");
-  const [tanggal_lahir, setTanggalLahir] = useState("");
-  const [alamat, setAlamat] = useState("");
-  const [email, setEmail] = useState("");
-  const [no_telp, setNoTelp] = useState("");
-  const [foto, setFoto] = useState("");
-  const [deskripsi, setDeskripsi] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [x, setX] = useState("");
-  const [github, setGithub] = useState("");
-  const [accountId, setAccountId] = useState("");
-  const navigate = useNavigate();
-  const { id } = useParams();
+    const [dataDiri, setDataDiri] = useState({
+      nama: "",
+      tempat_lahir: "",
+      tanggal_lahir: "",
+      alamat: "",
+      email: "",
+      no_telp: "",
+      foto: "",
+      deskripsi: "",
+      linkedin: "",
+      instagram: "",
+      x: "",
+      github: "",
+    });
 
+    const [token, setToken] = useState("");
+    const navigate = useNavigate();
 
-  const saveUser = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post(`http://localhost:5000/${accountId}/data_diri`, {
-        nama,
-        tempat_lahir,
-        tanggal_lahir,
-        alamat,
-        email,
-        no_telp,
-        foto,
-        deskripsi,
-        linkedin,
-        instagram,
-        x,
-        github,
-      });
-      navigate("/data-diri");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    useEffect(() => {
+      refreshToken();
+    }, []);
+
+    const refreshToken = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/token");
+        setToken(response.data.accessToken);
+        const decoded = jwt_decode(response.data.accessToken);
+        const currentTime = Math.floor(Date.now() / 1000);
+        if (decoded.exp < currentTime) {
+          // Implementasikan logika refresh token di sini jika diperlukan
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response) {
+          navigate("/login");
+        }
+      }
+    };
+
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setDataDiri({ ...dataDiri, [name]: value });
+    };
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        await axios.post("http://localhost:5000/data_diri", dataDiri, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        navigate("/datadiri");
+      } catch (error) {
+        console.log(error);
+        console.log(error.response);
+      }
+    };
 
   return (
     <>
@@ -264,12 +284,13 @@ const AddDatadiri = () => {
         <Grid>
           <Card sx={{ maxWidth: 450 }}>
             <CardContent>
-              <form onSubmit={saveUser}>
+              <form onSubmit={handleSubmit}>
                 <TextField
                   label="Nama"
                   fullWidth
-                  value={nama}
-                  onChange={(e) => setNama(e.target.value)}
+                  name="nama"
+                  value={dataDiri.nama}
+                  onChange={handleInputChange}
                   placeholder="Nama"
                   variant="outlined"
                   margin="normal"
@@ -277,8 +298,9 @@ const AddDatadiri = () => {
                 <TextField
                   label="Tempat Lahir"
                   fullWidth
-                  value={tempat_lahir}
-                  onChange={(e) => setTempatLahir(e.target.value)}
+                  name="tempat_lahir"
+                  value={dataDiri.tempat_lahir}
+                  onChange={handleInputChange}
                   placeholder="Tempat Lahir"
                   variant="outlined"
                   margin="normal"
@@ -287,8 +309,9 @@ const AddDatadiri = () => {
                   label="Tanggal Lahir"
                   fullWidth
                   type="date"
-                  value={tanggal_lahir}
-                  onChange={(e) => setTanggalLahir(e.target.value)}
+                  name="tanggal_lahir"
+                  value={dataDiri.tanggal_lahir}
+                  onChange={handleInputChange}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -298,8 +321,9 @@ const AddDatadiri = () => {
                 <TextField
                   label="Alamat"
                   fullWidth
-                  value={alamat}
-                  onChange={(e) => setAlamat(e.target.value)}
+                  name="alamat"
+                  value={dataDiri.alamat}
+                  onChange={handleInputChange}
                   placeholder="Alamat"
                   variant="outlined"
                   margin="normal"
@@ -308,8 +332,9 @@ const AddDatadiri = () => {
                   label="Email"
                   fullWidth
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  value={dataDiri.email}
+                  onChange={handleInputChange}
                   placeholder="Email"
                   variant="outlined"
                   margin="normal"
@@ -317,8 +342,9 @@ const AddDatadiri = () => {
                 <TextField
                   label="No Telepon"
                   fullWidth
-                  value={no_telp}
-                  onChange={(e) => setNoTelp(e.target.value)}
+                  name="no_telp"
+                  value={dataDiri.no_telp}
+                  onChange={handleInputChange}
                   placeholder="No Telepon"
                   variant="outlined"
                   margin="normal"
@@ -326,9 +352,10 @@ const AddDatadiri = () => {
                 <TextField
                   label="Foto"
                   fullWidth
-                  value={foto}
                   type="file"
-                  onChange={(e) => setFoto(e.target.value)}
+                  name="foto"
+                  value={dataDiri.foto}
+                  onChange={handleInputChange}
                   inputProps={{ accept: "image/*" }}
                   InputLabelProps={{
                     shrink: true,
@@ -339,8 +366,9 @@ const AddDatadiri = () => {
                 <TextField
                   label="Deskripsi"
                   fullWidth
-                  value={deskripsi}
-                  onChange={(e) => setDeskripsi(e.target.value)}
+                  name="deskripsi"
+                  value={dataDiri.deskripsi}
+                  onChange={handleInputChange}
                   placeholder="Deskripsi"
                   variant="outlined"
                   id="outlined-multiline-flexible"
@@ -351,8 +379,9 @@ const AddDatadiri = () => {
                 <TextField
                   label="Linkedin"
                   fullWidth
-                  value={linkedin}
-                  onChange={(e) => setLinkedin(e.target.value)}
+                  name="linkedin"
+                  value={dataDiri.linkedin}
+                  onChange={handleInputChange}
                   placeholder="Linkedin"
                   variant="outlined"
                   margin="normal"
@@ -360,8 +389,9 @@ const AddDatadiri = () => {
                 <TextField
                   label="Instagram"
                   fullWidth
-                  value={instagram}
-                  onChange={(e) => setInstagram(e.target.value)}
+                  name="instagram"
+                  value={dataDiri.instagram}
+                  onChange={handleInputChange}
                   placeholder="Instagram"
                   variant="outlined"
                   margin="normal"
@@ -369,8 +399,9 @@ const AddDatadiri = () => {
                 <TextField
                   label="X"
                   fullWidth
-                  value={x}
-                  onChange={(e) => setX(e.target.value)}
+                  name="x"
+                  value={dataDiri.x}
+                  onChange={handleInputChange}
                   placeholder="X"
                   variant="outlined"
                   margin="normal"
@@ -378,8 +409,9 @@ const AddDatadiri = () => {
                 <TextField
                   label="Github"
                   fullWidth
-                  value={github}
-                  onChange={(e) => setGithub(e.target.value)}
+                  name="github"
+                  value={dataDiri.github}
+                  onChange={handleInputChange}
                   placeholder="Github"
                   variant="outlined"
                   margin="normal"
