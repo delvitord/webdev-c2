@@ -28,8 +28,9 @@ export const getData_diri = async (req, res) => {
 export const getData_diriByIdWithChild = async (req, res) => {
   try {
     const { accountId } = req.user;
-    const response = await Data_diri.findOne({
+    const response = await Data_diri.findAll({
       where: {
+        // Make sure the field name matches the one in your Data_diri model
         accountId: accountId,
       },
       include: [
@@ -51,7 +52,7 @@ export const getData_diriByIdWithChild = async (req, res) => {
       ],
     });
 
-    if (!response) {
+    if (!response || response.length === 0) {
       return res.status(404).json({ error: "Data Diri Not Found" });
     }
 
@@ -61,6 +62,8 @@ export const getData_diriByIdWithChild = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
 
 export const createData_diri = async (req, res) => {
   try {

@@ -61,14 +61,12 @@ const Login = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={Auth}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" onSubmit={Auth} noValidate sx={{ mt: 1 }}>
             {msg && (
-              <Alert severity="warning" style={{ marginTop: "10px", marginBottom: "10px" }}>
+              <Alert
+                severity="error"
+                style={{ marginTop: "10px", marginBottom: "10px" }}
+              >
                 {msg}{" "}
               </Alert>
             )}
@@ -83,6 +81,7 @@ const Login = () => {
               autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              error={msg}
             />
             <TextField
               margin="normal"
@@ -95,6 +94,7 @@ const Login = () => {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              error={msg}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
