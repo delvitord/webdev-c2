@@ -7,33 +7,34 @@ import Grid from "@mui/material/Grid";
 import { Card, CardContent } from "@mui/material";
 
 const AddPendidikan = () => {
-  const [nama_instansi, setNamaInstansi] = useState("");
-  const [awal_periode, setAwalPeriode] = useState("");
-  const [akhir_periode, setAkhirPeriode] = useState("");
-  const [jurusan, setJurusan] = useState("");
+  const [Pendidikan, setPendidikan] = useState({
+    nama_instansi: "",
+    awal_periode: "",
+    akhir_periode: "",
+    jurusan: "",
+  });
   const navigate = useNavigate();
 
   const savePendidikan = async (e) => {
     e.preventDefault();
     try {
       const accessToken = localStorage.getItem("accessToken");
-      const headers = {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'multipart/form-data',
-      };
-      
-      await axios.post(`http://localhost:5000/datadiri/pendidikan`, {
-        nama_instansi,
-        awal_periode,
-        akhir_periode,
-        jurusan,
-      }, { headers });
-      
+      await axios.post(`http://localhost:5000/datadiri/pendidikan`, Pendidikan, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       navigate("/pendidikan");
     } catch (error) {
       console.log(error);
     }
   };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setPendidikan({ ...Pendidikan, [name]: value });
+  };
+
 
   return (
     <>
@@ -45,8 +46,9 @@ const AddPendidikan = () => {
                 <TextField
                   label="Nama Instansi"
                   fullWidth
-                  value={nama_instansi}
-                  onChange={(e) => setNamaInstansi(e.target.value)}
+                  name="nama_instansi"
+                  value={Pendidikan.nama_instansi}
+                  onChange={handleInputChange}
                   placeholder="Nama Instansi"
                   variant="outlined"
                   margin="normal"
@@ -55,8 +57,9 @@ const AddPendidikan = () => {
                   label="Tahun Masuk"
                   fullWidth
                   type="date"
-                  value={awal_periode}
-                  onChange={(e) => setAwalPeriode(e.target.value)}
+                  name="awal_periode"
+                  value={Pendidikan.awal_periode}
+                  onChange={handleInputChange}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -67,8 +70,9 @@ const AddPendidikan = () => {
                   label="Tahun Lulus"
                   fullWidth
                   type="date"
-                  value={akhir_periode}
-                  onChange={(e) => setAkhirPeriode(e.target.value)}
+                  name="akhir_periode"
+                  value={Pendidikan.akhir_periode}
+                  onChange={handleInputChange}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -78,8 +82,9 @@ const AddPendidikan = () => {
                 <TextField
                   label="Jurusan"
                   fullWidth
-                  value={jurusan}
-                  onChange={(e) => setJurusan(e.target.value)}
+                  name="jurusan"
+                  value={Pendidikan.jurusan}
+                  onChange={handleInputChange}
                   placeholder="Jurusan"
                   variant="outlined"
                   margin="normal"

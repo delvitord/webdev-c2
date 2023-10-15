@@ -247,20 +247,8 @@ const UpdateDatadiri = () => {
     x: "",
     github: "",
   });
-  // const [nama, setNama] = useState("");
-  // const [tempat_lahir, setTempatLahir] = useState("");
-  // const [tanggal_lahir, setTanggalLahir] = useState("");
-  // const [alamat, setAlamat] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [no_telp, setNoTelp] = useState("");
-  // const [foto, setFoto] = useState("");
-  // const [deskripsi, setDeskripsi] = useState("");
-  // const [linkedin, setLinkedin] = useState("");
-  // const [instagram, setInstagram] = useState("");
-  // const [x, setX] = useState("");
-  // const [github, setGithub] = useState("");
   const navigate = useNavigate();
-  const [token, setToken] = useState("");
+  const [ token, setToken ] = useState("");
 
   useEffect(() => {
     refreshToken(); // Refresh the token when the component mounts
@@ -269,44 +257,77 @@ const UpdateDatadiri = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/token");
-      setToken(response.data.accessToken);
-      const decoded = jwt_decode(response.data.accessToken);
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (decoded.exp < currentTime) {
-        // Implement token refresh logic here if needed
+      const accessToken = localStorage.getItem("accessToken");
+
+      // Cek apakah accessToken ada dan masih valid
+      if (accessToken) {
+        const decoded = jwt_decode(accessToken);
+        const currentTime = Math.floor(Date.now() / 1000);
+
+        // Jika token masih valid, tidak perlu refresh
+        if (decoded.exp > currentTime) {
+          return;
+        }
       }
+
+      // Jika token kedaluwarsa atau tidak ada, lakukan permintaan refresh
+      const response = await axios.get("http://localhost:5000/token", {
+        withCredentials: true,
+        // Jika diperlukan, sertakan cara otentikasi yang sesuai di sini
+      });
+      const newAccessToken = response.data.accessToken;
+
+      // Simpan token yang baru di local storage
+      localStorage.setItem("accessToken", newAccessToken);
+
+      // Perbarui state dengan token yang baru
+      setToken(newAccessToken);
     } catch (error) {
       console.log(error);
-      if (error.response) {
+
+      // Redirect ke halaman login jika terjadi kesalahan otentikasi
+      if (error.response && error.response.status === 401) {
         navigate("/login");
       }
     }
   };
 
+ 
+  const accessToken = localStorage.getItem("accessToken");
+
   const getDatadiri = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      
       const response = await axios.get(`http://localhost:5000/data_diri`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      setDataDiri({
-        nama: response.data.nama,
-        tempat_lahir: response.data.tempat_lahir,
-        tanggal_lahir: response.data.tanggal_lahir,
-        alamat: response.data.alamat,
-        email: response.data.email,
-        no_telp: response.data.no_telp,
-        foto: response.data.foto,
-        deskripsi: response.data.deskripsi,
-        linkedin: response.data.linkedin,
-        instagram: response.data.instagram,
-        x: response.data.x,
-        github: response.data.github,
-      });
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        // Ambil data diri pertama dalam array
+        const dataDiriServer = response.data[0];
+
+        // Set nilai dari data yang diperoleh ke dalam state
+        setDataDiri({
+          nama: dataDiriServer.nama,
+          tempat_lahir: dataDiriServer.tempat_lahir,
+          tanggal_lahir: dataDiriServer.tanggal_lahir,
+          alamat: dataDiriServer.alamat,
+          email: dataDiriServer.email,
+          no_telp: dataDiriServer.no_telp,
+          foto: dataDiriServer.foto,
+          deskripsi: dataDiriServer.deskripsi,
+          linkedin: dataDiriServer.linkedin,
+          instagram: dataDiriServer.instagram,
+          x: dataDiriServer.x,
+          github: dataDiriServer.github,
+        });
+      }
       console.log(response.data)
+      console.log(
+        "Token in local storage: ",
+        localStorage.getItem("accessToken")
+      );
     } catch (error) {
       console.log(error);
     }
@@ -315,12 +336,20 @@ const UpdateDatadiri = () => {
   const updateDatadiri = async (e) => {
     e.preventDefault();
     try {
-      const accessToken = localStorage.getItem("accessToken");
-      await axios.patch(`http://localhost:5000/data_diri`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // Include the token in the headers
-        },
-      });
+      const response = await axios.patch(
+        `http://localhost:5000/data_diri`,
+        dataDiri,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(
+        "Token in local storage: ",
+        localStorage.getItem("accessToken")
+      );
+      console.log("Server Response: ", response);
       navigate("/datadiri");
     } catch (error) {
       console.log(error);
