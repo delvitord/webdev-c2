@@ -1,6 +1,7 @@
 import React from "react";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
+import { Container } from "@mui/material";
 
 function Content({ children }) {
   return (

@@ -1,20 +1,7 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import { Link } from "react-router-dom";
+import React from "react";
+import  Box  from "@mui/material/Box";
 import Sidebar from "../layout/Sidebar";
 import Navbar from "../layout/Navbar";
-import { CardContent } from "@mui/material";
 import PortofolioTable from "../storage/PortofolioTable";
 
 const PortofolioList = () => {
@@ -24,17 +11,8 @@ const PortofolioList = () => {
       <Box height={100}/>
       <Box sx={{ display: 'flex' }}>
         <Sidebar />
-        <Box component="main" sx={{ flexGrow: 1, p: 2 }}>
-          <Card>
-            <CardContent>
-              <Link to={`/add-portofolio`}>
-                <Button variant="contained" color="success">
-                  Add New
-                </Button>
-              </Link>
-              <PortofolioTable/ >
-            </CardContent>
-          </Card>
+        <Box sx={{ flexGrow: 1, p: 2 }}>
+          <PortofolioTable/ >
         </Box>
       </Box>
     </>

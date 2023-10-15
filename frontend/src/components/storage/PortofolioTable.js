@@ -7,16 +7,19 @@ import Content from "../layout/Content";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 const columns = [
-  { id: "id", label: "ID", minWidth: 50 },
-  { id: "judul", label: "Judul", minWidth: 100 },
-  { id: "deskripsi", label: "Deskripsi", minWidth: 100 },
-  { id: "file", label: "File", minWidth: 100 },
-  { id: "image", label: "Image", minWidth: 100 },
-  { id: "link", label: "Link", minWidth: 100 },
-  { id: "edit", label: "Edit", minWidth: 100 },
+  { field: "id", headerName: "ID", minWidth: 50 },
+  { field: "judul", headerName: "Judul", minWidth: 100 },
+  { field: "deskripsi", headerName: "Deskripsi", minWidth: 100 },
+  { field: "file", headerName: "File", minWidth: 100 },
+  { field: "image", headerName: "Image", minWidth: 100 },
+  { field: "link", headerName: "Link", minWidth: 100 },
+  { field: "actions", headerName: "Actions", width: 150 },
 ];
+
 
 const PortofolioTable = () => {
   const [portofolios, setPortofolio] = useState([]);
@@ -92,6 +95,11 @@ const PortofolioTable = () => {
 
   return (
     <Content open={open}>
+        <Link to={`/add-portofolio`}>
+        <Button variant="contained" color="success" sx={{ mb: 3 }}>
+          Add New
+        </Button>
+      </Link>
       {portofolios && portofolios.length > 0 ? (
         <DataTable
           rows={portofolios}
