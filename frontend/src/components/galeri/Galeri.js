@@ -11,6 +11,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { Link } from "react-router-dom";
 import Sidebar from "../layout/Sidebar";
 import Navbar from "../layout/Navbar";
 import { CardContent } from "@mui/material";
@@ -27,47 +28,39 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import AddSkill from "./AddSkill"; // Import the AddSkill component
-
-const levelKeahlianText = {
-  1: "Pemula",
-  2: "Menengah",
-  3: "Ahli",
-};
 
 const columns = [
-  { id: "nama_skill", label: "Nama Skill", minWidth: 100 },
-  { id: "level_keahlian", label: "Level Keahlian", minWidth: 100 },
+  { id: "nama_kegiatan", label: "Nama Kegiatan", minWidth: 100 },
+  { id: "image", label: "Gambar", minWidth: 100 },
 ];
 
-const SkillList = () => {
-  const [skill, setSkill] = useState([]);
+const GaleriList = () => {
+  const [galeri, setGaleri] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-  const [skillToDelete, setSkillToDelete] = useState(null);
-  const [isAddSkillDialogOpen, setAddSkillDialogOpen] = useState(false);
+  const [galeriToDelete, setGaleriToDelete] = useState(null);
 
   useEffect(() => {
-    getSkill();
+    getGaleri();
   }, []);
 
-  const getSkill = async () => {
+  const getGaleri = async () => {
     try {
       // Retrieve the access token from localStorage
       const accessToken = localStorage.getItem("accessToken");
 
-      const response = await axios.get("http://localhost:5000/datadiri/skill", {
+      const response = await axios.get("http://localhost:5000/datadiri/galeri", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
 
-      setSkill(response.data);
+      setGaleri(response.data);
       console.log(response.data);
     } catch (error) {
       // Handle errors, e.g., unauthorized access
-      console.error("Error fetching skill data:", error);
+      console.error("Error fetching galeri data:", error);
     }
   };
 
@@ -83,21 +76,21 @@ const SkillList = () => {
   const navigate = useNavigate();
 
   const handleEditClick = (id) => {
-    navigate(`/edit-skill/${id}`);
+    navigate(`/edit-galeri/${id}`);
   };
 
   const handleDeleteClick = (id) => {
-    setSkillToDelete(id);
+    setGaleriToDelete(id);
     setDeleteConfirmationOpen(true);
   };
 
   const confirmDelete = () => {
-    const id = skillToDelete;
+    const id = galeriToDelete;
     if (id) {
       try {
         const accessToken = localStorage.getItem("accessToken");
         axios
-          .delete(`http://localhost:5000/datadiri/skill/${id}`, {
+          .delete(`http://localhost:5000/datadiri/galeri/${id}`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
@@ -122,7 +115,7 @@ const SkillList = () => {
   };
 
   const cancelDelete = () => {
-    setSkillToDelete(null);
+    setGaleriToDelete(null);
     setDeleteConfirmationOpen(false);
   };
 
@@ -139,14 +132,6 @@ const SkillList = () => {
     setSnackbarOpen(false);
   };
 
-  const handleAddSkillClick = () => {
-    setAddSkillDialogOpen(true);
-  };
-
-  const handleAddSkillClose = () => {
-    setAddSkillDialogOpen(false);
-  };
-
   return (
     <>
       <Navbar />
@@ -154,13 +139,13 @@ const SkillList = () => {
       <Box sx={{ display: "flex" }}>
         <Sidebar />
         <Content>
-          <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>Skill</h1>
           <Card>
             <CardContent>
-              <Button variant="contained" color="success" sx={{ marginLeft: 1 }} onClick={handleAddSkillClick}>
-                <AddIcon sx={{ marginRight: 1 }} /> Add New
-              </Button>
-
+              <Link to={`/add-galeri`}>
+                <Button variant="contained" color="success" sx={{ marginLeft: 1 }}>
+                  <AddIcon sx={{ marginRight: 1 }} /> Add New
+                </Button>
+              </Link>
               <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "1.5rem" }}>
                 <TableContainer sx={{ maxHeight: 440 }}>
                   <Table stickyHeader aria-label="sticky table">
@@ -180,19 +165,14 @@ const SkillList = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {skill.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
+                      {galeri.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
                         <TableRow key={item.id}>
                           <TableCell align="left">{page * rowsPerPage + index + 1}</TableCell>
-                          {columns.map((column) => {
-                            const { id } = column;
-                            const value = item[id];
 
-                            return (
-                              <TableCell key={id} align="left">
-                                {column.id === "level_keahlian" ? levelKeahlianText[value] : value}
-                              </TableCell>
-                            );
-                          })}
+                          <TableCell align="left">
+                            <Button variant="outlined">Outlined</Button>
+                          </TableCell>
+
                           <TableCell align="left">
                             <div>
                               <IconButton aria-label="Edit" color="primary" onClick={() => handleEditClick(item.id)}>
@@ -208,7 +188,7 @@ const SkillList = () => {
                     </TableBody>
                   </Table>
                 </TableContainer>
-                <TablePagination rowsPerPageOptions={[10, 25, 100]} component="div" count={skill.length} rowsPerPage={rowsPerPage} page={page} onPageChange={handleChangePage} onRowsPerPageChange={handleChangeRowsPerPage} />
+                <TablePagination rowsPerPageOptions={[10, 25, 100]} component="div" count={galeri.length} rowsPerPage={rowsPerPage} page={page} onPageChange={handleChangePage} onRowsPerPageChange={handleChangeRowsPerPage} />
               </Paper>
             </CardContent>
           </Card>
@@ -233,14 +213,6 @@ const SkillList = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Add Skill Dialog */}
-      <Dialog open={isAddSkillDialogOpen} onClose={handleAddSkillClose} width="500">
-        <DialogTitle>Add New Skill</DialogTitle>
-        <DialogContent>
-          <AddSkill onCancelAdd={handleAddSkillClose} onSuccess={getSkill} />
-        </DialogContent>
-      </Dialog>
-
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
         <MuiAlert elevation={6} variant="filled" severity="success" onClose={handleSnackbarClose}>
           Skill successfully deleted!
@@ -250,4 +222,4 @@ const SkillList = () => {
   );
 };
 
-export default SkillList;
+export default GaleriList;

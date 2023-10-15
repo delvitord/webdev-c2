@@ -7,20 +7,20 @@ function Content({ children }) {
     <Box
       component="main"
       sx={{
-        backgroundColor: (theme) =>
-          theme.palette.mode === "light"
-            ? theme.palette.grey[100]
-            : theme.palette.grey[900],
+        backgroundColor: (theme) => (theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900]),
         flexGrow: 1,
         height: "100vh",
         overflow: "auto",
         boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)", // Bayangan
         padding: 3, // Padding untuk memberikan ruang ekstra
         borderRadius: "10px", // Rounded corners
+        mt: -7, // Adding a top margin of -10
       }}
     >
       <Toolbar />
+      <Container maxWidth="lg" sx={{ mt: 0, mb: 4 }}>
         {children}
+      </Container>
     </Box>
   );
 }
