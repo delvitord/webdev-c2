@@ -9,7 +9,7 @@ const Qualification = () => {
 
   return (
     <section className="qualification section" id="qualification">
-      <h2 className="section__title">Qualification</h2>
+      <h2 className="section__title">History</h2>
       <span className="section__subtitle">My Personal Jurney</span>
 
       <div className="qualification__container container">
@@ -18,7 +18,7 @@ const Qualification = () => {
           "qualification__button qualification__active button--flex": "qualification__button button--flex" }
            onClick={() => toggleTab(1)}
            >
-            <i className="uil uil-briefcase-alt qualification__icon"></i> Experience
+            <i className="uil uil-briefcase-alt qualification__icon"></i> Organization
           </div>
 
           <div className={toggleState ===2 ? 
