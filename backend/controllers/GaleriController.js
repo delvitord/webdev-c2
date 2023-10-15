@@ -1,17 +1,17 @@
 import Galeri from "../models/GaleriModel.js";
 import path from "path";
 import fs from "fs";
-import Data_diri from "../models/DataDiriModel.js"; 
+import Data_diri from "../models/DataDiriModel.js";
 
 // Mendapatkan semua galeri berdasarkan dataDiriId
 export const getGaleri = async (req, res) => {
   try {
-    const { accountId } = req.user; 
+    const { accountId } = req.user;
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
     const response = await Galeri.findAll({
       where: {
-        dataDiriId: dataDiriId, 
+        dataDiriId: dataDiriId,
       },
     });
     res.status(200).json(response);
@@ -23,14 +23,14 @@ export const getGaleri = async (req, res) => {
 // Mendapatkan galeri berdasarkan ID
 export const getGaleriById = async (req, res) => {
   try {
-    const { id } = req.params; 
-    const { accountId } = req.user; 
+    const { id } = req.params;
+    const { accountId } = req.user;
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
     const response = await Galeri.findOne({
       where: {
-        id: id, 
-        dataDiriId: dataDiriId, 
+        id: id,
+        dataDiriId: dataDiriId,
       },
     });
     res.status(200).json(response);
@@ -46,7 +46,14 @@ export const createGaleri = async (req, res) => {
   const userData = await Data_diri.findOne({ where: { accountId: accountId } });
   const dataDiriId = userData.id;
   const { nama_kegiatan, deskripsi } = req.body;
+
+  // Check if req.files and req.files.image are defined
+  if (!req.files || !req.files.image) {
+    return res.status(400).json({ msg: "Image file is missing from the request." });
+  }
+
   const imageFiles = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
+
   const imageUrls = [];
 
   for (const file of imageFiles) {
@@ -56,27 +63,27 @@ export const createGaleri = async (req, res) => {
     const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
 
     if (!allowedType.includes(ext.toLowerCase())) {
-      return res.status(422).json({ msg: "Tipe Gambar Tidak Valid" });
+      return res.status(422).json({ msg: "Invalid Image Type" });
     }
 
     if (fileSize > 5000000) {
-      return res.status(422).json({ msg: "Ukuran Gambar harus kurang dari 5 MB" });
+      return res.status(422).json({ msg: "Image must be less than 5 MB" });
     }
 
     file.mv(`./public/images/${fileName}`, async (err) => {
       if (err) return res.status(500).json({ msg: err.message });
       imageUrls.push(url);
 
-      // Jika semua file telah diunggah, simpan array imageUrls ke dalam database
+      // If all files are uploaded, save the imageUrls to the database
       if (imageUrls.length === imageFiles.length) {
         try {
           const newGaleri = await Galeri.create({
             nama_kegiatan: nama_kegiatan,
-            image: imageUrls, // Simpan array URL gambar
+            image: imageUrls, // Store the array of image URLs
             deskripsi: deskripsi,
             dataDiriId,
           });
-          res.status(201).json({ msg: "Galeri Created", id: newGaleri.id  });
+          res.status(201).json({ msg: "Galeri Created", id: newGaleri.id });
         } catch (error) {
           console.log(error.message);
           res.status(500).json({ msg: "Internal Server Error" });
@@ -85,7 +92,6 @@ export const createGaleri = async (req, res) => {
     });
   }
 };
-
 
 // Memperbarui galeri berdasarkan ID
 export const updateGaleri = async (req, res) => {
@@ -149,14 +155,14 @@ export const updateGaleri = async (req, res) => {
 // Menghapus galeri berdasarkan ID
 export const deleteGaleri = async (req, res) => {
   try {
-    const { id } = req.params; 
-    const { accountId } = req.user; 
+    const { id } = req.params;
+    const { accountId } = req.user;
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
     const result = await Galeri.destroy({
       where: {
-        id: id, 
-        dataDiriId: dataDiriId, 
+        id: id,
+        dataDiriId: dataDiriId,
       },
     });
 

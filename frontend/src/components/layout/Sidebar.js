@@ -12,11 +12,16 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import PersonIcon from "@mui/icons-material/Person";
+import SchoolIcon from "@mui/icons-material/School";
+import CorporateFareIcon from "@mui/icons-material/CorporateFare";
+import SourceIcon from "@mui/icons-material/Source";
+import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
+import CollectionsIcon from "@mui/icons-material/Collections";
 import { useAppCv } from "../../appCv";
 
-const drawerWidth = 240;
+const drawerWidth = 265;
+const iconArray = [PersonIcon, SchoolIcon, CorporateFareIcon, SourceIcon, TipsAndUpdatesIcon, CollectionsIcon];
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -70,29 +75,25 @@ export default function MiniDrawer() {
   const open = useAppCv((state) => state.dopen);
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", backgroundColor: (theme) => (theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900]) }}>
       <CssBaseline />
       <Box height={50} />
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
+          <IconButton>{theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+          {["Data Diri", "Riwayat Pendidikan", "Pengalaman Organisasi", "Portofolio", "Skill", "Galeri"].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{
-                  minHeight: 48,
+                  minHeight: 40,
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
                 }}
+                component="a" // Menggunakan anchor (a) sebagai tautan
+                href={index === 0 ? "/datadiri" : index === 1 ? "/pendidikan" : index === 2 ? "/organisasi" : index === 3 ? "/portofolio" : index === 4 ? "/skill" : index === 5 ? "/galeri" : "/"} // Sesuaikan rute
               >
                 <ListItemIcon
                   sx={{
@@ -101,32 +102,7 @@ export default function MiniDrawer() {
                     justifyContent: "center",
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {React.createElement(iconArray[index])}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -134,9 +110,7 @@ export default function MiniDrawer() {
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-      </Box>
+      <Box component="main" sx={{ flexGrow: 1 }}></Box>
     </Box>
   );
 }
