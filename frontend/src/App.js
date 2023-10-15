@@ -7,14 +7,14 @@ import Dashboard from "./components/Dashboard";
 import DatadiriList from "./components/datadiri/Datadiri";
 import AddDatadiri from "./components/datadiri/AddDatadiri";
 import UpdateDatadiri from "./components/datadiri/EditDatadiri";
-import AddPendidikan from "./components/pendidikan/AddPendidikan";
-import UpdatePendidikan from "./components/pendidikan/EditPendidikan";
-import PendidikanList from "./components/pendidikan/Pendidikan";
 import PortofolioList from "./components/portofolio/Portofolio"; 
 import AddPortofolio from "./components/portofolio/AddPortofolio";
 import SkillList from "./components/skill/Skill";
 import AddSkill from "./components/skill/AddSkill";
+import AddOrganisasi from "./components/organisasi/AddOrganisasii";
+import OrganisasiList from "./components/organisasi/Organisasii";
 import LandingPage from "./components/landing_page/landing-page";
+import UpdateOrganisasi from "./components/organisasi/EditOrganisasi";
 
 function App() {
   return (
@@ -56,26 +56,26 @@ function App() {
           }
         />
         <Route
-          path="/pendidikan"
+          path="/organisasi"
           element={
             <>
-              <PendidikanList />
+              <OrganisasiList />
             </>
           }
         />
         <Route
-          path="/add-pendidikan"
+          path="/add-organisasi"
           element={
             <>
-              <AddPendidikan />
+              <AddOrganisasi />
             </>
           }
         />
         <Route
-          path="/edit-pendidikan/:id"
+          path="/edit-organisasi/:id"
           element={
             <>
-              <UpdatePendidikan />
+              <UpdateOrganisasi />
             </>
           }
         />
