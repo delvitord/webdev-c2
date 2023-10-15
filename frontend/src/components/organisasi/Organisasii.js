@@ -204,16 +204,7 @@ const OrganisasiList = () => {
           <Box sx={{ display: "flex" }}>
             <Sidebar />
             <Box component="main" sx={{ flexGrow: 1, p: 2 }}>
-              <Card>
-                <CardContent>
-                  <Link to={`/add-organisasi`}>
-                    <Button variant="contained" color="success">
-                      Add New
-                    </Button>
-                  </Link>
-                  <OrganisasiTable />
-                </CardContent>
-              </Card>
+              <OrganisasiTable />
             </Box>
           </Box>
         </>

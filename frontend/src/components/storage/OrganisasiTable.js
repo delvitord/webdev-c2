@@ -7,6 +7,8 @@ import Content from "../layout/Content";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 const columns = [
     { field: "id", headerName: "No", width: 30 },
@@ -76,14 +78,14 @@ const OrganisasiTable = () => {
     if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
       try {
         const accessToken = localStorage.getItem("accessToken");
-  
+
         // Send a DELETE request to the server to delete the item with a specific ID
         await axios.delete(`http://localhost:5000/datadiri/organisasi/${originalId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-  
+
         // After successful deletion, you can update the state or refresh the data
         getOrganisasi(); // You may want to call this to refresh the data.
       } catch (error) {
@@ -94,6 +96,11 @@ const OrganisasiTable = () => {
 
     return (
         <Content open={true}>
+            <Link to={`/add-organisasi`}>
+                <Button variant="contained" color="success" sx={{ mb: 3 }}>
+                Add New
+                </Button>
+            </Link>
             {organisasi && organisasi.length > 0 ? (
                 <DataTable
                     rows={organisasi}

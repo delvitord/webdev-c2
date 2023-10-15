@@ -117,14 +117,6 @@ function App() {
           }
         />
         <Route
-          path="/edit-portofolio/:id"
-          element={
-            <>
-              <UpdatePortofolio />
-            </>
-          }
-        />
-        <Route
           path="/skill"
           element={
             <>
