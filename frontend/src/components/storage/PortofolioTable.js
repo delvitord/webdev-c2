@@ -11,12 +11,12 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 
 const columns = [
-  { field: "id", headerName: "ID", minWidth: 50 },
-  { field: "judul", headerName: "Judul", minWidth: 100 },
-  { field: "deskripsi", headerName: "Deskripsi", minWidth: 100 },
+  { field: "id", headerName: "ID", minWidth: 30 },
+  { field: "judul", headerName: "Judul", minWidth: 200 },
+  { field: "deskripsi", headerName: "Deskripsi", minWidth: 150, },
   { field: "file", headerName: "File", minWidth: 100 },
-  { field: "image", headerName: "Image", minWidth: 100 },
-  { field: "link", headerName: "Link", minWidth: 100 },
+  { field: "image", headerName: "Image", minWidth: 120,  },
+  { field: "link", headerName: "Link", minWidth: 150 },
   { field: "actions", headerName: "Actions", width: 150 },
 ];
 
@@ -53,18 +53,14 @@ const PortofolioTable = () => {
   const getPortofolio = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-
+  
       const response = await axios.get("http://localhost:5000/datadiri/portofolio", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
-      const dataWithId = response.data.map((item, index) => ({
-        ...item,
-        id: index + 1,
-      }));
-      setPortofolio(dataWithId);
+  
+      setPortofolio(response.data); // Assuming the response includes database IDs
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -73,15 +69,15 @@ const PortofolioTable = () => {
   const [open] = React.useState(true);
   const handleEditClick = (id) => {
     // Navigasi ke halaman edit dengan mengirimkan ID data sebagai bagian dari URL
-    navigate(`/edit-portofolio`);
+    navigate(`/edit-portofolio/${id}`);
   };
 
-  const handleDeleteClick = async => {
+  const handleDeleteClick = async (id)=> {
     if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
       try {
         const accessToken = localStorage.getItem("accessToken");
         // Lakukan permintaan DELETE ke backend untuk menghapus data dengan ID tertentu
-        axios.delete(`http://localhost:5000/datadiri/portofolio`, {
+        axios.delete(`http://localhost:5000/datadiri/portofolio/${id}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -95,7 +91,7 @@ const PortofolioTable = () => {
 
   return (
     <Content open={open}>
-        <Link to={`/add-portofolio`}>
+      <Link to={`/add-portofolio`}>
         <Button variant="contained" color="success" sx={{ mb: 3 }}>
           Add New
         </Button>
@@ -106,7 +102,9 @@ const PortofolioTable = () => {
           columns={columns.map((column) => ({
             ...column,
             renderCell: (params) => {
-              if (column.field === "actions") {
+              const { field, value } = params;
+
+              if (field === "actions") {
                 return (
                   <div>
                     <IconButton
@@ -125,16 +123,34 @@ const PortofolioTable = () => {
                     </IconButton>
                   </div>
                 );
-              } else if (column.field === "foto") {
+              } else if (field === "file") {
+                return value ? (
+                  <a href={value} target="_blank" rel="noopener noreferrer">
+                    View File
+                  </a>
+                ) : "No File";
+              } else if (field === "image") {
+                return value && value.length > 0 ? (
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    {value.map((img, idx) => (
+                      <div key={idx} style={{ marginBottom: "8px" }}>
+                        <a href={img} target="_blank" rel="noopener noreferrer">
+                          View Image {idx + 1}
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                ) : "No Images";
+              } else if (field === "foto") {
                 return (
                   <img
-                    src={params.value} // Anda harus menyediakan URL gambar dari data
+                    src={params.value}
                     alt="Foto"
-                    style={{ width: 50, height: 50 }} // Sesuaikan dengan ukuran yang sesuai
+                    style={{ width: 50, height: 50 }}
                   />
                 );
               } else {
-                return <span>{params.value}</span>;
+                return <span>{value}</span>;
               }
             },
           }))}

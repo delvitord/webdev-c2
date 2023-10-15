@@ -12,6 +12,7 @@ import UpdatePendidikan from "./components/pendidikan/EditPendidikan";
 import PendidikanList from "./components/pendidikan/Pendidikan";
 import PortofolioList from "./components/portofolio/Portofolio";
 import AddPortofolio from "./components/portofolio/AddPortofolio";
+import UpdatePortofolio from "./components/portofolio/EditPortofolio";
 import SkillList from "./components/skill/Skill";
 import AddSkill from "./components/skill/AddSkill";
 import AddOrganisasi from "./components/organisasi/AddOrganisasii";
@@ -116,14 +117,14 @@ function App() {
             </>
           }
         />
-        {/* <Route
+        <Route
           path="/edit-portofolio/:id"
           element={
             <>
               <UpdatePortofolio />
             </>
           }
-        /> */}
+        />
         <Route
           path="/skill"
           element={

@@ -59,30 +59,24 @@ const PendidikanTable = () => {
           },
         }
       );
-
-      const dataWithId = response.data.map((item, index) => ({
-        ...item,
-        id: index + 1,
-        _originalId: item.id,
-      }));
-      setPendidikan(dataWithId);
+      setPendidikan(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   const [open] = React.useState(true);
-  const handleEditClick = (originalId) => {
+  const handleEditClick = (id) => {
     // Navigasi ke halaman edit dengan mengirimkan ID data sebagai bagian dari URL
-    navigate(`/edit-pendidikan/${originalId}`);
+    navigate(`/edit-pendidikan/${id}`);
   };
 
-  const handleDeleteClick = async (originalId) => {
+  const handleDeleteClick = async (id) => {
     if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
       try {
         const accessToken = localStorage.getItem("accessToken");
         // Lakukan permintaan DELETE ke backend untuk menghapus data dengan ID tertentu
-        axios.delete(`http://localhost:5000/pendidikan/${originalId}`, {
+        axios.delete(`http://localhost:5000/datadiri/pendidikan/${id}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -113,14 +107,14 @@ const PendidikanTable = () => {
                     <IconButton
                       aria-label="Edit"
                       color="primary"
-                      onClick={() => handleEditClick(params.row._originalId)}
+                      onClick={() => handleEditClick(params.row.id)}
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton
                       aria-label="Delete"
                       color="error"
-                      onClick={() => handleDeleteClick(params.row._originalId)}
+                      onClick={() => handleDeleteClick(params.row.id)}
                     >
                       <DeleteIcon />
                     </IconButton>
