@@ -3,7 +3,7 @@ import { Sequelize } from "sequelize";
 const env = {
   database: "db_personal_web",
   username: "postgres",
-  password: "123",
+  password: "gian1234",
   host: "localhost",
   dialect: "postgres",
   pool: {

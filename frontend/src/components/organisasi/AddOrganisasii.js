@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Card, CardContent } from "@mui/material";
 
-const AddPendidikan = () => {
-  const [nama_instansi, setNamaInstansi] = useState("");
+const AddOrganisasi = () => {
+  const [nama_organisasi, setNamaOrganisasi] = useState("");
+  const [jabatan, setJabatan] = useState("");
   const [awal_periode, setAwalPeriode] = useState("");
   const [akhir_periode, setAkhirPeriode] = useState("");
-  const [jurusan, setJurusan] = useState("");
+  const [deskripsi, setDeskripsi] = useState("");
   const navigate = useNavigate();
 
-  const savePendidikan = async (e) => {
+  const saveOrganisasi = async (e) => {
     e.preventDefault();
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -22,14 +23,15 @@ const AddPendidikan = () => {
         'Content-Type': 'multipart/form-data',
       };
       
-      await axios.post(`http://localhost:5000/datadiri/pendidikan`, {
-        nama_instansi,
+      await axios.post(`http://localhost:5000/datadiri/organisasi`, {
+        nama_organisasi,
+        jabatan,
         awal_periode,
         akhir_periode,
-        jurusan,
+        deskripsi,
       }, { headers });
       
-      navigate("/pendidikan");
+      navigate("/organisasi");
     } catch (error) {
       console.log(error);
     }
@@ -41,18 +43,27 @@ const AddPendidikan = () => {
         <Grid>
           <Card sx={{ maxWidth: 450 }}>
             <CardContent>
-              <form onSubmit={savePendidikan}>
+              <form onSubmit={saveOrganisasi}>
                 <TextField
-                  label="Nama Instansi"
+                  label="Nama Organisasi"
                   fullWidth
-                  value={nama_instansi}
-                  onChange={(e) => setNamaInstansi(e.target.value)}
-                  placeholder="Nama Instansi"
+                  value={nama_organisasi}
+                  onChange={(e) => setNamaOrganisasi(e.target.value)}
+                  placeholder="Nama Organisasi"
                   variant="outlined"
                   margin="normal"
                 />
                 <TextField
-                  label="Tahun Masuk"
+                  label="Jabatan"
+                  fullWidth
+                  value={jabatan}
+                  onChange={(e) => setJabatan(e.target.value)}
+                  placeholder="Jabatan"
+                  variant="outlined"
+                  margin="normal"
+                />
+                <TextField
+                  label="Awal Periode"
                   fullWidth
                   type="date"
                   value={awal_periode}
@@ -64,7 +75,7 @@ const AddPendidikan = () => {
                   margin="normal"
                 />
                 <TextField
-                  label="Tahun Lulus"
+                  label="Akhir Periode"
                   fullWidth
                   type="date"
                   value={akhir_periode}
@@ -76,11 +87,12 @@ const AddPendidikan = () => {
                   margin="normal"
                 />
                 <TextField
-                  label="Jurusan"
+                  label="Deskripsi"
                   fullWidth
-                  value={jurusan}
-                  onChange={(e) => setJurusan(e.target.value)}
-                  placeholder="Jurusan"
+                  multiline
+                  value={deskripsi}
+                  onChange={(e) => setDeskripsi(e.target.value)}
+                  placeholder="Deskripsi"
                   variant="outlined"
                   margin="normal"
                 />
@@ -96,4 +108,4 @@ const AddPendidikan = () => {
   );
 };
 
-export default AddPendidikan;
+export default AddOrganisasi;
