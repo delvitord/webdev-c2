@@ -6,41 +6,45 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Card, CardContent } from "@mui/material";
 
-const UpdatePendidikan = () => {
-  const [Pendidikan, setPendidikan] = useState({
-    nama_instansi: "",
+const UpdateOrganisasi = () => {
+  const [organisasi, setOrganisasi] = useState({
+    nama_organisasi: "",
+    jabatan: "",
     awal_periode: "",
     akhir_periode: "",
-    jurusan: "",
+    deskripsi: "",
   });
   const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
-    getPendidikanById();
+    getOrganisasiById();
   }, []);
 
-  
   const accessToken = localStorage.getItem("accessToken");
 
-  const updatePendidikan = async (e) => {
+  const updateOrganisasi = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/datadiri/pendidikan/${id}`, Pendidikan,{
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      navigate("/pendidikan");
+      await axios.patch(
+        `http://localhost:5000/datadiri/organisasi/${id}`,
+        organisasi,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      navigate("/organisasi");
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getPendidikanById = async () => {
+  const getOrganisasiById = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/datadiri/pendidikan/${id}`,
+        `http://localhost:5000/datadiri/organisasi/${id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -48,17 +52,17 @@ const UpdatePendidikan = () => {
         }
       );
       if (response.data) {
-        const dataServer = response.data; // Gunakan data sebagai objek langsung
+        const dataServer = response.data;
 
-        // Set nilai dari data yang diperoleh ke dalam state
-        setPendidikan({
-          nama_instansi: dataServer.nama_instansi,
+        setOrganisasi({
+          nama_organisasi: dataServer.nama_organisasi,
+          jabatan: dataServer.jabatan,
           awal_periode: dataServer.awal_periode,
           akhir_periode: dataServer.akhir_periode,
-          jurusan: dataServer.jurusan,
+          deskripsi: dataServer.deskripsi,
         });
       }
-      console.log(response)
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -70,31 +74,46 @@ const UpdatePendidikan = () => {
         <Grid item>
           <Card sx={{ maxWidth: 450 }}>
             <CardContent>
-              <form onSubmit={updatePendidikan}>
+              <form onSubmit={updateOrganisasi}>
                 <TextField
-                  label="Nama Instansi"
+                  label="Nama Organisasi"
                   fullWidth
-                  name="nama_instansi"
-                  value={Pendidikan.nama_instansi || ""}
+                  name="nama_organisasi"
+                  value={organisasi.nama_organisasi || ""}
                   onChange={(e) =>
-                    setPendidikan({
-                      ...Pendidikan,
-                      nama_instansi: e.target.value,
+                    setOrganisasi({
+                      ...organisasi,
+                      nama_organisasi: e.target.value,
                     })
                   }
-                  placeholder="Nama instansi"
+                  placeholder="Nama Organisasi"
                   variant="outlined"
                   margin="normal"
                 />
                 <TextField
-                  label="Tahun Masuk"
+                  label="Jabatan"
+                  fullWidth
+                  name="jabatan"
+                  value={organisasi.jabatan || ""}
+                  onChange={(e) =>
+                    setOrganisasi({
+                      ...organisasi,
+                      jabatan: e.target.value,
+                    })
+                  }
+                  placeholder="Jabatan"
+                  variant="outlined"
+                  margin="normal"
+                />
+                <TextField
+                  label="Tahun Mulai"
                   fullWidth
                   type="date"
                   name="awal_periode"
-                  value={Pendidikan.awal_periode || ""}
+                  value={organisasi.awal_periode || ""}
                   onChange={(e) =>
-                    setPendidikan({
-                      ...Pendidikan,
+                    setOrganisasi({
+                      ...organisasi,
                       awal_periode: e.target.value,
                     })
                   }
@@ -105,14 +124,14 @@ const UpdatePendidikan = () => {
                   margin="normal"
                 />
                 <TextField
-                  label="Tahun Lulus"
+                  label="Tahun Selesai"
                   fullWidth
                   type="date"
                   name="akhir_periode"
-                  value={Pendidikan.akhir_periode || ""}
+                  value={organisasi.akhir_periode || ""}
                   onChange={(e) =>
-                    setPendidikan({
-                      ...Pendidikan,
+                    setOrganisasi({
+                      ...organisasi,
                       akhir_periode: e.target.value,
                     })
                   }
@@ -123,17 +142,17 @@ const UpdatePendidikan = () => {
                   margin="normal"
                 />
                 <TextField
-                  label="Jurusan"
+                  label="Deskripsi"
                   fullWidth
-                  name="jurusan"
-                  value={Pendidikan.jurusan || ""}
+                  name="deskripsi"
+                  value={organisasi.deskripsi || ""}
                   onChange={(e) =>
-                    setPendidikan({
-                      ...Pendidikan,
-                      jurusan: e.target.value,
+                    setOrganisasi({
+                      ...organisasi,
+                      deskripsi: e.target.value,
                     })
                   }
-                  placeholder="Alamat"
+                  placeholder="Deskripsi"
                   variant="outlined"
                   margin="normal"
                 />
@@ -149,4 +168,4 @@ const UpdatePendidikan = () => {
   );
 };
 
-export default UpdatePendidikan;
+export default UpdateOrganisasi;

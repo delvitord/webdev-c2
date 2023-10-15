@@ -4,67 +4,97 @@ import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { Card, CardContent } from "@mui/material";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
+import { CardContent } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import Alert from "@mui/material/Alert";
 
-const AddSkill = () => {
+const AddSkill = ({ onCancelAdd, onSuccess }) => {
   const [nama_skill, setSkill] = useState("");
-  const [level_keahlian, setLevelKeahlian] = useState("ahli"); // Default to "ahli"
+  const [level_keahlian, setLevelKeahlian] = useState(null);
+  const [error, setError] = useState("");
+  const [isCanceled, setIsCanceled] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const navigate = useNavigate();
+
+  const options = [
+    { level_keahlian: "Pemula", id: 1 },
+    { level_keahlian: "Menengah", id: 2 },
+    { level_keahlian: "Ahli", id: 3 },
+  ];
 
   const saveSkill = async (e) => {
     e.preventDefault();
+    setError("");
 
-    // Mengambil token akses dari penyimpanan lokal
-    const accessToken = localStorage.getItem("accessToken");
+    if (!isCanceled) {
+      if (!nama_skill && !level_keahlian) {
+        setError("Nama Skill dan Level Keahlian harus diisi");
+      } else if (!nama_skill) {
+        setError("Nama Skill harus diisi");
+      } else if (!level_keahlian) {
+        setError("Level Keahlian harus diisi");
+      }
+    }
 
-    // Membuat header dengan otorisasi Bearer
-    const headers = {
-      Authorization: `Bearer ${accessToken}`,
-    };
+    if (!isCanceled && (nama_skill || level_keahlian)) {
+      const accessToken = localStorage.getItem("accessToken");
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+      };
 
-    // Membuat FormData untuk mengirim data yang kompleks (file, image) ke server
-    const formData = new FormData();
-    formData.append("nama_skill", nama_skill);
-    formData.append("level_keahlian", level_keahlian);
+      const formData = new FormData();
+      formData.append("nama_skill", nama_skill);
+      formData.append("level_keahlian", level_keahlian.id);
 
-    try {
-      await axios.post("http://localhost:5000/datadiri/skill", formData, {
-        headers, // Menggunakan header yang sudah dibuat
-      });
-      navigate("/skill"); // Redirect setelah berhasil menambahkan skill
-    } catch (error) {
-      console.log(error);
+      try {
+        await axios.post("http://localhost:5000/datadiri/skill", formData, {
+          headers,
+        });
+        setShowSuccessAlert(true);
+        setTimeout(() => {
+          setShowSuccessAlert(false);
+          onSuccess(); // Call the `onSuccess` function passed from SkillList
+          onCancelAdd(); // Close the AddSkill dialog
+        }, 2000);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
+  const handleCancel = () => {
+    setIsCanceled(true);
+    navigate(-1);
+  };
+
   return (
-    <>
-      <Grid container spacing={2} mt={5} justifyContent="center">
-        <Grid>
-          <Card sx={{ maxWidth: 450 }}>
-            <CardContent>
-              <form onSubmit={saveSkill}>
-                <TextField label="Nama Skill" fullWidth value={nama_skill} onChange={(e) => setSkill(e.target.value)} placeholder="Skill" variant="outlined" margin="normal" />
-                <InputLabel id="level-label">Level Keahlian</InputLabel>
-                <Select labelId="level-label" id="level" fullWidth value={level_keahlian} onChange={(e) => setLevelKeahlian(e.target.value)} variant="outlined" margin="normal">
-                  <MenuItem value="ahli">Ahli</MenuItem>
-                  <MenuItem value="berpengalaman">Berpengalaman</MenuItem>
-                  <MenuItem value="Terampil">Terampil</MenuItem>
-                  <MenuItem value="Menengah">Menengah</MenuItem>
-                  <MenuItem value="Pemula">Pemula</MenuItem>
-                </Select>
-                <Button type="submit" variant="contained" color="primary">
-                  Save
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+    <CardContent sx={{ minWidth: 500 }}>
+      {error && <Alert severity="error">{error}</Alert>}
+      {showSuccessAlert && (
+        <Alert severity="success" sx={{ marginBottom: 1 }}>
+          Data Skill berhasil disimpan
+        </Alert>
+      )}
+      <form onSubmit={saveSkill}>
+        <TextField label="Nama Skill" fullWidth value={nama_skill} onChange={(e) => setSkill(e.target.value)} variant="outlined" margin="normal" />
+        <Autocomplete
+          id="level_keahlian"
+          options={options}
+          value={level_keahlian}
+          onChange={(event, newValue) => setLevelKeahlian(newValue)}
+          getOptionLabel={(option) => option.level_keahlian}
+          renderInput={(params) => <TextField {...params} label="Level keahlian" sx={{ marginTop: 1 }} />}
+        />
+        <Grid container justifyContent="flex-end">
+          <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+            Save
+          </Button>
+          <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+            Cancel
+          </Button>
         </Grid>
-      </Grid>
-    </>
+      </form>
+    </CardContent>
   );
 };
 

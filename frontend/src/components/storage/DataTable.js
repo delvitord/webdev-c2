@@ -1,24 +1,48 @@
 import * as React from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { createTheme, ThemeProvider, CssBaseline} from "@mui/material";
 
-export default function DataTable({
-  rows,
-  columns,
-}) {
+
+const themeLight = createTheme();
+const themeDark = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#90caf9",
+    },
+  },
+});
+
+export default function DataTable({ rows, columns, isDarkMode }) {
+  const theme = isDarkMode ? themeDark : themeLight;
+
   return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <DataGrid
         rows={rows}
         columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
+        autoHeight
+        disableColumnMenu
+        columnHeaderHeight={60}
+        checkboxSelection
+        cellModesModel={1}
+        disableSelectionOnClick
+        pageSize={5}
+        rowsPerPageOptions={[5]}
+        slots={{
+          toolbar: GridToolbar,
+        }}
+        // Customize row styling
+        sx={{
+          [`& .MuiDataGrid-row`]: {
+            backgroundColor: theme.palette.background.default,
+            "&:hover": {
+              backgroundColor: theme.palette.action.hover,
             },
           },
         }}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
       />
+    </ThemeProvider>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import DataTable from './DataTable'
+import DataTable from "./DataTable";
 import Content from "../layout/Content";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
@@ -11,31 +11,23 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 
 const columns = [
-  { field: "id", headerName: "No", width: 30 },
-  { field: "nama", headerName: "Nama", minWidth: 100 },
-  { field: "tempat_lahir", headerName: "Tempat Lahir", minWidth: 100 },
-  { field: "tanggal_lahir", headerName: "Tanggal Lahir", minWidth: 100 },
-  { field: "alamat", headerName: "Alamat", minWidth: 100 },
-  { field: "email", headerName: "Email", minWidth: 100 },
-  { field: "no_telp", headerName: "No.Telp", minWidth: 100 },
-  { field: "foto", headerName: "Foto", minWidth: 100, },
-  { field: "deskripsi", headerName: "Deskripsi", minWidth: 100 },
-  { field: "linkedin", headerName: "LinkedIn", minWidth: 100 },
-  { field: "instagram", headerName: "Instagram", minWidth: 100 },
-  { field: "x", headerName: "X", minWidth: 100 },
-  { field: "github", headerName: "GitHub", minWidth: 100 },
+  { field: "id", headerName: "No", minWidth: 30 },
+  { field: "nama_instansi", headerName: "Nama Instansi", minWidth: 250 },
+  { field: "awal_periode", headerName: "Tahun Masuk", minWidth: 200 },
+  { field: "akhir_periode", headerName: "Tahun Lulus", minWidth: 200 },
+  { field: "jurusan", headerName: "Jurusan", minWidth: 200 },
   { field: "actions", headerName: "Actions", minWidth: 100 },
 ];
 
-const DatadiriTable = () => {
-  const [datadiris, setDatadiri] = useState([]);
+const PendidikanTable = () => {
+  const [pendidikan, setPendidikan] = useState([]);
   const [token, setToken] = useState("");
   const [expire, setExpire] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     refreshToken();
-    getDatadiri();
+    getPendidikan();
   }, []);
 
   const refreshToken = async () => {
@@ -43,7 +35,7 @@ const DatadiriTable = () => {
       const response = await axios.get("http://localhost:5000/token");
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
-      setDatadiri(decoded.nama);
+      setPendidikan(decoded.nama);
       const currentTime = Math.floor(Date.now() / 1000);
       if (decoded.exp < currentTime) {
       }
@@ -55,39 +47,42 @@ const DatadiriTable = () => {
     }
   };
 
-
-  const getDatadiri = async () => {
+  const getPendidikan = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
 
-      const response = await axios.get("http://localhost:5000/data_diri", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:5000/datadiri/pendidikan",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
       const dataWithId = response.data.map((item, index) => ({
         ...item,
         id: index + 1,
+        _originalId: item.id,
       }));
-      setDatadiri(dataWithId);
+      setPendidikan(dataWithId);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   const [open] = React.useState(true);
-  const handleEditClick = (id) => {
+  const handleEditClick = (originalId) => {
     // Navigasi ke halaman edit dengan mengirimkan ID data sebagai bagian dari URL
-    navigate(`/edit-datadiri`);
+    navigate(`/edit-pendidikan/${originalId}`);
   };
 
-  const handleDeleteClick = async => {
+  const handleDeleteClick = async (originalId) => {
     if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
       try {
         const accessToken = localStorage.getItem("accessToken");
         // Lakukan permintaan DELETE ke backend untuk menghapus data dengan ID tertentu
-        axios.delete(`http://localhost:5000/data_diri`, {
+        axios.delete(`http://localhost:5000/pendidikan/${originalId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -101,14 +96,14 @@ const DatadiriTable = () => {
 
   return (
     <Content open={open}>
-      <Link to={`/add-datadiri`}>
-        <Button variant="contained" color="success" sx={{ mb : 3}}>
+      <Link to={`/add-pendidikan`}>
+        <Button variant="contained" color="success" sx={{ mb: 3 }}>
           Add New
         </Button>
       </Link>
-      {datadiris && datadiris.length > 0 ? (
+      {pendidikan && pendidikan.length > 0 ? (
         <DataTable
-          rows={datadiris}
+          rows={pendidikan}
           columns={columns.map((column) => ({
             ...column,
             renderCell: (params) => {
@@ -118,29 +113,19 @@ const DatadiriTable = () => {
                     <IconButton
                       aria-label="Edit"
                       color="primary"
-                      onClick={() => handleEditClick(params.row.id)}
+                      onClick={() => handleEditClick(params.row._originalId)}
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton
                       aria-label="Delete"
                       color="error"
-                      onClick={() => handleDeleteClick(params.row.id)}
+                      onClick={() => handleDeleteClick(params.row._originalId)}
                     >
                       <DeleteIcon />
                     </IconButton>
                   </div>
                 );
-              } else if (column.field === "foto") {
-                return (
-                  <img
-                    src={params.value} // Anda harus menyediakan URL gambar dari data
-                    alt="Foto"
-                    style={{ width: 50, height: 50 }} // Sesuaikan dengan ukuran yang sesuai
-                  />
-                );
-              } else {
-                return <span>{params.value}</span>;
               }
             },
           }))}
@@ -152,4 +137,4 @@ const DatadiriTable = () => {
   );
 };
 
-export default DatadiriTable
+export default PendidikanTable;
