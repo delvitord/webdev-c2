@@ -8,10 +8,12 @@ import { Card, CardContent } from "@mui/material";
 
 
 const UpdatePendidikan = () => {
-  const [nama_instansi, setNamaInstansi] = useState("");
-  const [awal_periode, setAwalPeriode] = useState("");
-  const [akhir_periode, setAkhirPeriode] = useState("");
-  const [jurusan, setJurusan] = useState("");
+  const [Pendidikan, setPendidikan] = useState({
+    nama_instansi: "",
+    awal_periode: "",
+    akhir_periode: "",
+    jurusan: "",
+  });
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -19,14 +21,16 @@ const UpdatePendidikan = () => {
     getPendidikanById();
   }, []);
 
+  
+  const accessToken = localStorage.getItem("accessToken");
+
   const updatePendidikan = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/pendidikan/${id}`, {
-        nama_instansi,
-        awal_periode,
-        akhir_periode,
-        jurusan,
+      await axios.patch(`http://localhost:5000/datadiri/pendidikan/${id}`, Pendidikan,{
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
       navigate("/pendidikan");
     } catch (error) {
@@ -35,11 +39,30 @@ const UpdatePendidikan = () => {
   };
 
   const getPendidikanById = async () => {
-    const response = await axios.get(`http://localhost:5000/pendidikan/${id}`);
-    setNamaInstansi(response.data.nama_instansi);
-    setAwalPeriode(response.data.awal_periode);
-    setAkhirPeriode(response.data.akhir_periode);
-    setJurusan(response.data.jurusant);
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/datadiri/pendidikan/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.data) {
+        const dataServer = response.data; // Gunakan data sebagai objek langsung
+
+        // Set nilai dari data yang diperoleh ke dalam state
+        setPendidikan({
+          nama_instansi: dataServer.nama_instansi,
+          awal_periode: dataServer.awal_periode,
+          akhir_periode: dataServer.akhir_periode,
+          jurusan: dataServer.jurusan,
+        });
+      }
+      console.log(response)
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -52,8 +75,14 @@ const UpdatePendidikan = () => {
                 <TextField
                   label="Nama Instansi"
                   fullWidth
-                  value={nama_instansi}
-                  onChange={(e) => setNamaInstansi(e.target.value)}
+                  name="nama_instansi"
+                  value={Pendidikan.nama_instansi || ""}
+                  onChange={(e) =>
+                    setPendidikan({
+                      ...Pendidikan,
+                      nama_instansi: e.target.value,
+                    })
+                  }
                   placeholder="Nama instansi"
                   variant="outlined"
                   margin="normal"
@@ -62,9 +91,17 @@ const UpdatePendidikan = () => {
                   label="Tahun Masuk"
                   fullWidth
                   type="date"
-                  value={awal_periode}
-                  onChange={(e) => setAwalPeriode(e.target.value)}
-                  placeholder="Tahun Masuk"
+                  name="awal_periode"
+                  value={Pendidikan.awal_periode || ""}
+                  onChange={(e) =>
+                    setPendidikan({
+                      ...Pendidikan,
+                      awal_periode: e.target.value,
+                    })
+                  }
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                   variant="outlined"
                   margin="normal"
                 />
@@ -72,17 +109,31 @@ const UpdatePendidikan = () => {
                   label="Tahun Lulus"
                   fullWidth
                   type="date"
-                  value={akhir_periode}
-                  onChange={(e) => setAkhirPeriode(e.target.value)}
-                  placeholder="Tahun Lulus"
+                  name="akhir_periode"
+                  value={Pendidikan.akhir_periode || ""}
+                  onChange={(e) =>
+                    setPendidikan({
+                      ...Pendidikan,
+                      akhir_periode: e.target.value,
+                    })
+                  }
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
                   variant="outlined"
                   margin="normal"
                 />
                 <TextField
                   label="Jurusan"
                   fullWidth
-                  value={jurusan}
-                  onChange={(e) => setJurusan(e.target.value)}
+                  name="jurusan"
+                  value={Pendidikan.jurusan || ""}
+                  onChange={(e) =>
+                    setPendidikan({
+                      ...Pendidikan,
+                      jurusan: e.target.value,
+                    })
+                  }
                   placeholder="Alamat"
                   variant="outlined"
                   margin="normal"

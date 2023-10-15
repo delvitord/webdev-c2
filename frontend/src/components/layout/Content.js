@@ -1,6 +1,5 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
 
 function Content({ children }) {
@@ -10,17 +9,18 @@ function Content({ children }) {
       sx={{
         backgroundColor: (theme) =>
           theme.palette.mode === "light"
-            ? theme.palette.grey[100]
-            : theme.palette.grey[900],
+            ? theme.palette.background.paper
+            : theme.palette.background.default,
         flexGrow: 1,
         height: "100vh",
         overflow: "auto",
+        boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.1)", // Bayangan
+        padding: 3, // Padding untuk memberikan ruang ekstra
+        borderRadius: "10px", // Rounded corners
       }}
     >
       <Toolbar />
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         {children}
-      </Container>
     </Box>
   );
 }

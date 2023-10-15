@@ -216,7 +216,7 @@ import { useNavigate} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { Card, CardContent } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 
 const AddDatadiri = () => {
     const [dataDiri, setDataDiri] = useState({
@@ -266,11 +266,13 @@ const AddDatadiri = () => {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        await axios.post("http://localhost:5000/data_diri", dataDiri, {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.post("http://localhost:5000/data_diri", dataDiri, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
+        console.log(response)
         navigate("/datadiri");
       } catch (error) {
         console.log(error);
@@ -349,7 +351,57 @@ const AddDatadiri = () => {
                   variant="outlined"
                   margin="normal"
                 />
-                <TextField
+                <input
+                  accept="image/*"
+                  id="file-input"
+                  type="file"
+                  name="foto"
+                  value={dataDiri.foto}
+                  onChange={handleInputChange}
+                  style={{ display: "none" }}
+                />
+                <label htmlFor="file-input">
+                  <Typography variant="subtitle1" color="textSecondary">
+                    Upload Foto
+                  </Typography>
+                  <div
+                    style={{
+                      border: "1px dashed #e0e0e0",
+                      borderRadius: "6px",
+                      minHeight: "200px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "48px",
+                    }}
+                  >
+                    <Typography variant="h6" color="primary">
+                      Drop files here
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      color="textSecondary"
+                      style={{ marginBottom: "8px" }}
+                    >
+                      Or
+                    </Typography>
+                    <label htmlFor="file-input">
+                      <Typography
+                        variant="body1"
+                        color="primary"
+                        style={{
+                          display: "inline-block",
+                          padding: "8px 28px",
+                          border: "1px solid #e0e0e0",
+                          borderRadius: "4px",
+                        }}
+                      >
+                        Browse
+                      </Typography>
+                    </label>
+                  </div>
+                </label>
+                {/* <TextField
                   label="Foto"
                   fullWidth
                   type="file"
@@ -362,7 +414,7 @@ const AddDatadiri = () => {
                   }}
                   variant="outlined"
                   margin="normal"
-                />
+                /> */}
                 <TextField
                   label="Deskripsi"
                   fullWidth
