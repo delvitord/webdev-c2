@@ -1,6 +1,7 @@
 import * as React from "react";
-import { DataGrid } from "@mui/x-data-grid";
-import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { createTheme, ThemeProvider, CssBaseline} from "@mui/material";
+
 
 const themeLight = createTheme();
 const themeDark = createTheme({
@@ -29,6 +30,9 @@ export default function DataTable({ rows, columns, isDarkMode }) {
         disableSelectionOnClick
         pageSize={5}
         rowsPerPageOptions={[5]}
+        slots={{
+          toolbar: GridToolbar,
+        }}
         // Customize row styling
         sx={{
           [`& .MuiDataGrid-row`]: {
