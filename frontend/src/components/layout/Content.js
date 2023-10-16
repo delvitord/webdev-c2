@@ -19,7 +19,7 @@ function Content({ children }) {
       }}
     >
       <Toolbar />
-        {children}
+      {children}
     </Box>
   );
 }

@@ -8,11 +8,11 @@ const PortofolioList = () => {
   return (
     <>
       <Navbar />
-      <Box height={100}/>
-      <Box sx={{ display: 'flex' }}>
+      <Box height={100} />
+      <Box sx={{ display: "flex" }}>
         <Sidebar />
-        <Box sx={{ flexGrow: 1, p: 2 }}>
-          <PortofolioTable/ >
+        <Box component="main" sx={{ flexGrow: 1 }}>
+          <PortofolioTable />
         </Box>
       </Box>
     </>

@@ -1,26 +1,42 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
 import DataTable from "./DataTable";
 import Content from "../layout/Content";
+import Card from "@mui/material/Card";
+import { CardContent } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import MuiAlert from "@mui/material/Alert";
+import { Transition } from "react-transition-group";
+import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import { TextField } from "@mui/material";
-import InfoIcon from '@mui/icons-material/Info';
-import AddIcon from "@mui/icons-material/Add";
-import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
-import { Link } from "react-router-dom";
+import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
+import AddDatadiri from "../datadiri/AddDatadiri";
+import "../style.css";
 
 const columns = [
   { field: "id", headerName: "No", width: 30 },
-  { field: "nama", headerName: "Nama", minWidth: 250 },
-  { field: "email", headerName: "Email", minWidth: 150 },
-  { field: "no_telp", headerName: "No.Telp", minWidth: 150 },
-  { field: "actions", headerName: "Actions", minWidth: 250 },
+  { field: "nama", headerName: "Nama", minWidth: 100 },
+  { field: "tempat_lahir", headerName: "Tempat Lahir", minWidth: 100 },
+  { field: "tanggal_lahir", headerName: "Tanggal Lahir", minWidth: 100 },
+  { field: "alamat", headerName: "Alamat", minWidth: 100 },
+  { field: "email", headerName: "Email", minWidth: 100 },
+  { field: "no_telp", headerName: "No.Telp", minWidth: 100 },
+  { field: "foto", headerName: "Foto", minWidth: 100 },
+  { field: "deskripsi", headerName: "Deskripsi", minWidth: 100 },
+  { field: "linkedin", headerName: "LinkedIn", minWidth: 100 },
+  { field: "instagram", headerName: "Instagram", minWidth: 100 },
+  { field: "x", headerName: "X", minWidth: 100 },
+  { field: "github", headerName: "GitHub", minWidth: 100 },
+  { field: "actions", headerName: "Actions", minWidth: 100 },
 ];
 
 const DatadiriTable = () => {
@@ -30,6 +46,9 @@ const DatadiriTable = () => {
   const [selectedData, setSelectedData] = useState(null);
   const [showNoDataMessage, setShowNoDataMessage] = useState(true);
   const navigate = useNavigate();
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [datadiriToDelete, setDatadiriToDelete] = useState(null);
+  const [isAddDatadiriDialogOpen, setAddDatadiriDialogOpen] = useState(false);
 
   useEffect(() => {
     refreshToken();
@@ -87,19 +106,29 @@ const DatadiriTable = () => {
   };
 
   const handleDeleteClick = (id) => {
-    if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+    setDatadiriToDelete(id);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const confirmDelete = () => {
+    const id = datadiriToDelete;
+    if (id) {
       try {
         const accessToken = localStorage.getItem("accessToken");
-        // Lakukan permintaan DELETE ke backend untuk menghapus data dengan ID tertentu
         axios
-          .delete(`http://localhost:5000/data_diri`, {
+          .delete(`http://localhost:5000/datadiri/`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           })
-          .then(() => {
-            // Setelah menghapus data, Anda dapat memuat ulang data
-            getDatadiri();
+          .then((response) => {
+            if (response.status === 200) {
+              // Datadiri is successfully deleted, show the snackbar
+              handleSnackbarOpen();
+              window.location.reload();
+            } else {
+              console.error("Gagal menghapus data.");
+            }
           })
           .catch((error) => {
             console.error("Error deleting data:", error);
@@ -108,169 +137,133 @@ const DatadiriTable = () => {
         console.error("Error deleting data:", error);
       }
     }
+    setDeleteConfirmationOpen(false);
+  };
+
+  const cancelDelete = () => {
+    setDatadiriToDelete(null);
+    setDeleteConfirmationOpen(false);
+  };
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const handleSnackbarOpen = () => {
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+  const handleAddDatadiriClick = () => {
+    setAddDatadiriDialogOpen(true);
+  };
+
+  const handleAddDatadiriClose = () => {
+    setAddDatadiriDialogOpen(false);
+  };
+
+  const iconStyle = {
+    fontSize: "40px", // Sesuaikan dengan ukuran yang Anda inginkan
+    color: "black", // Sesuaikan dengan warna ikon Anda
+    backgroundColor: "#ccc", // Warna abu-abu untuk latar belakang
+    borderRadius: "50%", // Membuatnya menjadi lingkaran
+    width: "60px", // Lebar total ikon (termasuk latar belakang)
+    height: "60px", // Tinggi total ikon (termasuk latar belakang)
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   return (
     <Content open={open}>
-      {selectedData && (
-        <div>
-          <IconButton
-            variant="contained"
-            color="danger"
-            sx={{ mb: 3 }}
-            onClick={() => setSelectedData(null)}
-          >
-            <IndeterminateCheckBoxIcon sx={{ fontSize: 40 }} />
-          </IconButton>
-          <Grid
-            item
-            xs={10}
-            sm={6}
-            md={4}
-            sx={{ marginRight: 5, textAlign: "center" }}
-          >
-            <img
-              src={selectedData.foto}
-              alt="Foto"
-              style={{ width: 150, height: 150, objectFit: "cover" }}
-            />
-          </Grid>
-          <TextField
-            label="Name"
-            fullWidth
-            variant="outlined"
-            InputProps={{ readOnly: true }}
-            value={selectedData.nama}
-            margin="normal"
-          />
-          <TextField
-            label="Tempat Lahir"
-            variant="outlined"
-            InputProps={{ readOnly: true }}
-            value={selectedData.tempat_lahir}
-            margin="normal"
-            sx={{ width: 742 }}
-          />
-          <TextField
-            label="Tanggal Lahir"
-            variant="outlined"
-            InputProps={{ readOnly: true }}
-            value={selectedData.tanggal_lahir}
-            margin="normal"
-            sx={{ marginLeft: 5, width: 742 }}
-          />
-          <TextField
-            label="Alamat"
-            fullWidth
-            variant="outlined"
-            InputProps={{ readOnly: true }}
-            value={selectedData.alamat}
-            margin="normal"
-          />
-          <TextField
-            label="Email"
-            fullWidth
-            variant="outlined"
-            InputProps={{ readOnly: true }}
-            value={selectedData.email}
-            margin="normal"
-          />
-          <TextField
-            label="Linkedin"
-            variant="outlined"
-            InputProps={{ readOnly: true }}
-            value={selectedData.linkedin}
-            margin="normal"
-            sx={{ width: 351 }}
-          />
-          <TextField
-            label="Instagram"
-            variant="outlined"
-            InputProps={{ readOnly: true }}
-            value={selectedData.instagram}
-            margin="normal"
-            sx={{ marginLeft: 5, width: 351 }}
-          />
-          <TextField
-            label="X"
-            variant="outlined"
-            InputProps={{ readOnly: true }}
-            value={selectedData.x}
-            margin="normal"
-            sx={{ marginLeft: 5, width: 351 }}
-          />
-          <TextField
-            label="Github"
-            variant="outlined"
-            InputProps={{ readOnly: true }}
-            value={selectedData.github}
-            margin="normal"
-            sx={{ marginLeft: 5, width: 351 }}
-          />
-          <TextField
-            label="Deskripsi"
-            fullWidth
-            variant="outlined"
-            InputProps={{ readOnly: true }}
-            value={selectedData.deskripsi}
-            multiline
-            rows={4}
-            margin="normal"
-          />
-        </div>
-      )}
-      {datadiris && datadiris.length === 0 && (
-        <Link to={`/add-datadiri`}>
-          <Button
-            variant="contained"
-            color="success"
-            sx={{ marginLeft: 1 }}
-          >
-            <AddIcon sx={{ marginRight: 1 }} /> Add New
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>Data Diri</h1>
+      <Card>
+        <CardContent>
+          <Button variant="contained" color="success" sx={{ mb: 3 }} onClick={handleAddDatadiriClick}>
+            Add New
           </Button>
-        </Link>
-      )}
-      {!selectedData && datadiris && datadiris.length > 0 ? (
-        <DataTable
-          rows={datadiris}
-          columns={columns.map((column) => ({
-            ...column,
-            renderCell: (params) => {
-              if (column.field === "actions") {
-                return (
-                  <div>
-                    <IconButton
-                      aria-label="Edit"
-                      color="primary"
-                      onClick={() => handleEditClick(params.row.id)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      aria-label="Delete"
-                      color="error"
-                      onClick={() => handleDeleteClick(params.row.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                    <IconButton
-                      variant="contained"
-                      color="info"
-                      onClick={() => handleShowDetail(params.row)}
-                    >
-                      <InfoIcon />
-                    </IconButton>
-                  </div>
-                );
-              } else {
-                return <span>{params.value}</span>;
-              }
-            },
-          }))}
-        />
-      ) : showNoDataMessage ? (
-        <p>Data tidak tersedia atau sedang dimuat...</p>
-      ) : null}
+
+          {datadiris && datadiris.length > 0 ? (
+            <DataTable
+              rows={datadiris}
+              columns={columns.map((column) => ({
+                ...column,
+                renderCell: (params) => {
+                  if (column.field === "actions") {
+                    return (
+                      <div>
+                        <IconButton aria-label="Edit" color="primary" onClick={() => handleEditClick(params.row.id)}>
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton aria-label="Delete" color="error" onClick={() => handleDeleteClick(params.row.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </div>
+                    );
+                  } else if (column.field === "foto") {
+                    return (
+                      <img
+                        src={params.value} // Anda harus menyediakan URL gambar dari data
+                        alt="Foto"
+                        style={{ width: 50, height: 50 }} // Sesuaikan dengan ukuran yang sesuai
+                      />
+                    );
+                  } else {
+                    return <span>{params.value}</span>;
+                  }
+                },
+              }))}
+            />
+          ) : (
+            <p>Data tidak tersedia atau sedang dimuat...</p>
+          )}
+        </CardContent>
+      </Card>
+
+      <Dialog open={deleteConfirmationOpen} onClose={cancelDelete} aria-labelledby="draggable-dialog-title">
+        <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
+          Konfirmasi Hapus Skill
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>Apakah Anda yakin ingin menghapus data ini?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={cancelDelete}>
+            Batal
+          </Button>
+          <Button onClick={confirmDelete} color="error">
+            Hapus
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Add Skill Dialog */}
+
+      <Transition in={isAddDatadiriDialogOpen} timeout={300} unmountOnExit>
+        {(state) => (
+          <Dialog open={isAddDatadiriDialogOpen} onClose={handleAddDatadiriClose}>
+            <DialogTitle sx={{ display: "flex", marginTop: "10px", marginLeft: "10px", height: "110px" }}>
+              <div style={iconStyle}>
+                <PersonAddAltRoundedIcon />
+              </div>
+              <span style={{ fontSize: "24px", fontWeight: "bold", marginTop: "10px", marginLeft: "20px" }}> Add New Data Diri</span>
+            </DialogTitle>
+            <DialogContent sx={{ marginTop: "-30px" }}>
+              <AddDatadiri onCancelAdd={handleAddDatadiriClose} onSuccess={getDatadiri} />
+            </DialogContent>
+          </Dialog>
+        )}
+      </Transition>
+
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <MuiAlert elevation={6} variant="filled" severity="success" onClose={handleSnackbarClose}>
+          Skill successfully deleted!
+        </MuiAlert>
+      </Snackbar>
     </Content>
   );
 };
