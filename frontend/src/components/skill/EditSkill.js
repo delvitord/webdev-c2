@@ -4,116 +4,107 @@ import { useNavigate, useParams } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { Card, CardContent } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import Alert from "@mui/material/Alert";
-import { useMemo } from "react";
 
-const EditSkill = () => {
-  const { id } = useParams();
-  const [nama_skill, setSkill] = useState(""); // Menyimpan nama skill
-  const [level_keahlian, setLevelKeahlian] = useState(null); // Menyimpan level keahlian
-  const [error, setError] = useState("");
-  const [isCanceled, setIsCanceled] = useState(false);
+const EditSkill = (onCancelAdd, onSuccess, props) => {
+  const [skill, setSkill] = useState({
+    nama_skill: "",
+    level_keahlian: "",
+  });
+
+  const options = [
+    { level_keahlian: "Pemula", id: 1 },
+    { level_keahlian: "Menengah", id: 2 },
+    { level_keahlian: "Ahli", id: 3 },
+  ];
+
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("accessToken");
+  const { id } = useParams();
 
-  const options = useMemo(
-    () => [
-      { level_keahlian: "Pemula", id: 1 },
-      { level_keahlian: "Menengah", id: 2 },
-      { level_keahlian: "Ahli", id: 3 },
-    ],
-    []
-  );
   useEffect(() => {
-    // Mengambil data skill berdasarkan ID saat komponen dimuat
-    axios
-      .get(`http://localhost:5000/datadiri/skill/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((response) => {
-        const skillData = response.data;
-        setSkill(skillData.nama_skill);
-        setLevelKeahlian(options.find((option) => option.id === skillData.level_keahlian));
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [id, options, accessToken]); // Include accessToken in the dependency array
+    getSkillById();
+  }, [id]); // Include `id` in the dependency array
+
+  const accessToken = localStorage.getItem("accessToken");
+  const [isCanceled, setIsCanceled] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [error, setError] = useState("");
+
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+  };
 
   const updateSkill = async (e) => {
     e.preventDefault();
-
-    setError(""); // Reset error state
-
-    if (!isCanceled) {
-      // Hanya validasi jika tidak dibatalkan
-      if (!nama_skill && !level_keahlian) {
-        setError("Nama Skill dan Level Keahlian harus diisi");
-      } else if (!nama_skill) {
-        setError("Nama Skill harus diisi");
-      } else if (!level_keahlian) {
-        setError("Level Keahlian harus diisi");
-      }
+    try {
+      await axios.patch(`http://localhost:5000/datadiri/skill/${id}`, skill, {
+        headers,
+      });
+      navigate("/skill");
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    if (!isCanceled && (nama_skill || level_keahlian)) {
-      const headers = {
-        Authorization: `Bearer ${accessToken}`,
-      };
+  const getSkillById = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/datadiri/skill/${id}`, {
+        headers,
+      });
+      if (response.data) {
+        const dataServer = response.data; // Gunakan data sebagai objek langsung
 
-      const formData = new FormData();
-      formData.append("nama_skill", nama_skill);
-      formData.append("level_keahlian", level_keahlian.id);
-
-      try {
-        await axios.patch(`http://localhost:5000/datadiri/skill/${id}`, formData, {
-          headers,
+        // Set nilai dari data yang diperoleh ke dalam state
+        setSkill({
+          nama_skill: dataServer.nama_skill,
+          level_keahlian: dataServer.level_keahlian,
         });
-        navigate("/skill");
-      } catch (error) {
-        console.log(error);
       }
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const handleCancel = () => {
     setIsCanceled(true); // Set isCanceled to true when Cancel is clicked
-    navigate(-1); // Navigate to the previous page
+    navigate("/skill");
   };
 
   return (
-    <Grid container spacing={2} mt={5} justifyContent="center">
-      <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
-        <Card sx={{ width: 450 }}>
-          <CardContent>
-            {error && <Alert severity="error">{error}</Alert>}
-            <form onSubmit={updateSkill}>
-              <TextField label="Nama Skill" fullWidth value={nama_skill} onChange={(e) => setSkill(e.target.value)} placeholder="Skill" variant="outlined" margin="normal" />
-              <Autocomplete
-                id="level_keahlian"
-                options={options}
-                value={level_keahlian}
-                onChange={(event, newValue) => setLevelKeahlian(newValue)}
-                getOptionLabel={(option) => option.level_keahlian}
-                renderInput={(params) => <TextField {...params} label="Level keahlian" sx={{ marginTop: 1 }} />}
-              />
-              <Grid container justifyContent="flex-end">
-                <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
-                  Update
-                </Button>
-                <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
-                  Cancel
-                </Button>
-              </Grid>
-            </form>
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
+    <>
+      {showSuccessAlert && (
+        <Alert severity="success" sx={{ marginBottom: 1 }}>
+          Data Pendidikan berhasil disimpan
+        </Alert>
+      )}
+      <form onSubmit={updateSkill}>
+        <Grid container spacing={0.8} mt={0.5} justifyContent="center">
+          <Grid item sm={12}>
+            <TextField label="Nama Skill" fullWidth value={skill.nama_skill} onChange={(e) => setSkill(e.target.value)} variant="outlined" margin="normal" />
+          </Grid>
+          <Grid item sm={12}>
+            <Autocomplete
+              id="level_keahlian"
+              options={options}
+              value={skill.level_keahlian}
+              onChange={(e) => setSkill(e.target.value)}
+              getOptionLabel={(option) => option.level_keahlian}
+              renderInput={(params) => <TextField {...params} label="Level keahlian" sx={{ marginTop: 1 }} />}
+            />
+          </Grid>
+          <Grid container justifyContent="flex-end">
+            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+              Save
+            </Button>
+            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+              Cancel
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </>
   );
 };
 

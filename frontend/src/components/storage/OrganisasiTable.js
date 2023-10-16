@@ -22,12 +22,12 @@ import CorporateFareIcon from "@mui/icons-material/CorporateFare";
 import "../style.css";
 
 const columns = [
-  { field: "id", headerName: "No", width: 30 },
-  { field: "nama_organisasi", headerName: "Nama Organisasi", minWidth: 100 },
-  { field: "jabatan", headerName: "Jabatan", minWidth: 100 },
-  { field: "awal_periode", headerName: "Awal Periode", minWidth: 100 },
-  { field: "akhir_periode", headerName: "Akhir Periode", minWidth: 100 },
-  { field: "deskripsi", headerName: "Deskripsi", minWidth: 100 },
+  { field: "id", headerName: "No", width: 100 },
+  { field: "nama_organisasi", headerName: "Nama Organisasi", minWidth: 200 },
+  { field: "jabatan", headerName: "Jabatan", minWidth: 200 },
+  { field: "awal_periode", headerName: "Awal Periode", minWidth: 200 },
+  { field: "akhir_periode", headerName: "Akhir Periode", minWidth: 200 },
+  { field: "deskripsi", headerName: "Deskripsi", minWidth: 200 },
   { field: "actions", headerName: "Actions", width: 150 },
 ];
 

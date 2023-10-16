@@ -20,6 +20,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import AddDatadiri from "../datadiri/AddDatadiri";
+import EditDatadiri from "../datadiri/EditDatadiri";
 import "../style.css";
 
 const columns = [
@@ -49,6 +50,8 @@ const DatadiriTable = () => {
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [datadiriToDelete, setDatadiriToDelete] = useState(null);
   const [isAddDatadiriDialogOpen, setAddDatadiriDialogOpen] = useState(false);
+  const [isEditDatadiriDialogOpen, setEditDatadiriDialogOpen] = useState(false);
+  const [dataToEdit, setDataToEdit] = useState(null);
 
   useEffect(() => {
     refreshToken();
@@ -97,12 +100,13 @@ const DatadiriTable = () => {
 
   const handleShowDetail = (data) => {
     setSelectedData(data);
-    setShowNoDataMessage(false)
+    setShowNoDataMessage(false);
   };
 
-  const handleEditClick = (id) => {
-    // Navigasi ke halaman edit dengan mengirimkan ID data sebagai bagian dari URL
-    navigate(`/edit-datadiri`);
+  const handleEditClick = (data) => {
+    setDataToEdit(data);
+    setEditDatadiriDialogOpen(true);
+    console.log(data);
   };
 
   const handleDeleteClick = (id) => {
@@ -149,6 +153,12 @@ const DatadiriTable = () => {
 
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
+  };
+
+  const handleEditDatadiriClose = () => {
+    // Menutup dialog edit
+    setEditDatadiriDialogOpen(false);
+    setDataToEdit(null); // Kosongkan `editId`
   };
 
   const handleSnackbarClose = (event, reason) => {
@@ -226,7 +236,7 @@ const DatadiriTable = () => {
 
       <Dialog open={deleteConfirmationOpen} onClose={cancelDelete} aria-labelledby="draggable-dialog-title">
         <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
-          Konfirmasi Hapus Skill
+          Konfirmasi Hapus Data Diri
         </DialogTitle>
         <DialogContent>
           <DialogContentText>Apakah Anda yakin ingin menghapus data ini?</DialogContentText>
@@ -254,6 +264,22 @@ const DatadiriTable = () => {
             </DialogTitle>
             <DialogContent sx={{ marginTop: "-30px" }}>
               <AddDatadiri onCancelAdd={handleAddDatadiriClose} onSuccess={getDatadiri} />
+            </DialogContent>
+          </Dialog>
+        )}
+      </Transition>
+
+      <Transition in={isEditDatadiriDialogOpen} timeout={300} unmountOnExit>
+        {(state) => (
+          <Dialog open={isEditDatadiriDialogOpen} onClose={handleEditDatadiriClose}>
+            <DialogTitle sx={{ display: "flex", marginTop: "10px", marginLeft: "10px", height: "110px" }}>
+              <div style={iconStyle}>
+                <PersonAddAltRoundedIcon />
+              </div>
+              <span style={{ fontSize: "24px", fontWeight: "bold", marginTop: "10px", marginLeft: "20px" }}>Update Data Datadiri</span>
+            </DialogTitle>
+            <DialogContent sx={{ marginTop: "-30px" }}>
+              <EditDatadiri data={dataToEdit} onCancelAdd={handleEditDatadiriClose} onSuccess={getDatadiri} />
             </DialogContent>
           </Dialog>
         )}
