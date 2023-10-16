@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent } from "@mui/material";
 import DataTable from "./DataTable";
 import Content from "../layout/Content";
@@ -16,19 +16,20 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MuiAlert from "@mui/material/Alert";
 import AddPendidikan from "../pendidikan/AddPendidikan";
-import EditPendidikan from "../pendidikan/EditPendidikan";
+import UpdatePendidikan from "../pendidikan/EditPendidikan";
 import Snackbar from "@mui/material/Snackbar";
 import { Transition } from "react-transition-group";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
+import { useParams } from "react-router-dom";
 import "../style.css";
 
 const columns = [
-  { field: "id", headerName: "No", minWidth: 30 },
+  { field: "id", headerName: "No", minWidth: 100 },
   { field: "nama_instansi", headerName: "Nama Instansi", minWidth: 250 },
   { field: "awal_periode", headerName: "Tahun Masuk", minWidth: 200 },
   { field: "akhir_periode", headerName: "Tahun Lulus", minWidth: 200 },
-  { field: "jurusan", headerName: "Jurusan", minWidth: 200 },
-  { field: "actions", headerName: "Actions", minWidth: 100 },
+  { field: "jurusan", headerName: "Jurusan", minWidth: 300 },
+  { field: "actions", headerName: "Actions", minWidth: 150 },
 ];
 
 const PendidikanTable = () => {
@@ -36,6 +37,7 @@ const PendidikanTable = () => {
   const [token, setToken] = useState("");
   const [expire, setExpire] = useState("");
   const navigate = useNavigate();
+  const { id } = useParams();
   const accessToken = localStorage.getItem("accessToken");
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [pendidikanToDelete, setPendidikanToDelete] = useState(null);
@@ -67,7 +69,6 @@ const PendidikanTable = () => {
 
   const getPendidikan = async () => {
     try {
-
       const response = await axios.get("http://localhost:5000/datadiri/pendidikan", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -243,7 +244,7 @@ const PendidikanTable = () => {
               <span style={{ fontSize: "24px", fontWeight: "bold", marginTop: "10px", marginLeft: "20px" }}>Update Data Pendidikan</span>
             </DialogTitle>
             <DialogContent sx={{ marginTop: "-30px" }}>
-              <EditPendidikan data={dataToEdit} onCancelAdd={handleEditPendidikanClose} onSuccess={getPendidikan} />
+              <UpdatePendidikan data={dataToEdit} onCancelAdd={handleEditPendidikanClose} onSuccess={getPendidikan} />
             </DialogContent>
           </Dialog>
         )}

@@ -18,7 +18,8 @@ import AddSkill from "./components/skill/AddSkill";
 import AddOrganisasi from "./components/organisasi/AddOrganisasii";
 import OrganisasiList from "./components/organisasi/Organisasii";
 import EditSkill from "./components/skill/EditSkill";
-import LandingPage from "./components/landing_page/landing-page";
+import PersonalWeb from "./components/personal_web/PersonalWeb";
+import LandingPage from "./components/landing_page/LandingPage";
 import UpdateOrganisasi from "./components/organisasi/EditOrganisasi";
 import GaleriList from "./components/galeri/Galeri";
 import AddGaleri from "./components/galeri/AddGaleri";
@@ -31,6 +32,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/datadiri/personal-web" element={<PersonalWeb />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route

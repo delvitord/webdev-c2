@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Card, CardContent } from "@mui/material";
+import Alert from "@mui/material/Alert";
 
 const UpdateDatadiri = () => {
   const [dataDiri, setDataDiri] = useState({
@@ -15,15 +16,17 @@ const UpdateDatadiri = () => {
     alamat: "",
     email: "",
     no_telp: "",
-    foto: "",
+    foto: null, // Menggunakan null untuk elemen input file
     deskripsi: "",
     linkedin: "",
     instagram: "",
     x: "",
     github: "",
   });
+
   const navigate = useNavigate();
-  const [ token, setToken ] = useState("");
+  const [token, setToken] = useState("");
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   useEffect(() => {
     refreshToken(); // Refresh the token when the component mounts
@@ -67,12 +70,10 @@ const UpdateDatadiri = () => {
     }
   };
 
- 
   const accessToken = localStorage.getItem("accessToken");
 
   const getDatadiri = async () => {
     try {
-      
       const response = await axios.get(`http://localhost:5000/data_diri`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -98,11 +99,8 @@ const UpdateDatadiri = () => {
           github: dataDiriServer.github,
         });
       }
-      console.log(response.data)
-      console.log(
-        "Token in local storage: ",
-        localStorage.getItem("accessToken")
-      );
+      console.log(response.data);
+      console.log("Token in local storage: ", localStorage.getItem("accessToken"));
     } catch (error) {
       console.log(error);
     }
@@ -111,198 +109,144 @@ const UpdateDatadiri = () => {
   const updateDatadiri = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(
-        `http://localhost:5000/data_diri`,
-        dataDiri,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log(
-        "Token in local storage: ",
-        localStorage.getItem("accessToken")
-      );
+      const formData = new FormData();
+      formData.append("nama", dataDiri.nama);
+      formData.append("tempat_lahir", dataDiri.tempat_lahir);
+      formData.append("tanggal_lahir", dataDiri.tanggal_lahir);
+      formData.append("alamat", dataDiri.alamat);
+      formData.append("email", dataDiri.email);
+      formData.append("no_telp", dataDiri.no_telp);
+      formData.append("foto", dataDiri.foto);
+      formData.append("deskripsi", dataDiri.deskripsi);
+      formData.append("linkedin", dataDiri.linkedin);
+      formData.append("instagram", dataDiri.instagram);
+      formData.append("x", dataDiri.x);
+      formData.append("github", dataDiri.github);
+
+      const response = await axios.patch("http://localhost:5000/data_diri", formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data", // Penting untuk mengunggah berkas
+        },
+      });
+
       console.log("Server Response: ", response);
+      setShowSuccessAlert(true);
       navigate("/datadiri");
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setDataDiri({ ...dataDiri, foto: file });
+  };
+
+  const handleCancel = () => {
+    navigate("/datadiri");
+  };
 
   return (
     <>
-      <Grid container spacing={2} mt={5} justifyContent="center">
-        <Grid item>
-          <Card sx={{ maxWidth: 450 }}>
-            <CardContent>
-              <form onSubmit={updateDatadiri}>
-                {/* Render input fields for dataDiri */}
-                <TextField
-                  label="Nama"
-                  fullWidth
-                  name="nama"
-                  value={dataDiri.nama || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, nama: e.target.value })
-                  }
-                  placeholder="Nama"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Tempat Lahir"
-                  fullWidth
-                  name="tempat_lahir"
-                  value={dataDiri.tempat_lahir || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, tempat_lahir: e.target.value })
-                  }
-                  placeholder="Tempat Lahir"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Tanggal Lahir"
-                  fullWidth
-                  type="date"
-                  name="tanggal_lahir"
-                  value={dataDiri.tanggal_lahir || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, tanggal_lahir: e.target.value })
-                  }
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Alamat"
-                  fullWidth
-                  name="alamat"
-                  value={dataDiri.alamat || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, alamat: e.target.value })
-                  }
-                  placeholder="Alamat"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Email"
-                  fullWidth
-                  type="email"
-                  name="email"
-                  value={dataDiri.email || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, email: e.target.value })
-                  }
-                  placeholder="Email"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="No Telepon"
-                  fullWidth
-                  name="no_telp"
-                  value={dataDiri.no_telp || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, no_telp: e.target.value })
-                  }
-                  placeholder="No Telepon"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Foto"
-                  fullWidth
-                  type="file"
-                  name="foto"
-                  value={dataDiri.foto || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, nama: e.target.value })
-                  }
-                  inputProps={{ accept: "image/*" }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Deskripsi"
-                  fullWidth
-                  name="deskripsi"
-                  value={dataDiri.deskripsi || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, deskripsi: e.target.value })
-                  }
-                  placeholder="Deskripsi"
-                  variant="outlined"
-                  id="outlined-multiline-flexible"
-                  multiline
-                  maxRows={4}
-                  margin="normal"
-                />
-                <TextField
-                  label="Linkedin"
-                  fullWidth
-                  name="linkedin"
-                  value={dataDiri.linkedin || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, linkedin: e.target.value })
-                  }
-                  placeholder="Linkedin"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Instagram"
-                  fullWidth
-                  name="instagram"
-                  value={dataDiri.instagram || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, instagram: e.target.value })
-                  }
-                  placeholder="Instagram"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="X"
-                  fullWidth
-                  name="x"
-                  value={dataDiri.x || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, x: e.target.value })
-                  }
-                  placeholder="X"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Github"
-                  fullWidth
-                  name="github"
-                  value={dataDiri.github || ""}
-                  onChange={(e) =>
-                    setDataDiri({ ...dataDiri, github: e.target.value })
-                  }
-                  placeholder="Github"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <Button type="submit" variant="contained" color="primary">
-                  Update
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+      {showSuccessAlert && (
+        <Alert severity="success" sx={{ marginBottom: 1 }}>
+          Data berhasil disimpan
+        </Alert>
+      )}
+      <form onSubmit={updateDatadiri}>
+        <Grid container spacing={0.8} mt={0.5} justifyContent="center">
+          <Grid item xs={12}>
+            <TextField label="Nama" fullWidth name="nama" value={dataDiri.nama || ""} onChange={(e) => setDataDiri({ ...dataDiri, nama: e.target.value })} placeholder="Nama" variant="outlined" margin="normal" />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Tempat Lahir"
+              fullWidth
+              name="tempat_lahir"
+              value={dataDiri.tempat_lahir || ""}
+              onChange={(e) => setDataDiri({ ...dataDiri, tempat_lahir: e.target.value })}
+              placeholder="Tempat Lahir"
+              variant="outlined"
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Tanggal Lahir"
+              fullWidth
+              type="date"
+              name="tanggal_lahir"
+              value={dataDiri.tanggal_lahir || ""}
+              onChange={(e) => setDataDiri({ ...dataDiri, tanggal_lahir: e.target.value })}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant="outlined"
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField label="Alamat" fullWidth name="alamat" value={dataDiri.alamat || ""} onChange={(e) => setDataDiri({ ...dataDiri, alamat: e.target.value })} placeholder="Alamat" variant="outlined" margin="normal" />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField label="Email" fullWidth type="email" name="email" value={dataDiri.email || ""} onChange={(e) => setDataDiri({ ...dataDiri, email: e.target.value })} placeholder="Email" variant="outlined" margin="normal" />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField label="No Telepon" fullWidth name="no_telp" value={dataDiri.no_telp || ""} onChange={(e) => setDataDiri({ ...dataDiri, no_telp: e.target.value })} placeholder="No Telepon" variant="outlined" margin="normal" />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Foto"
+              fullWidth
+              type="file"
+              name="foto"
+              onChange={handleFileChange}
+              inputProps={{ accept: "image/*" }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant="outlined"
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Deskripsi"
+              fullWidth
+              name="deskripsi"
+              value={dataDiri.deskripsi || ""}
+              onChange={(e) => setDataDiri({ ...dataDiri, deskripsi: e.target.value })}
+              placeholder="Deskripsi"
+              variant="outlined"
+              id="outlined-multiline-flexible"
+              multiline
+              maxRows={4}
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField label="Linkedin" fullWidth name="linkedin" value={dataDiri.linkedin || ""} onChange={(e) => setDataDiri({ ...dataDiri, linkedin: e.target.value })} placeholder="Linkedin" variant="outlined" margin="normal" />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField label="Instagram" fullWidth name="instagram" value={dataDiri.instagram || ""} onChange={(e) => setDataDiri({ ...dataDiri, instagram: e.target.value })} placeholder="Instagram" variant="outlined" margin="normal" />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField label="X" fullWidth name="x" value={dataDiri.x || ""} onChange={(e) => setDataDiri({ ...dataDiri, x: e.target.value })} placeholder="X" variant="outlined" margin="normal" />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField label="Github" fullWidth name="github" value={dataDiri.github || ""} onChange={(e) => setDataDiri({ ...dataDiri, github: e.target.value })} placeholder="Github" variant="outlined" margin="normal" />
+          </Grid>
+          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+              Save
+            </Button>
+            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+              Cancel
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      </form>
     </>
   );
 };

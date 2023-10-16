@@ -68,33 +68,38 @@ const AddSkill = ({ onCancelAdd, onSuccess }) => {
   };
 
   return (
-    <CardContent sx={{ minWidth: 500 }}>
-      {error && <Alert severity="error">{error}</Alert>}
+    <>
       {showSuccessAlert && (
         <Alert severity="success" sx={{ marginBottom: 1 }}>
           Data Skill berhasil disimpan
         </Alert>
       )}
       <form onSubmit={saveSkill}>
-        <TextField label="Nama Skill" fullWidth value={nama_skill} onChange={(e) => setSkill(e.target.value)} variant="outlined" margin="normal" />
-        <Autocomplete
-          id="level_keahlian"
-          options={options}
-          value={level_keahlian}
-          onChange={(event, newValue) => setLevelKeahlian(newValue)}
-          getOptionLabel={(option) => option.level_keahlian}
-          renderInput={(params) => <TextField {...params} label="Level keahlian" sx={{ marginTop: 1 }} />}
-        />
-        <Grid container justifyContent="flex-end">
-          <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
-            Save
-          </Button>
-          <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
-            Cancel
-          </Button>
+        <Grid container spacing={0.8} mt={0.5} justifyContent="center">
+          <Grid item sm={12}>
+            <TextField label="Nama Skill" fullWidth value={nama_skill} onChange={(e) => setSkill(e.target.value)} variant="outlined" margin="normal" />
+          </Grid>
+          <Grid item sm={12}>
+            <Autocomplete
+              id="level_keahlian"
+              options={options}
+              value={level_keahlian}
+              onChange={(event, newValue) => setLevelKeahlian(newValue)}
+              getOptionLabel={(option) => option.level_keahlian}
+              renderInput={(params) => <TextField {...params} label="Level keahlian" sx={{ marginTop: 1 }} />}
+            />
+          </Grid>
+          <Grid container justifyContent="flex-end">
+            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+              Save
+            </Button>
+            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+              Cancel
+            </Button>
+          </Grid>
         </Grid>
       </form>
-    </CardContent>
+    </>
   );
 };
 

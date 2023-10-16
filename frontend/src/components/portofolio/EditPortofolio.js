@@ -4,9 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import Alert from "@mui/material/Alert";
 import { Card, CardContent } from "@mui/material";
 
-const UpdatePortofolio = () => {
+const UpdatePortofolio = (onCancelAdd, onSuccess) => {
   const [Portofolio, setPortofolio] = useState({
     judul: "",
     deskripsi: "",
@@ -18,6 +19,8 @@ const UpdatePortofolio = () => {
   const { id } = useParams();
   const [image, setImage] = useState([]);
   const [imageSelected, setImageSelected] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [isCanceled, setIsCanceled] = useState(false);
 
   useEffect(() => {
     getPortofolioById();
@@ -98,14 +101,11 @@ const UpdatePortofolio = () => {
 
   const getPortofolioById = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/datadiri/portofolio/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await axios.get(`http://localhost:5000/datadiri/portofolio/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       if (response.data) {
         const dataServer = response.data;
         setPortofolio({
@@ -138,20 +138,12 @@ const UpdatePortofolio = () => {
     });
   };
 
-  const handleImageChange = (e) => {
-    const selectedImage = Array.from(e.target.files);
-    setImage((prevImage) => [...prevImage, ...selectedImage]);
-    setImageSelected(true);
-    console.log("ini image",image)
-  };
-
-  const handleCancelNewImage = (index) => {
-    const updatedImages = [...image];
-    updatedImages.splice(index, 1);
-    setImage(updatedImages);
-    if (updatedImages.length === 0) {
-      setImageSelected(false);
-    }
+  const handleImagesChange = (e) => {
+    const selectedImages = e.target.files; // Menggunakan e.target.files untuk mendapatkan multiple files
+    setPortofolio({
+      ...Portofolio,
+      images: selectedImages, // Perbarui daftar gambar yang dipilih
+    });
   };
 
  const handleCancelImage = (index) => {
@@ -167,55 +159,58 @@ const UpdatePortofolio = () => {
 
   return (
     <>
-      <Grid container spacing={2} mt={5} justifyContent="center">
-        <Grid item>
-          <Card sx={{ maxWidth: 450 }}>
-            <CardContent>
-              <form onSubmit={updatePortofolio}>
-                <TextField
-                  label="Judul"
-                  fullWidth
-                  name="judul"
-                  value={Portofolio.judul || ""}
-                  onChange={(e) =>
-                    setPortofolio({
-                      ...Portofolio,
-                      judul: e.target.value,
-                    })
-                  }
-                  placeholder="Judul"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Deskripsi"
-                  fullWidth
-                  multiline
-                  value={Portofolio.deskripsi || ""}
-                  onChange={(e) =>
-                    setPortofolio({
-                      ...Portofolio,
-                      deskripsi: e.target.value,
-                    })
-                  }
-                  placeholder="Deskripsi"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Link"
-                  fullWidth
-                  value={Portofolio.link || ""}
-                  onChange={(e) =>
-                    setPortofolio({
-                      ...Portofolio,
-                      link: e.target.value,
-                    })
-                  }
-                  placeholder="Link"
-                  variant="outlined"
-                  margin="normal"
-                />
+      {showSuccessAlert && (
+        <Alert severity="success" sx={{ marginBottom: 1 }}>
+          Data Portofolio berhasil disimpan
+        </Alert>
+      )}
+      <form onSubmit={updatePortofolio} sx={{ margin: "auto" }}>
+        <Grid container spacing={0.8} mt={0.5} justifyContent="center">
+          <Grid item>
+            <TextField
+              label="Judul"
+              fullWidth
+              name="judul"
+              value={Portofolio.judul || ""}
+              onChange={(e) =>
+                setPortofolio({
+                  ...Portofolio,
+                  judul: e.target.value,
+                })
+              }
+              placeholder="Judul"
+              variant="outlined"
+              margin="normal"
+            />
+            <TextField
+              label="Deskripsi"
+              fullWidth
+              multiline
+              value={Portofolio.deskripsi || ""}
+              onChange={(e) =>
+                setPortofolio({
+                  ...Portofolio,
+                  deskripsi: e.target.value,
+                })
+              }
+              placeholder="Deskripsi"
+              variant="outlined"
+              margin="normal"
+            />
+            <TextField
+              label="Link"
+              fullWidth
+              value={Portofolio.link || ""}
+              onChange={(e) =>
+                setPortofolio({
+                  ...Portofolio,
+                  link: e.target.value,
+                })
+              }
+              placeholder="Link"
+              variant="outlined"
+              margin="normal"
+            />
 
                 <div
                   style={{
@@ -572,7 +567,7 @@ const UpdatePortofolio = () => {
             </CardContent>
           </Card>
         </Grid>
-      </Grid>
+      </form>
     </>
   );
 };

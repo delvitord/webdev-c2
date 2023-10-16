@@ -16,24 +16,24 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MuiAlert from "@mui/material/Alert";
 import AddPortofolio from "../portofolio/AddPortofolio";
+import EditPortofolio from "../portofolio/EditPortofolio";
 import Snackbar from "@mui/material/Snackbar";
 import { Transition } from "react-transition-group";
 import SourceIcon from "@mui/icons-material/Source";
 import "../style.css";
-import { Card } from "@mui/material";
-import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
-import CardContent from "@mui/material/CardContent";
+import { Card, CardContent } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { Card, CardContent } from "@mui/material";
 
 const columns = [
   { field: "id", headerName: "ID", minWidth: 30 },
-  { field: "judul", headerName: "Judul", minWidth: 200 },
-  { field: "deskripsi", headerName: "Deskripsi", minWidth: 150, },
-  { field: "file", headerName: "File", minWidth: 100 },
-  { field: "image", headerName: "Image", minWidth: 120,  },
-  { field: "link", headerName: "Link", minWidth: 150 },
+  { field: "judul", headerName: "Judul", minWidth: 125 },
+  { field: "deskripsi", headerName: "Deskripsi", minWidth: 150 },
+  { field: "file", headerName: "File", minWidth: 200 },
+  { field: "image", headerName: "Image", minWidth: 225 },
+  { field: "link", headerName: "Link", minWidth: 200 },
   { field: "actions", headerName: "Actions", width: 150 },
 ];
-
 
 const PortofolioTable = () => {
   const [portofolios, setPortofolio] = useState([]);
@@ -43,6 +43,8 @@ const PortofolioTable = () => {
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [portofolioToDelete, setPortofolioToDelete] = useState(null);
   const [isAddPortofolioDialogOpen, setAddPortofolioDialogOpen] = useState(false);
+  const [isEditPortofolioDialogOpen, setEditPortofolioDialogOpen] = useState(false);
+  const [dataToEdit, setDataToEdit] = useState(null);
 
   useEffect(() => {
     refreshToken();
@@ -69,13 +71,13 @@ const PortofolioTable = () => {
   const getPortofolio = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-  
+
       const response = await axios.get("http://localhost:5000/datadiri/portofolio", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-  
+
       setPortofolio(response.data); // Assuming the response includes database IDs
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -91,11 +93,11 @@ const PortofolioTable = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
-  }
+  };
 
-  const handleEditClick = (id) => {
-    // Navigasi ke halaman edit dengan mengirimkan ID data sebagai bagian dari URL
-    navigate(`/edit-portofolio/${id}`);
+  const handleDeleteClick = (id) => {
+    setPortofolioToDelete(id);
+    setDeleteConfirmationOpen(true);
   };
 
   const handleSnackbarClose = (event, reason) => {
@@ -149,6 +151,11 @@ const PortofolioTable = () => {
     setAddPortofolioDialogOpen(false);
   };
 
+    const handleDeleteClick = (id) => {
+      setPortofolioToDelete(id);
+      setDeleteConfirmationOpen(true);
+    };
+
   const iconStyle = {
     fontSize: "40px", // Sesuaikan dengan ukuran yang Anda inginkan
     color: "black", // Sesuaikan dengan warna ikon Anda
@@ -161,12 +168,31 @@ const PortofolioTable = () => {
     justifyContent: "center",
   };
 
+  const handleEditClick = (data) => {
+    setDataToEdit(data);
+    setEditPortofolioDialogOpen(true);
+    console.log(data);
+  };
+
+  const handleEditPortofolioClose = () => {
+    // Menutup dialog edit
+    setEditPortofolioDialogOpen(false);
+    setDataToEdit(null); // Kosongkan `editId`
+  };
+
   return (
     <Content open={open}>
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>Portofolio</h1>
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>
+        Portofolio
+      </h1>
       <Card>
         <CardContent>
-          <Button variant="contained" color="success" sx={{ mb: 3 }} onClick={handleAddPortofolioClick}>
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ mb: 3 }}
+            onClick={handleAddPortofolioClick}
+          >
             Add New
           </Button>
           {portofolios && portofolios.length > 0 ? (
@@ -178,10 +204,18 @@ const PortofolioTable = () => {
                   if (column.field === "actions") {
                     return (
                       <div>
-                        <IconButton aria-label="Edit" color="primary" onClick={() => handleEditClick(params.row.id)}>
+                        <IconButton
+                          aria-label="Edit"
+                          color="primary"
+                          onClick={() => handleEditClick(params.row.id)}
+                        >
                           <EditIcon />
                         </IconButton>
-                        <IconButton aria-label="Delete" color="error" onClick={() => handleDeleteClick(params.row.id)}>
+                        <IconButton
+                          aria-label="Delete"
+                          color="error"
+                          onClick={() => handleDeleteClick(params.row.id)}
+                        >
                           <DeleteIcon />
                         </IconButton>
                       </div>
@@ -217,12 +251,18 @@ const PortofolioTable = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={deleteConfirmationOpen} onClose={cancelDelete} aria-labelledby="draggable-dialog-title">
+      <Dialog
+        open={deleteConfirmationOpen}
+        onClose={cancelDelete}
+        aria-labelledby="draggable-dialog-title"
+      >
         <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
           Konfirmasi Hapus Portofolio
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>Apakah Anda yakin ingin menghapus data ini?</DialogContentText>
+          <DialogContentText>
+            Apakah Anda yakin ingin menghapus data ini?
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button color="primary" autoFocus onClick={cancelDelete}>
@@ -237,22 +277,53 @@ const PortofolioTable = () => {
       {/* Add or Edit Pendidikan Dialog */}
       <Transition in={isAddPortofolioDialogOpen} timeout={300} unmountOnExit>
         {(state) => (
-          <Dialog open={isAddPortofolioDialogOpen} onClose={handleAddPortofolioClose}>
-            <DialogTitle sx={{ display: "flex", marginTop: "10px", marginLeft: "10px", height: "110px" }}>
+          <Dialog
+            open={isAddPortofolioDialogOpen}
+            onClose={handleAddPortofolioClose}
+          >
+            <DialogTitle
+              sx={{
+                display: "flex",
+                marginTop: "10px",
+                marginLeft: "10px",
+                height: "110px",
+              }}
+            >
               <div style={iconStyle}>
-                <SchoolRoundedIcon />
+                <SourceIcon />
               </div>
-              <span style={{ fontSize: "24px", fontWeight: "bold", marginTop: "10px", marginLeft: "20px" }}>Add New Data Portofolio</span>
+              <span
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  marginTop: "10px",
+                  marginLeft: "20px",
+                }}
+              >
+                Add New Data Portofolio
+              </span>
             </DialogTitle>
             <DialogContent sx={{ marginTop: "-30px" }}>
-              <AddPortofolio onCancelAdd={handleAddPortofolioClose} onSuccess={getPortofolio} />
+              <AddPortofolio
+                onCancelAdd={handleAddPortofolioClose}
+                onSuccess={getPortofolio}
+              />
             </DialogContent>
           </Dialog>
         )}
       </Transition>
 
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <MuiAlert elevation={6} variant="filled" severity="success" onClose={handleSnackbarClose}>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          severity="success"
+          onClose={handleSnackbarClose}
+        >
           Portofolio successfully deleted!
         </MuiAlert>
       </Snackbar>
