@@ -6,47 +6,93 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Card, CardContent } from "@mui/material";
 
-
 const UpdatePortofolio = () => {
   const [Portofolio, setPortofolio] = useState({
     judul: "",
     deskripsi: "",
     file: "",
-    images: "",
+    image: [""],
     link: "",
   });
   const navigate = useNavigate();
   const { id } = useParams();
-  const [imagesToDelete, setImagesToDelete] = useState([]);
+  const [image, setImage] = useState([]);
+  const [imageSelected, setImageSelected] = useState(false);
 
   useEffect(() => {
     getPortofolioById();
   }, []);
 
+  useEffect(() => {
+    console.log("Ini Di EFEK",Portofolio)
+  }, [Portofolio]);
+
+  console.log(Portofolio)
+
   const accessToken = localStorage.getItem("accessToken");
 
   const updatePortofolio = async (e) => {
     e.preventDefault();
-  
-    // Hapus gambar yang terdaftar dalam state imagesToDelete dari daftar Portofolio.images
-    const updatedImages = Portofolio.images.filter((image) => !imagesToDelete.includes(image));
-  
-    setPortofolio({
-      ...Portofolio,
-      images: updatedImages, // Perbarui daftar gambar tanpa yang dihapus
-    });
-  
-    try {
-      await axios.patch(`http://localhost:5000/datadiri/portofolio/${id}`, Portofolio, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": `multipart/form-data`,
-        },
+    
+    // Hapus gambar yang terdaftar dalam state imageToDelete dari daftar Portofolio.image
+    console.log("diLUARRR",Portofolio)
+    const newPortofolio = Portofolio;
+
+
+      //Add image to setPortofolio.image
+      setPortofolio(prev => ({
+        ...prev, 
+        image: [...prev.image, image],
+      }));
+      newPortofolio.image = [...Portofolio.image, ...image.flat()];
+
+
+    if(Portofolio.image.length === 0){
+      const arrayEmpty = [""]
+      setPortofolio({
+        ...Portofolio,
+        image: arrayEmpty, // Perbarui daftar gambar ya ng dipilih
       });
-  
-      navigate("/portofolio");
-    } catch (error) {
-      console.log(error);
+    }
+
+    console.log("diLUARRR Portofolio",Portofolio)
+    console.log("diLUARRR nwPortofolio",newPortofolio)
+    if(imageSelected){
+      console.log("image selected")
+      const formData = new FormData();
+      //append formData with field in portofolio
+      formData.append("judul", newPortofolio.judul);
+      formData.append("deskripsi", newPortofolio.deskripsi);
+      formData.append("link", newPortofolio.link);
+      formData.append("file", newPortofolio.file);
+      //append formData with image
+      for (let i = 0; i < newPortofolio.image.length; i++) {
+        formData.append("image", newPortofolio.image[i]);
+      }
+      console.log("ini formdata",formData.get("image"))
+
+      try {
+        await axios.patch(`http://localhost:5000/datadiri/portofolio/${id}`, formData, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": `multipart/form-data`,
+          },
+        });
+        navigate("/portofolio");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        await axios.patch(`http://localhost:5000/datadiri/portofolio/${id}`, newPortofolio, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        navigate("/portofolio");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -67,7 +113,7 @@ const UpdatePortofolio = () => {
           deskripsi: dataServer.deskripsi,
           link: dataServer.link,
           file: dataServer.file,
-          images: dataServer.image, // Store the array of image URLs from the database
+          image: dataServer.image, // Store the array of image URLs from the database
         });
       }
     } catch (error) {
@@ -92,22 +138,33 @@ const UpdatePortofolio = () => {
     });
   };
 
-  const handleImagesChange = (e) => {
-    const selectedImages = e.target.files; // Menggunakan e.target.files untuk mendapatkan multiple files
-    setPortofolio({
-      ...Portofolio,
-      images: selectedImages, // Perbarui daftar gambar yang dipilih
-    });
+  const handleImageChange = (e) => {
+    const selectedImage = Array.from(e.target.files);
+    setImage((prevImage) => [...prevImage, ...selectedImage]);
+    setImageSelected(true);
+    console.log("ini image",image)
   };
 
-  const handleCancelImage = (index) => {
-    const updatedImages = [...Portofolio.images];
-    updatedImages.splice(index, 1); // Hapus gambar sesuai dengan indeks
-    setPortofolio({
-      ...Portofolio,
-      images: updatedImages, // Perbarui daftar gambar
-    });
+  const handleCancelNewImage = (index) => {
+    const updatedImages = [...image];
+    updatedImages.splice(index, 1);
+    setImage(updatedImages);
+    if (updatedImages.length === 0) {
+      setImageSelected(false);
+    }
   };
+
+ const handleCancelImage = (index) => {
+    // Remove the image at the specified index from the image array
+    const updatedImage = [...Portofolio.image];
+    updatedImage.splice(index, 1);
+    setPortofolio(prev => ({
+      ...prev,
+      image: updatedImage,
+    }));
+    
+  };
+
   return (
     <>
       <Grid container spacing={2} mt={5} justifyContent="center">
@@ -290,99 +347,223 @@ const UpdatePortofolio = () => {
                     fontSize: "14px",
                     position: "absolute",
                     top: "-18px",
-                    left: "8%",
+                    left: "12%",
                     transform: "translateX(-50%)",
                     marginBottom: "30px"
                   }}
                 >
-                  Image
+                  Image Lalu
                 </div>
-                    {Portofolio.images && Portofolio.images.length > 0 ? (
+                    {Portofolio.image && Portofolio.image.length > 0 ? (
                         <>
-                        {Portofolio.images.map((imageURL, index) => (
-                            <div
-                            key={index}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                border: "1px solid #ccc",
-                                padding: "4px",
-                                borderRadius: "6px",
-                                marginTop: "10px",
-                                marginBottom: "10px",
-                                backgroundColor: "white",
-                                width: "60%",
-                                color: "#1976d2",
-                                borderColor: "#1976d2",
-                            }}
-                            >
-                            <div
+                        {Portofolio.image.map((imageURL, index) => {
+                          if (typeof imageURL === 'string') {
+                            return (
+                              <div
+                                key={index}
                                 style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  border: "1px solid #ccc",
+                                  padding: "4px",
+                                  borderRadius: "6px",
+                                  marginTop: "10px",
+                                  marginBottom: "10px",
+                                  backgroundColor: "white",
+                                  width: "60%",
+                                  color: "#1976d2",
+                                  borderColor: "#1976d2",
+                                }}
+                              >
+                                <div
+                                  style={{
                                     backgroundColor: "#1976d2",
                                     color: "white",
                                     padding: "2px 4px",
                                     borderRadius: "5px",
                                     marginRight: "8px",
-                                    fontSize: "14px"
-                                }}
-                            >
-                                {imageURL.split('.').pop().toUpperCase()}
-                            </div>
-                            <p
-                            style={{
-                              marginRight: "8px",
-                              flexGrow: 1,
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                              fontSize: "14px"
-                            }}
-                          >
-                            <a href={imageURL} target="_blank" rel="noopener noreferrer">
-                                View File
-                            </a>
-                          </p>
-                            
-                            <Button
-                                type="button"
-                                color="primary"
-                                onClick={() => handleCancelImage(index)}
-                                style={{
-                                marginRight: "5px",
-                                paddingTop: "2px",
-                                fontSize: "12px",
-                                }}
-                                sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
-                            >
-                                X
-                            </Button>
-                            </div>
-                        ))}
+                                    fontSize: "14px",
+                                  }}
+                                >
+                                  {imageURL.split('.').pop().toUpperCase()}
+                                </div>
+                                <p
+                                  style={{
+                                    marginRight: "8px",
+                                    flexGrow: 1,
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                    fontSize: "14px",
+                                  }}
+                                >
+                                  <a href={imageURL} target="_blank" rel="noopener noreferrer">
+                                    View File
+                                  </a>
+                                </p>
+                                
+                                <Button
+                                  type="button"
+                                  color="primary"
+                                  onClick={() => handleCancelImage(index)}
+                                  style={{
+                                    marginRight: "5px",
+                                    paddingTop: "2px",
+                                    fontSize: "12px",
+                                  }}
+                                  sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
+                                >
+                                  X
+                                </Button>
+                              </div>
+                            );
+                          }
+                          return null; // Skip rendering if imageURL is not a string
+                        })}
                         </>
                     ) : (
                         <>
-                        <input
-                            type="file"
-                            accept=".gif,.jpg,.jpeg,.png"
-                            multiple
-                            id="image-upload"
-                            style={{ display: "none" }}
-                            onChange={handleImagesChange}
-                        />
-                        <label htmlFor="image-upload">
-                            <Button
-                            component="span"
-                            variant="outlined"
-                            color="primary"
-                            style={{ marginBottom: "15px" }}
-                            >
-                            Add More
-                            </Button>
-                        </label>
+                        <p
+                        style={{marginBottom: "14px",}}
+                        >
+                        Image tidak ada
+                        </p>
+                        
                         </>
-                    )}
+                    )
+                    
+                    }
                     </div>
-
+                    <div
+        style={{
+          border: "1px solid #ccc",
+          borderRadius: "6px",
+          marginTop: "10px",
+          marginBottom: "20px",
+          position: "relative",
+          paddingTop: "17px",
+          paddingLeft: "15px"
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "white",
+            color: "black",
+            padding: "4px",
+            borderTopLeftRadius: "6px",
+            borderTopRightRadius: "6px",
+            fontSize: "14px",
+            position: "absolute",
+            top: "-18px",
+            left: "12%",
+            transform: "translateX(-50%)",
+            marginBottom: "30px"
+          }}
+        >
+          Image Baru
+        </div>
+          {image.length > 0 ? (
+            <>
+              {image.map((image, index) => (
+                <div
+                  key={image.name} // Menggunakan 'name' gambar sebagai kunci unik
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    border: "1px solid #ccc",
+                    padding: "4px",
+                    borderRadius: "6px",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    width: "60%",
+                    color: "#1976d2",
+                    borderColor: "#1976d2",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#1976d2",
+                      color: "white",
+                      padding: "2px 4px",
+                      borderRadius: "5px",
+                      marginRight: "8px",
+                      fontSize: "14px"
+                    }}
+                  >
+                    {image.type}
+                  </div>
+                  <p
+                    style={{
+                      marginRight: "8px",
+                      flexGrow: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      fontSize: "14px"
+                    }}
+                  >
+                    {image.name}
+                  </p>
+                  <Button
+                    type="button"
+                    color="primary"
+                    onClick={() => handleCancelNewImage(index)}
+                    style={{
+                      marginRight: "5px",
+                      paddingTop: "2px",
+                      fontSize: "12px"
+                    }}
+                    sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
+                  >
+                    X
+                  </Button>
+                </div>
+              ))}
+              <input
+                type="file"
+                accept=".gif,.jpg,.jpeg,.png"
+                multiple
+                id="image-upload"
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+              />
+              <label htmlFor="image-upload">
+                <Button
+                  component="span"
+                  variant="outlined"
+                  color="primary"
+                  style={{
+                    marginBottom: "15px",
+                  }}
+                >
+                  Add More
+                </Button>
+              </label>
+            </>
+          ) : (
+            <>
+              <input
+                type="file"
+                accept=".gif,.jpg,.jpeg,.png"
+                multiple
+                id="image-upload"
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+              />
+              <label htmlFor="image-upload">
+                <Button
+                  component="span"
+                  variant="outlined"
+                  color="primary"
+                  style={{ marginBottom: "15px", marginTop: "2px", }}
+                >
+                  Pilih File
+                </Button>
+              </label>
+            </>
+          )}
+        </div>
 
                 <Button type="submit" variant="contained" color="primary">
                   Update

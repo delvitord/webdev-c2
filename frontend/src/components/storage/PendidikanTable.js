@@ -36,7 +36,6 @@ const PendidikanTable = () => {
   const [token, setToken] = useState("");
   const [expire, setExpire] = useState("");
   const navigate = useNavigate();
-  const {id} = useParams()
   const accessToken = localStorage.getItem("accessToken");
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [pendidikanToDelete, setPendidikanToDelete] = useState(null);
@@ -85,10 +84,10 @@ const PendidikanTable = () => {
     setAddPendidikanDialogOpen(true);
   };
 
-  // const handleDeleteClick = (id) => {
-  //   setPendidikanToDelete(id);
-  //   setDeleteConfirmationOpen(true);
-  // };
+  const handleDeleteClick = (id) => {
+    setPendidikanToDelete(id);
+    setDeleteConfirmationOpen(true);
+  };
 
   const confirmDelete = () => {
     const id = pendidikanToDelete;

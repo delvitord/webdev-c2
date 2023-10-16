@@ -75,284 +75,276 @@ const AddPortofolio = () => {
 
   return (
     <>
-      <Grid container spacing={2} mt={5} justifyContent="center">
-        <Grid>
-          <Card sx={{ maxWidth: 450 }}>
-            <CardContent>
-              <form onSubmit={savePortofolio}>
-                <TextField
-                  label="Judul"
-                  fullWidth
-                  value={judul}
-                  onChange={(e) => setJudul(e.target.value)}
-                  placeholder="Judul"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Deskripsi"
-                  fullWidth
-                  multiline
-                  value={deskripsi}
-                  onChange={(e) => setDeskripsi(e.target.value)}
-                  placeholder="Deskripsi"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Link"
-                  fullWidth
-                  value={link}
-                  onChange={(e) => setLink(e.target.value)}
-                  placeholder="Link"
-                  variant="outlined"
-                  margin="normal"
-                />
+      <form onSubmit={savePortofolio}>
+        <TextField
+          label="Judul"
+          fullWidth
+          value={judul}
+          onChange={(e) => setJudul(e.target.value)}
+          placeholder="Judul"
+          variant="outlined"
+          margin="normal"
+        />
+        <TextField
+          label="Deskripsi"
+          fullWidth
+          multiline
+          value={deskripsi}
+          onChange={(e) => setDeskripsi(e.target.value)}
+          placeholder="Deskripsi"
+          variant="outlined"
+          margin="normal"
+        />
+        <TextField
+          label="Link"
+          fullWidth
+          value={link}
+          onChange={(e) => setLink(e.target.value)}
+          placeholder="Link"
+          variant="outlined"
+          margin="normal"
+        />
+      <div
+        style={{
+          border: "1px solid #ccc",
+          borderRadius: "6px",
+          marginTop: "10px",
+          marginBottom: "20px",
+          position: "relative",
+          paddingTop: "18px",
+          paddingLeft: "15px",
+          paddingBottom: "3px",
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "white",
+            color: "black",
+            padding: "4px",
+            borderTopLeftRadius: "6px",
+            borderTopRightRadius: "6px",
+            fontSize: "14px",
+            position: "absolute",
+            top: "-18px",
+            left: "6%",
+            transform: "translateX(-50%)",
+            marginBottom: "30px"
+          }}
+        >
+          File
+        </div>
+          {fileSelected ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                border: "1px solid #ccc",
+                padding: "4px",
+                borderRadius: "6px",
+                marginTop: "10px",
+                marginBottom: "20px",
+                backgroundColor: "white",
+                width: "50%",
+                color: "#1976d2",
+                borderColor: "#1976d2",
+              }}
+            >
               <div
                 style={{
-                  border: "1px solid #ccc",
-                  borderRadius: "6px",
-                  marginTop: "10px",
-                  marginBottom: "20px",
-                  position: "relative",
-                  paddingTop: "18px",
-                  paddingLeft: "15px",
-                  paddingBottom: "3px",
+                  backgroundColor: "#1976d2",
+                  color: "white",
+                  padding: "2px 4px",
+                  borderRadius: "5px",
+                  marginRight: "8px",
+                  fontSize: "14px"
                 }}
               >
-                <div
-                  style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    padding: "4px",
-                    borderTopLeftRadius: "6px",
-                    borderTopRightRadius: "6px",
-                    fontSize: "14px",
-                    position: "absolute",
-                    top: "-18px",
-                    left: "6%",
-                    transform: "translateX(-50%)",
-                    marginBottom: "30px"
-                  }}
-                >
-                  File
-                </div>
-                  {fileSelected ? (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        border: "1px solid #ccc",
-                        padding: "4px",
-                        borderRadius: "6px",
-                        marginTop: "10px",
-                        marginBottom: "20px",
-                        backgroundColor: "white",
-                        width: "50%",
-                        color: "#1976d2",
-                        borderColor: "#1976d2",
-                      }}
-                    >
-                      <div
-                        style={{
-                          backgroundColor: "#1976d2",
-                          color: "white",
-                          padding: "2px 4px",
-                          borderRadius: "5px",
-                          marginRight: "8px",
-                          fontSize: "14px"
-                        }}
-                      >
-                        PDF
-                      </div>
-                      <p
-                        style={{
-                          marginRight: "8px",
-                          flexGrow: 1,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                          fontSize: "14px"
-                        }}
-                      >
-                        {file.name}
-                      </p>
-                      <Button
-                        type="button"
-                        color="primary"
-                        onClick={handleCancelFile}
-                        style={{
-                          marginRight: "5px",
-                          paddingTop: "2px",
-                          fontSize: "12px"
-                        }}
-                        sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
-                      >
-                        X
-                      </Button>
-                    </div>
-                  ) : (
-                    <>
-                      <input
-                        type="file"
-                        accept=".pdf,"
-                        id="file-upload"
-                        style={{ display: "none" }}
-                        onChange={handleFileChange}
-                      />
-                      <label htmlFor="file-upload">
-                        <Button
-                          component="span"
-                          variant="outlined"
-                          color="primary"
-                          style={{
-                            marginBottom: "10px",
-                          }}
-                        >
-                          Pilih File
-                        </Button>
-                      </label>
-                    </>
-                  )}
+                PDF
               </div>
-              <div
+              <p
                 style={{
-                  border: "1px solid #ccc",
-                  borderRadius: "6px",
-                  marginTop: "10px",
-                  marginBottom: "20px",
-                  position: "relative",
-                  paddingTop: "17px",
-                  paddingLeft: "15px"
+                  marginRight: "8px",
+                  flexGrow: 1,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  fontSize: "14px"
                 }}
               >
-                <div
+                {file.name}
+              </p>
+              <Button
+                type="button"
+                color="primary"
+                onClick={handleCancelFile}
+                style={{
+                  marginRight: "5px",
+                  paddingTop: "2px",
+                  fontSize: "12px"
+                }}
+                sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
+              >
+                X
+              </Button>
+            </div>
+          ) : (
+            <>
+              <input
+                type="file"
+                accept=".pdf,"
+                id="file-upload"
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+              />
+              <label htmlFor="file-upload">
+                <Button
+                  component="span"
+                  variant="outlined"
+                  color="primary"
                   style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    padding: "4px",
-                    borderTopLeftRadius: "6px",
-                    borderTopRightRadius: "6px",
-                    fontSize: "14px",
-                    position: "absolute",
-                    top: "-18px",
-                    left: "8%",
-                    transform: "translateX(-50%)",
-                    marginBottom: "30px"
+                    marginBottom: "10px",
                   }}
                 >
-                  Image
-                </div>
-                  {images.length > 0 ? (
-                    <>
-                      {images.map((image, index) => (
-                        <div
-                          key={image.name} // Menggunakan 'name' gambar sebagai kunci unik
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            border: "1px solid #ccc",
-                            padding: "4px",
-                            borderRadius: "6px",
-                            marginTop: "10px",
-                            marginBottom: "10px",
-                            backgroundColor: "white",
-                            width: "60%",
-                            color: "#1976d2",
-                            borderColor: "#1976d2",
-                          }}
-                        >
-                          <div
-                            style={{
-                              backgroundColor: "#1976d2",
-                              color: "white",
-                              padding: "2px 4px",
-                              borderRadius: "5px",
-                              marginRight: "8px",
-                              fontSize: "14px"
-                            }}
-                          >
-                            {image.type}
-                          </div>
-                          <p
-                            style={{
-                              marginRight: "8px",
-                              flexGrow: 1,
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                              fontSize: "14px"
-                            }}
-                          >
-                            {image.name}
-                          </p>
-                          <Button
-                            type="button"
-                            color="primary"
-                            onClick={() => handleCancelImage(index)}
-                            style={{
-                              marginRight: "5px",
-                              paddingTop: "2px",
-                              fontSize: "12px"
-                            }}
-                            sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
-                          >
-                            X
-                          </Button>
-                        </div>
-                      ))}
-                      <input
-                        type="file"
-                        accept=".gif,.jpg,.jpeg,.png"
-                        multiple
-                        id="image-upload"
-                        style={{ display: "none" }}
-                        onChange={handleImagesChange}
-                      />
-                      <label htmlFor="image-upload">
-                        <Button
-                          component="span"
-                          variant="outlined"
-                          color="primary"
-                          style={{
-                            marginBottom: "15px",
-                          }}
-                        >
-                          Add More
-                        </Button>
-                      </label>
-                    </>
-                  ) : (
-                    <>
-                      <input
-                        type="file"
-                        accept=".gif,.jpg,.jpeg,.png"
-                        multiple
-                        id="image-upload"
-                        style={{ display: "none" }}
-                        onChange={handleImagesChange}
-                      />
-                      <label htmlFor="image-upload">
-                        <Button
-                          component="span"
-                          variant="outlined"
-                          color="primary"
-                          style={{ marginBottom: "15px", marginTop: "2px", }}
-                        >
-                          Pilih File
-                        </Button>
-                      </label>
-                    </>
-                  )}
-                </div>
-                <Button type="submit" variant="contained" color="primary">
-                  Save
+                  Pilih File
                 </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+              </label>
+            </>
+          )}
+      </div>
+      <div
+        style={{
+          border: "1px solid #ccc",
+          borderRadius: "6px",
+          marginTop: "10px",
+          marginBottom: "20px",
+          position: "relative",
+          paddingTop: "17px",
+          paddingLeft: "15px"
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "white",
+            color: "black",
+            padding: "4px",
+            borderTopLeftRadius: "6px",
+            borderTopRightRadius: "6px",
+            fontSize: "14px",
+            position: "absolute",
+            top: "-18px",
+            left: "8%",
+            transform: "translateX(-50%)",
+            marginBottom: "30px"
+          }}
+        >
+          Image
+        </div>
+          {images.length > 0 ? (
+            <>
+              {images.map((image, index) => (
+                <div
+                  key={image.name} // Menggunakan 'name' gambar sebagai kunci unik
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    border: "1px solid #ccc",
+                    padding: "4px",
+                    borderRadius: "6px",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    backgroundColor: "white",
+                    width: "60%",
+                    color: "#1976d2",
+                    borderColor: "#1976d2",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#1976d2",
+                      color: "white",
+                      padding: "2px 4px",
+                      borderRadius: "5px",
+                      marginRight: "8px",
+                      fontSize: "14px"
+                    }}
+                  >
+                    {image.type}
+                  </div>
+                  <p
+                    style={{
+                      marginRight: "8px",
+                      flexGrow: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      fontSize: "14px"
+                    }}
+                  >
+                    {image.name}
+                  </p>
+                  <Button
+                    type="button"
+                    color="primary"
+                    onClick={() => handleCancelImage(index)}
+                    style={{
+                      marginRight: "5px",
+                      paddingTop: "2px",
+                      fontSize: "12px"
+                    }}
+                    sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
+                  >
+                    X
+                  </Button>
+                </div>
+              ))}
+              <input
+                type="file"
+                accept=".gif,.jpg,.jpeg,.png"
+                multiple
+                id="image-upload"
+                style={{ display: "none" }}
+                onChange={handleImagesChange}
+              />
+              <label htmlFor="image-upload">
+                <Button
+                  component="span"
+                  variant="outlined"
+                  color="primary"
+                  style={{
+                    marginBottom: "15px",
+                  }}
+                >
+                  Add More
+                </Button>
+              </label>
+            </>
+          ) : (
+            <>
+              <input
+                type="file"
+                accept=".gif,.jpg,.jpeg,.png"
+                multiple
+                id="image-upload"
+                style={{ display: "none" }}
+                onChange={handleImagesChange}
+              />
+              <label htmlFor="image-upload">
+                <Button
+                  component="span"
+                  variant="outlined"
+                  color="primary"
+                  style={{ marginBottom: "15px", marginTop: "2px", }}
+                >
+                  Pilih File
+                </Button>
+              </label>
+            </>
+          )}
+        </div>
+        <Button type="submit" variant="contained" color="primary">
+          Save
+        </Button>
+      </form>
     </>
   );
 };

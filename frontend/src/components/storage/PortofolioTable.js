@@ -21,6 +21,8 @@ import { Transition } from "react-transition-group";
 import SourceIcon from "@mui/icons-material/Source";
 import "../style.css";
 import { Card } from "@mui/material";
+import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
+import CardContent from "@mui/material/CardContent";
 
 const columns = [
   { field: "id", headerName: "ID", minWidth: 30 },
@@ -103,6 +105,11 @@ const PortofolioTable = () => {
     setSnackbarOpen(false);
   };
 
+  const handleDeleteClick = (id) => {
+    setPortofolioToDelete(id);
+    setDeleteConfirmationOpen(true);
+  };
+
   const confirmDelete = () => {
     const id = portofolioToDelete;
     if (id) {
@@ -162,7 +169,7 @@ const PortofolioTable = () => {
           <Button variant="contained" color="success" sx={{ mb: 3 }} onClick={handleAddPortofolioClick}>
             Add New
           </Button>
-          {portofolios && portofolio.length > 0 ? (
+          {portofolios && portofolios.length > 0 ? (
             <DataTable
               rows={portofolios}
               columns={columns.map((column) => ({
@@ -179,14 +186,25 @@ const PortofolioTable = () => {
                         </IconButton>
                       </div>
                     );
-                  } else if (column.field === "foto") {
-                    return (
-                      <img
-                        src={params.value} // Anda harus menyediakan URL gambar dari data
-                        alt="Foto"
-                        style={{ width: 50, height: 50 }} // Sesuaikan dengan ukuran yang sesuai
-                      />
-                    );
+                  } else if (column.field === "file") {
+                    return params.value ? (
+                      <a href={params.value} target="_blank" rel="noopener noreferrer">
+                        View File
+                      </a>
+                    ) : "No File";
+                  }
+                  else if (column.field === "image") {
+                    return params.value && params.value.length > 0 ? (
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        {params.value.map((img, idx) => (
+                          <div key={idx} style={{ marginBottom: "8px" }}>
+                            <a href={img} target="_blank" rel="noopener noreferrer">
+                              View Image {idx + 1}
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                    ) : "No Images";
                   } else {
                     return <span>{params.value}</span>;
                   }

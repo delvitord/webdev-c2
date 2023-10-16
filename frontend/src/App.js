@@ -108,14 +108,14 @@ function App() {
             </>
           }
         />
-        {/* <Route
+        <Route
           path="/edit-portofolio/:id"
           element={
             <>
               <UpdatePortofolio />
             </>
           }
-        /> */}
+        />
         <Route
           path="/skill"
           element={

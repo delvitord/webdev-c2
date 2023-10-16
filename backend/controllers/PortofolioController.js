@@ -193,8 +193,10 @@ export const updatePortofolio = async (req, res) => {
     let portofolio = await Portofolio.findOne({
       where: { id },
     });
-    const { judul, deskripsi, link } = req.body;
-
+    const { judul, deskripsi, link, image, file } = req.body;
+    console.log(image);
+    console.log(judul);
+    console.log(file);
     if (!portofolio) {
       return res.status(404).json({ error: "Portofolio not found" });
     }
@@ -203,7 +205,7 @@ export const updatePortofolio = async (req, res) => {
       return res.status(404).json({ error: "Portofolio not found" });
     }
 
-    let fileUrl = portofolio.file;
+    let fileUrl = file;
 
      // Mengecek apakah ada file yang diunggah
     if (req.files && req.files.file) {
@@ -241,9 +243,10 @@ export const updatePortofolio = async (req, res) => {
           deskripsi,
           file: fileUrl,
           link,
+          image,
           dataDiriId, 
         });
-
+        updateImage(id, req, res)
         res.status(200).json({ msg: "Portofolio Updated Successfully" });
       });
     }  else {
@@ -251,11 +254,11 @@ export const updatePortofolio = async (req, res) => {
       await portofolio.update({
         judul,
         deskripsi,
+        file: fileUrl,
         link,
         dataDiriId, 
+        image,
       });
-
-      
 
       updateImage(id, req, res)
       res.status(200).json({ msg: "Portofolio Updated Successfully" });
@@ -279,49 +282,60 @@ export const updatePortofolio = async (req, res) => {
       return res.status(404).json({ error: "Portofolio not found" });
     }
   
-    const { judul, deskripsi, link} = req.body;
+    const { judul, deskripsi, link, image } = req.body;
+    
+    // Convert the comma-separated string of URLs in req.body.image into an array
+    let existingImageUrls;
+    
+    if (image > 1){
+      existingImageUrls = image.split(',');
+    } else if (image === 1){
+      existingImageUrls = [image];
+    }
+    else {
+      existingImageUrls = [''];
+    }
     try {
       const imageFiles = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
-    const imageUrls = [];
+      console.log("imagefile", imageFiles);
+      const newImageUrls = [];
   
-    for (const file of imageFiles) {
-      const fileSize = file.data.length;
-      const ext = path.extname(file.name);
-      const fileName = file.md5 + ext;
-      const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+      for (const file of imageFiles) {
+        const fileSize = file.data.length;
+        const ext = path.extname(file.name);
+        const fileName = file.md5 + ext;
+        const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
   
-      if (!allowedImgType.includes(ext.toLowerCase())) {
-        return res.status(422).json({ msg: "Invalid Image Type" });
-      }
-  
-      if (fileSize > 5000000) {
-        return res.status(422).json({ msg: "Image must be less than 5 MB" });
-      }
-  
-      file.mv(`./public/images/${fileName}`, (err) => {
-        if (err) {
-          console.error(err.message);
-          return res.status(500).json({ msg: "File Upload Failed" });
+        if (!allowedImgType.includes(ext.toLowerCase())) {
+          return res.status(422).json({ msg: "Invalid Image Type" });
         }
-        imageUrls.push(url);
   
-
-        if (imageUrls.length === imageFiles.length) {
-          try {
-            portofolio.update({
-              judul: judul,
-              deskripsi: deskripsi,
-              image: imageUrls, // Store the array of image URLs
-              link: link,
-            });
-            
-          } catch (error) {
-            console.error(error.message);
-            res.status(500).json({ msg: "Internal Server Error" });
+        if (fileSize > 5000000) {
+          return res.status(422).json({ msg: "Image must be less than 5 MB" });
+        }
+  
+        file.mv(`./public/images/${fileName}`, (err) => {
+          if (err) {
+            console.error(err.message);
+            return res.status(500).json({ msg: "File Upload Failed" });
           }
-        }
-      });
-    }
+          newImageUrls.push(url);
+  
+        });
+      }
+      const updatedImageUrls = existingImageUrls.concat(newImageUrls);
+            
+            try {
+              portofolio.update({
+                judul: judul,
+                deskripsi: deskripsi,
+                image: updatedImageUrls, // Store the array of image URLs
+                link: link,
+              });
+            } catch (error) {
+              console.error(error.message);
+              res.status(500).json({ msg: "Internal Server Error" });
+            }
     } catch (error){
       
     }
