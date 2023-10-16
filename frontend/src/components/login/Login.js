@@ -55,7 +55,7 @@ const Login = () => {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: "#333333" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">

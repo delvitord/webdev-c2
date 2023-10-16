@@ -1,5 +1,5 @@
 import React from "react";
-import "./homelanding.css";
+import "./homepersonal.css";
 
 const ScrollDown = () => {
   return (

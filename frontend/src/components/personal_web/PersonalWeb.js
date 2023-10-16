@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./header/Header";
-import Home from "./home/Home";
+import Home from "./home/HomePersonal";
 import About from "./about/About";
 import Skills from "./skills/Skills";
 import Contact from "./contact/Contact";
@@ -9,7 +9,7 @@ import ScrollUp from "./scrollup/ScrollUp";
 import Qualification from "./qualification/Qualification";
 import Portofolio from "./portofolio/Work";
 
-function landing_page() {
+function PersonalWeb() {
   return (
     <>
       <Header />
@@ -17,9 +17,9 @@ function landing_page() {
         <Home />
         <About />
         <Skills />
-        <Contact />
         <Qualification />
         <Portofolio />
+        <Contact />
       </main>
       <Footer />
       <ScrollUp />
@@ -27,4 +27,4 @@ function landing_page() {
   );
 }
 
-export default landing_page;
+export default PersonalWeb;
