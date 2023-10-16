@@ -14,11 +14,7 @@ const OrganisasiList = () => {
           <Box sx={{ display: "flex" }}>
             <Sidebar />
             <Box component="main" sx={{ flexGrow: 1, p: 2 }}>
-              <Card>
-                <CardContent>
-                  <OrganisasiTable />
-                </CardContent>
-              </Card>
+              <OrganisasiTable />
             </Box>
           </Box>
         </>

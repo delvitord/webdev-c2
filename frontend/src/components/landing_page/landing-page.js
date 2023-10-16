@@ -6,6 +6,8 @@ import Skills from "./skills/Skills";
 import Contact from "./contact/Contact";
 import Footer from "./footer/Footer"
 import ScrollUp from "./scrollup/ScrollUp";
+import Qualification from "./qualification/Qualification";
+import Portofolio from "./portofolio/Work";
 
 function landing_page() {
   return (
@@ -16,6 +18,8 @@ function landing_page() {
         <About />
         <Skills />
         <Contact />
+        <Qualification />
+        <Portofolio />
       </main>
       <Footer />
       <ScrollUp />

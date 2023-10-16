@@ -112,7 +112,7 @@ function App() {
           path="/edit-portofolio/:id"
           element={
             <>
-              {/* <UpdatePortofolio /> */}
+              <UpdatePortofolio />
             </>
           }
         />

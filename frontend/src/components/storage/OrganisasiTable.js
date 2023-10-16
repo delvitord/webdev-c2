@@ -78,14 +78,14 @@ const OrganisasiTable = () => {
     if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
       try {
         const accessToken = localStorage.getItem("accessToken");
-  
+
         // Send a DELETE request to the server to delete the item with a specific ID
         await axios.delete(`http://localhost:5000/datadiri/organisasi/${originalId}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-  
+
         // After successful deletion, you can update the state or refresh the data
         getOrganisasi(); // You may want to call this to refresh the data.
       } catch (error) {
@@ -95,48 +95,46 @@ const OrganisasiTable = () => {
   };
 
     return (
-      <Content open={true}>
-        <Link to={`/add-organisasi`}>
-          <Button variant="contained" color="success" sx={{ mb: 3 }}>
-            Add New
-          </Button>
-        </Link>
-        {organisasi && organisasi.length > 0 ? (
-          <DataTable
-            rows={organisasi}
-            columns={columns.map((column) => ({
-              ...column,
-              renderCell: (params) => {
-                if (column.field === "actions") {
-                  return (
-                    <div>
-                      <IconButton
-                        aria-label="Edit"
-                        color="primary"
-                        onClick={() => handleEditClick(params.row._originalId)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        aria-label="Delete"
-                        color="error"
-                        onClick={() =>
-                          handleDeleteClick(params.row._originalId)
-                        }
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </div>
-                  );
-                }
-                return params.value;
-              },
-            }))}
-          />
-        ) : (
-          <p>Data tidak tersedia atau sedang dimuat...</p>
-        )}
-      </Content>
+        <Content open={true}>
+            <Link to={`/add-organisasi`}>
+                <Button variant="contained" color="success" sx={{ mb: 3 }}>
+                Add New
+                </Button>
+            </Link>
+            {organisasi && organisasi.length > 0 ? (
+                <DataTable
+                    rows={organisasi}
+                    columns={columns.map((column) => ({
+                        ...column,
+                        renderCell: (params) => {
+                            if (column.field === "actions") {
+                                return (
+                                    <div>
+                                        <IconButton
+                                            aria-label="Edit"
+                                            color="primary"
+                                            onClick={() => handleEditClick(params.row._originalId)}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton
+                                            aria-label="Delete"
+                                            color="error"
+                                            onClick={() => handleDeleteClick(params.row._originalId)}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </div>
+                                );
+                            }
+                            return params.value;
+                        },
+                    }))}
+                />
+            ) : (
+                <p>Data tidak tersedia atau sedang dimuat...</p>
+            )}
+        </Content>
     );
 };
 
