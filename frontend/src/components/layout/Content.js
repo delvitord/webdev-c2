@@ -19,9 +19,7 @@ function Content({ children }) {
       }}
     >
       <Toolbar />
-      <Container maxWidth="lg" sx={{ mt: 0, mb: 4 }}>
         {children}
-      </Container>
     </Box>
   );
 }

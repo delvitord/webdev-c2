@@ -26,7 +26,6 @@ export default function DataTable({ rows, columns, isDarkMode }) {
         disableColumnMenu
         columnHeaderHeight={60}
         checkboxSelection
-        cellModesModel={1}
         disableSelectionOnClick
         pageSize={5}
         rowsPerPageOptions={[5]}

@@ -60,7 +60,7 @@
 }
 
 .home__img {
-  background: url(../../../assets/OIP.jpeg);
+  background: url(../../../assets/SZE.jpg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -69,10 +69,10 @@
   justify-self: center;
   width: 300px;
   height: 300px;
-  animation: profile_animate 8s ease-in-out infinite 1s;
+  animation: profile__animate 8s ease-in-out infinite 1s;
 }
 
-@keyframes profile_animate {
+@keyframes profile__animate {
   0% {
     border-radius: 60% 40% 30% 70%/60% 30% 70% 40%;
   }

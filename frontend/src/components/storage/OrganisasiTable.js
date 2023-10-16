@@ -7,6 +7,8 @@ import Content from "../layout/Content";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 const columns = [
     { field: "id", headerName: "No", width: 30 },
@@ -93,41 +95,48 @@ const OrganisasiTable = () => {
   };
 
     return (
-        <Content open={true}>
-            {organisasi && organisasi.length > 0 ? (
-                <DataTable
-                    rows={organisasi}
-                    columns={columns.map((column) => ({
-                        ...column,
-                        renderCell: (params) => {
-                            if (column.field === "actions") {
-                                return (
-                                    <div>
-                                        <IconButton
-                                            aria-label="Edit"
-                                            color="primary"
-                                            onClick={() => handleEditClick(params.row._originalId)}
-                                        >
-                                            <EditIcon />
-                                        </IconButton>
-                                        <IconButton
-                                            aria-label="Delete"
-                                            color="error"
-                                            onClick={() => handleDeleteClick(params.row._originalId)}
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </div>
-                                );
-                            }
-                            return params.value;
-                        },
-                    }))}
-                />
-            ) : (
-                <p>Data tidak tersedia atau sedang dimuat...</p>
-            )}
-        </Content>
+      <Content open={true}>
+        <Link to={`/add-organisasi`}>
+          <Button variant="contained" color="success" sx={{ mb: 3 }}>
+            Add New
+          </Button>
+        </Link>
+        {organisasi && organisasi.length > 0 ? (
+          <DataTable
+            rows={organisasi}
+            columns={columns.map((column) => ({
+              ...column,
+              renderCell: (params) => {
+                if (column.field === "actions") {
+                  return (
+                    <div>
+                      <IconButton
+                        aria-label="Edit"
+                        color="primary"
+                        onClick={() => handleEditClick(params.row._originalId)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label="Delete"
+                        color="error"
+                        onClick={() =>
+                          handleDeleteClick(params.row._originalId)
+                        }
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </div>
+                  );
+                }
+                return params.value;
+              },
+            }))}
+          />
+        ) : (
+          <p>Data tidak tersedia atau sedang dimuat...</p>
+        )}
+      </Content>
     );
 };
 

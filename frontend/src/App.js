@@ -22,18 +22,9 @@ import LandingPage from "./components/landing_page/landing-page";
 import UpdateOrganisasi from "./components/organisasi/EditOrganisasi";
 import GaleriList from "./components/galeri/Galeri";
 import AddGaleri from "./components/galeri/AddGaleri";
-import { Link } from "react-router-dom";
+import { NotFound } from "./components/layout/NotFound";
 
-function NotFound() {
-  return (
-    <div>
-      Page Not Found
-      <Link to="/">
-        <button> Go to Main Page</button>
-      </Link>
-    </div>
-  );
-}
+
 
 function App() {
   return (
@@ -121,7 +112,7 @@ function App() {
           path="/edit-portofolio/:id"
           element={
             <>
-              <UpdatePortofolio />
+              {/* <UpdatePortofolio /> */}
             </>
           }
         />

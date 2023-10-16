@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DataTable from "./DataTable";
 import Content from "../layout/Content";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
+import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 
 const columns = [
@@ -24,6 +25,8 @@ const PendidikanTable = () => {
   const [token, setToken] = useState("");
   const [expire, setExpire] = useState("");
   const navigate = useNavigate();
+  const {id} = useParams()
+  const accessToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     refreshToken();
@@ -49,7 +52,6 @@ const PendidikanTable = () => {
 
   const getPendidikan = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
 
       const response = await axios.get(
         "http://localhost:5000/datadiri/pendidikan",
@@ -59,7 +61,12 @@ const PendidikanTable = () => {
           },
         }
       );
-      setPendidikan(response.data);
+
+      const dataWithId = response.data.map((item, index) => ({
+        ...item,
+        id: index + 1,
+      }));
+      setPendidikan(dataWithId);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -71,17 +78,16 @@ const PendidikanTable = () => {
     navigate(`/edit-pendidikan/${id}`);
   };
 
-  const handleDeleteClick = async (id) => {
+  const handleDeleteClick = async (original) => {
     if (window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
       try {
-        const accessToken = localStorage.getItem("accessToken");
         // Lakukan permintaan DELETE ke backend untuk menghapus data dengan ID tertentu
-        axios.delete(`http://localhost:5000/datadiri/pendidikan/${id}`, {
+        axios.delete(`http://localhost:5000/pendidikan/${original}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        window.location.reload();
+        // window.location.reload();
       } catch (error) {
         console.error("Error deleting data:", error);
       }
@@ -91,8 +97,12 @@ const PendidikanTable = () => {
   return (
     <Content open={open}>
       <Link to={`/add-pendidikan`}>
-        <Button variant="contained" color="success" sx={{ mb: 3 }}>
-          Add New
+        <Button
+          variant="contained"
+          color="success"
+          sx={{ marginLeft: 1 }}
+        >
+          <AddIcon sx={{ marginRight: 1 }} /> Add New
         </Button>
       </Link>
       {pendidikan && pendidikan.length > 0 ? (
