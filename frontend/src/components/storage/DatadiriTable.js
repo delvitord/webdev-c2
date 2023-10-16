@@ -103,43 +103,46 @@ const DatadiriTable = () => {
     setShowNoDataMessage(false);
   };
 
-  const handleEditClick = (data) => {
-    setDataToEdit(data);
+  const handleEditClick = (id) => {
+    // Temukan data diri yang sesuai dengan ID yang diteruskan
+    const dataToEdit = datadiris.find((data) => data.id === id);
+
+    // Setel dataToEdit ke data diri yang ditemukan
+    setDataToEdit(dataToEdit);
+
+    // Buka dialog edit
     setEditDatadiriDialogOpen(true);
-    console.log(data);
   };
 
-  const handleDeleteClick = (id) => {
-    setDatadiriToDelete(id);
+
+  const handleDeleteClick = () => {
+    setDatadiriToDelete();
     setDeleteConfirmationOpen(true);
   };
 
   const confirmDelete = () => {
-    const id = datadiriToDelete;
-    if (id) {
-      try {
-        const accessToken = localStorage.getItem("accessToken");
-        axios
-          .delete(`http://localhost:5000/datadiri/`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
-          .then((response) => {
-            if (response.status === 200) {
-              // Datadiri is successfully deleted, show the snackbar
-              handleSnackbarOpen();
-              window.location.reload();
-            } else {
-              console.error("Gagal menghapus data.");
-            }
-          })
-          .catch((error) => {
-            console.error("Error deleting data:", error);
-          });
-      } catch (error) {
-        console.error("Error deleting data:", error);
-      }
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      axios
+        .delete(`http://localhost:5000/data_diri/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            // Datadiri is successfully deleted, show the snackbar
+            handleSnackbarOpen();
+            window.location.reload();
+          } else {
+            console.error("Gagal menghapus data.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting data:", error);
+        });
+    } catch (error) {
+      console.error("Error deleting data:", error);
     }
     setDeleteConfirmationOpen(false);
   };

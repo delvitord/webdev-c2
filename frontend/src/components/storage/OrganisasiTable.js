@@ -16,8 +16,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import AddOrganisasi from "../organisasi/AddOrganisasii"; // Corrected typo
 import EditOrganisasi from "../organisasi/EditOrganisasi";
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 import { Transition } from "react-transition-group";
-import { useParams } from "react-router-dom";
 import CorporateFareIcon from "@mui/icons-material/CorporateFare";
 import "../style.css";
 
@@ -36,6 +37,7 @@ const OrganisasiTable = () => {
   const [token, setToken] = useState("");
   const [expire, setExpire] = useState("");
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem("accessToken");
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [organisasiToDelete, setOrganisasiToDelete] = useState(null);
   const [isAddOrganisasiDialogOpen, setAddOrganisasiDialogOpen] = useState(false);
@@ -65,47 +67,32 @@ const OrganisasiTable = () => {
 
   const getOrganisasi = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
       const response = await axios.get("http://localhost:5000/datadiri/organisasi", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
-      const dataWithId = response.data.map((item, index) => ({
-        ...item,
-        id: index + 1,
-        _originalId: item.id,
-      }));
-      setOrganisasi(dataWithId);
+      setOrganisasi(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
   const [open] = React.useState(true);
   const handleAddOrganisasiClick = () => {
-    // Update the state to open the Add Organisasi dialog
     setAddOrganisasiDialogOpen(true);
   };
-  // const handleEditClick = (originalId) => {
-  //   navigate(`/edit-organisasi/${originalId}`);
-  // };
-
-  const handleEditOrganisasiClick = (id) => {
-    const organisasiData = organisasi.find((item) => item._originalId === id);
-    if (organisasiData) {
-      console.log(organisasiData); // Add this line to debug
-      setOrganisasiToEdit(organisasiData);
-      // Update the state to open the Edit Organisasi dialog
-      setEditOrganisasiDialogOpen(true);
-    }
-  };
-
-  // Add a function to open the Edit Organisasi dialog with data
 
   const handleDeleteClick = (id) => {
     setOrganisasiToDelete(id);
     setDeleteConfirmationOpen(true);
+  };
+
+
+  const handleEditClick = (data) => {
+    setOrganisasiToEdit(data);
+    setEditOrganisasiDialogOpen(true);
+    console.log(data);
   };
 
   const confirmDelete = () => {
@@ -160,27 +147,6 @@ const OrganisasiTable = () => {
     setOrganisasiToEdit(null);
   };
 
-  const { id } = useParams();
-  const handleUpdateOrganisasi = async (e) => {
-    e.preventDefault();
-
-    try {
-      const accessToken = localStorage.getItem("accessToken");
-      // Lakukan permintaan axios untuk mengirim data perubahan ke server
-      await axios.patch(`http://localhost:5000/datadiri/organisasi/${id}`, organisasi, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      // Setelah berhasil, Anda dapat melakukan navigasi kembali ke halaman "organisasi" atau tempat yang sesuai
-      navigate("/organisasi");
-    } catch (error) {
-      console.log(error);
-      // Anda dapat menambahkan penanganan kesalahan di sini, seperti menampilkan pesan kesalahan kepada pengguna.
-    }
-  };
-
   const handleAddOrganisasiClose = () => {
     setAddOrganisasiDialogOpen(false);
   };
@@ -199,10 +165,17 @@ const OrganisasiTable = () => {
 
   return (
     <Content open={open}>
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>Pengalaman Organisasi</h1>
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>
+        Pengalaman Organisasi
+      </h1>
       <Card>
         <CardContent>
-          <Button variant="contained" color="success" sx={{ mb: 3 }} onClick={handleAddOrganisasiClick}>
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ mb: 3 }}
+            onClick={handleAddOrganisasiClick}
+          >
             Add New
           </Button>
           {organisasi && organisasi.length > 0 ? (
@@ -214,10 +187,18 @@ const OrganisasiTable = () => {
                   if (column.field === "actions") {
                     return (
                       <div>
-                        <IconButton aria-label="Edit" color="primary" onClick={() => handleEditOrganisasiClick(params.row._originalId)}>
+                        <IconButton
+                          aria-label="Edit"
+                          color="primary"
+                          onClick={() => handleEditClick(params.row)}
+                        >
                           <EditIcon />
                         </IconButton>
-                        <IconButton aria-label="Delete" color="error" onClick={() => handleDeleteClick(params.row._originalId)}>
+                        <IconButton
+                          aria-label="Delete"
+                          color="error"
+                          onClick={() => handleDeleteClick(params.row.id)}
+                        >
                           <DeleteIcon />
                         </IconButton>
                       </div>
@@ -232,17 +213,62 @@ const OrganisasiTable = () => {
         </CardContent>
       </Card>
 
+      <Dialog
+        open={deleteConfirmationOpen}
+        onClose={cancelDelete}
+        aria-labelledby="draggable-dialog-title"
+      >
+        <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
+          Konfirmasi Hapus Data Pendidikan
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Apakah Anda yakin ingin menghapus data ini?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="primary" autoFocus onClick={cancelDelete}>
+            Batal
+          </Button>
+          <Button onClick={confirmDelete} color="error">
+            Hapus
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Transition in={isAddOrganisasiDialogOpen} timeout={300} unmountOnExit>
         {(state) => (
-          <Dialog open={isAddOrganisasiDialogOpen} onClose={handleAddOrganisasiClose}>
-            <DialogTitle sx={{ display: "flex", marginTop: "10px", marginLeft: "10px", height: "110px" }}>
+          <Dialog
+            open={isAddOrganisasiDialogOpen}
+            onClose={handleAddOrganisasiClose}
+          >
+            <DialogTitle
+              sx={{
+                display: "flex",
+                marginTop: "10px",
+                marginLeft: "10px",
+                height: "110px",
+              }}
+            >
               <div style={iconStyle}>
                 <CorporateFareIcon />
               </div>
-              <span style={{ fontSize: "24px", fontWeight: "bold", marginTop: "10px", marginLeft: "20px" }}>Add New Data Pengalaman Organisasi</span>
+              <span
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  marginTop: "10px",
+                  marginLeft: "20px",
+                }}
+              >
+                Add New Data Pengalaman Organisasi
+              </span>
             </DialogTitle>
             <DialogContent sx={{ marginTop: "-30px" }}>
-              <AddOrganisasi onCancelAdd={handleAddOrganisasiClose} onSuccess={getOrganisasi} />
+              <AddOrganisasi
+                onCancelAdd={handleAddOrganisasiClose}
+                onSuccess={getOrganisasi}
+              />
             </DialogContent>
           </Dialog>
         )}
@@ -251,14 +277,35 @@ const OrganisasiTable = () => {
       {/* Edit Organisasi Dialog */}
       <Transition in={isEditOrganisasiDialogOpen} timeout={300} unmountOnExit>
         {(state) => (
-          <Dialog open={isEditOrganisasiDialogOpen} onClose={handleEditOrganisasiClose}>
+          <Dialog
+            open={isEditOrganisasiDialogOpen}
+            onClose={handleEditOrganisasiClose}
+          >
             <DialogTitle>Edit Data Pengalaman Organisasi</DialogTitle>
             <DialogContent>
-              <EditOrganisasi data={organisasiToEdit} onCancelEdit={handleEditOrganisasiClose} onSuccess={getOrganisasi} />
+              <EditOrganisasi
+                data={organisasiToEdit}
+                onCancelAdd={handleEditOrganisasiClose}
+                onSuccess={getOrganisasi}
+              />
             </DialogContent>
           </Dialog>
         )}
       </Transition>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          severity="success"
+          onClose={handleSnackbarClose}
+        >
+          Pendidikan successfully deleted!
+        </MuiAlert>
+      </Snackbar>
     </Content>
   );
 };

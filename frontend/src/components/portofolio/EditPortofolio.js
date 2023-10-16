@@ -6,22 +6,23 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
 
-const UpdatePortofolio = (onCancelAdd, onSuccess) => {
+const UpdatePortofolio = ({ data, onCancelAdd, onSuccess }) => {
   const [Portofolio, setPortofolio] = useState({
-    judul: "",
-    deskripsi: "",
-    file: "",
-    images: "",
-    link: "",
+    id: data ? data.id : "",
+    judul: data ? data.judul : "",
+    deskripsi: data ? data.deskripsi : "",
+    file: data ? data.file : "",
+    images: data ? data.images : "",
+    link: data ? data.link : "",
   });
   const navigate = useNavigate();
-  const { id } = useParams();
+
   const [imagesToDelete, setImagesToDelete] = useState([]);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [isCanceled, setIsCanceled] = useState(false);
 
   useEffect(() => {
-    getPortofolioById();
+    console.log(data)
   }, []);
 
   const accessToken = localStorage.getItem("accessToken");
@@ -30,7 +31,9 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
     e.preventDefault();
 
     // Hapus gambar yang terdaftar dalam state imagesToDelete dari daftar Portofolio.images
-    const updatedImages = Portofolio.images.filter((image) => !imagesToDelete.includes(image));
+    const updatedImages = Portofolio.images.filter(
+      (image) => !imagesToDelete.includes(image)
+    );
 
     setPortofolio({
       ...Portofolio,
@@ -38,12 +41,16 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
     });
 
     try {
-      await axios.patch(`http://localhost:5000/datadiri/portofolio/${id}`, Portofolio, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": `multipart/form-data`,
-        },
-      });
+      await axios.patch(
+        `http://localhost:5000/datadiri/portofolio/${Portofolio.id}`,
+        Portofolio,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": `multipart/form-data`,
+          },
+        }
+      );
 
       setShowSuccessAlert(true);
       setTimeout(() => {
@@ -51,28 +58,6 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
         onSuccess(); // Panggil fungsi `onSuccess` yang dilewatkan dari SkillList
         onCancelAdd(); // Tutup dialog AddSkill
       }, 2000);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getPortofolioById = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/datadiri/portofolio/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      if (response.data) {
-        const dataServer = response.data;
-        setPortofolio({
-          judul: dataServer.judul,
-          deskripsi: dataServer.deskripsi,
-          link: dataServer.link,
-          file: dataServer.file,
-          images: dataServer.image, // Store the array of image URLs from the database
-        });
-      }
     } catch (error) {
       console.log(error);
     }
@@ -238,7 +223,11 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
                       fontSize: "14px",
                     }}
                   >
-                    <a href={Portofolio.file} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={Portofolio.file}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       View File
                     </a>
                   </p>
@@ -258,7 +247,13 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
                 </div>
               ) : (
                 <>
-                  <input type="file" accept=".pdf," id="file-upload" style={{ display: "none" }} onChange={handleFileChange} />
+                  <input
+                    type="file"
+                    accept=".pdf,"
+                    id="file-upload"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
                   <label htmlFor="file-upload">
                     <Button
                       component="span"
@@ -343,7 +338,11 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
                           fontSize: "14px",
                         }}
                       >
-                        <a href={imageURL} target="_blank" rel="noopener noreferrer">
+                        <a
+                          href={imageURL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           View File
                         </a>
                       </p>
@@ -366,20 +365,46 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
                 </>
               ) : (
                 <>
-                  <input type="file" accept=".gif,.jpg,.jpeg,.png" multiple id="image-upload" style={{ display: "none" }} onChange={handleImagesChange} />
+                  <input
+                    type="file"
+                    accept=".gif,.jpg,.jpeg,.png"
+                    multiple
+                    id="image-upload"
+                    style={{ display: "none" }}
+                    onChange={handleImagesChange}
+                  />
                   <label htmlFor="image-upload">
-                    <Button component="span" variant="outlined" color="primary" style={{ marginBottom: "15px" }}>
+                    <Button
+                      component="span"
+                      variant="outlined"
+                      color="primary"
+                      style={{ marginBottom: "15px" }}
+                    >
                       Add More
                     </Button>
                   </label>
                 </>
               )}
             </div>
-            <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
-              <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+            <Grid
+              container
+              justifyContent="flex-end"
+              sx={{ marginTop: "10px", marginBottom: "10px" }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ marginTop: 2 }}
+              >
                 Update
               </Button>
-              <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{ marginTop: 2, marginLeft: 1 }}
+                onClick={handleCancel}
+              >
                 Cancel
               </Button>
             </Grid>

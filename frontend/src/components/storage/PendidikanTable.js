@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { Card, CardContent } from "@mui/material";
 import DataTable from "./DataTable";
 import Content from "../layout/Content";
@@ -14,13 +14,12 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import MuiAlert from "@mui/material/Alert";
 import AddPendidikan from "../pendidikan/AddPendidikan";
 import UpdatePendidikan from "../pendidikan/EditPendidikan";
+import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import { Transition } from "react-transition-group";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
-import { useParams } from "react-router-dom";
 import "../style.css";
 
 const columns = [
@@ -37,7 +36,6 @@ const PendidikanTable = () => {
   const [token, setToken] = useState("");
   const [expire, setExpire] = useState("");
   const navigate = useNavigate();
-  const { id } = useParams();
   const accessToken = localStorage.getItem("accessToken");
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [pendidikanToDelete, setPendidikanToDelete] = useState(null);
@@ -73,6 +71,7 @@ const PendidikanTable = () => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        
       });
       setPendidikan(response.data);
     } catch (error) {

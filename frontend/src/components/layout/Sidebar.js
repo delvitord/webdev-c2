@@ -1,6 +1,7 @@
 import * as React from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import { Button } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -18,7 +19,9 @@ import CorporateFareIcon from "@mui/icons-material/CorporateFare";
 import SourceIcon from "@mui/icons-material/Source";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import CollectionsIcon from "@mui/icons-material/Collections";
+import SendIcon from "@mui/icons-material/Send";
 import { useAppCv } from "../../appCv";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 265;
 const iconArray = [PersonIcon, SchoolIcon, CorporateFareIcon, SourceIcon, TipsAndUpdatesIcon, CollectionsIcon];
@@ -73,18 +76,44 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const theme = useTheme();
   const open = useAppCv((state) => state.dopen);
+  const navigate = useNavigate()
+
+  const handleButton = () => {
+    navigate("/datadiri/personal-web")
+  }
 
   return (
-    <Box sx={{ display: "flex", backgroundColor: (theme) => (theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900]) }}>
+    <Box
+      sx={{
+        display: "flex",
+        backgroundColor: (theme) =>
+          theme.palette.mode === "light"
+            ? theme.palette.grey[100]
+            : theme.palette.grey[900],
+      }}
+    >
       <CssBaseline />
       <Box height={50} />
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton>{theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
+          <IconButton>
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
+          </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {["Data Diri", "Riwayat Pendidikan", "Pengalaman Organisasi", "Portofolio", "Skill", "Galeri"].map((text, index) => (
+          {[
+            "Data Diri",
+            "Riwayat Pendidikan",
+            "Pengalaman Organisasi",
+            "Portofolio",
+            "Skill",
+            "Galeri",
+          ].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={{
@@ -93,7 +122,21 @@ export default function MiniDrawer() {
                   px: 2.5,
                 }}
                 component="a" // Menggunakan anchor (a) sebagai tautan
-                href={index === 0 ? "/datadiri" : index === 1 ? "/pendidikan" : index === 2 ? "/organisasi" : index === 3 ? "/portofolio" : index === 4 ? "/skill" : index === 5 ? "/galeri" : "/"} // Sesuaikan rute
+                href={
+                  index === 0
+                    ? "/datadiri"
+                    : index === 1
+                    ? "/pendidikan"
+                    : index === 2
+                    ? "/organisasi"
+                    : index === 3
+                    ? "/portofolio"
+                    : index === 4
+                    ? "/skill"
+                    : index === 5
+                    ? "/galeri"
+                    : "/"
+                } // Sesuaikan rute
               >
                 <ListItemIcon
                   sx={{
@@ -109,6 +152,24 @@ export default function MiniDrawer() {
             </ListItem>
           ))}
         </List>
+        <Box sx={{ flexGrow: 1 }} />{" "}
+        {/* Add a flexible box to push the button to the bottom */}
+        <Button
+          variant="contained"
+          size="small" // Make the button smaller
+          sx={{
+            color:"white",
+            mb: 3,
+            width: 180,
+            height: 35,
+            alignSelf: "center",
+            backgroundColor: "#333333",
+          }}
+          onClick={handleButton}
+          endIcon={<SendIcon />}
+        >
+          Lauch Your Web
+        </Button>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1 }}></Box>
     </Box>

@@ -67,8 +67,14 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!dataDiri.nama || !dataDiri.tempat_lahir || !dataDiri.tanggal_lahir || !dataDiri.alamat || !dataDiri.email || !dataDiri.no_telp) {
-      // Display an error message for each empty field
+    if (
+      !dataDiri.nama ||
+      !dataDiri.tempat_lahir ||
+      !dataDiri.tanggal_lahir ||
+      !dataDiri.alamat ||
+      !dataDiri.email ||
+      !dataDiri.no_telp
+    ) {
       setDataDiri((prevState) => ({
         ...prevState,
         errorNama: !dataDiri.nama,
@@ -78,14 +84,18 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
         errorEmail: !dataDiri.email,
         errorNoTelp: !dataDiri.no_telp,
       }));
-
+    } else {
       try {
         const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.post("http://localhost:5000/data_diri", dataDiri, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const response = await axios.post(
+          "http://localhost:5000/data_diri",
+          dataDiri,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         console.log(response);
         setShowSuccessAlert(true);
         setTimeout(() => {
@@ -102,7 +112,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate("/datadiri/");
+    navigate("/datadiri");
   };
 
   return (
@@ -139,7 +149,9 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
               variant="outlined"
               margin="normal"
               error={dataDiri.errorTempatLahir}
-              helperText={dataDiri.errorTempatLahir ? "Tempat Lahir harus diisi" : ""}
+              helperText={
+                dataDiri.errorTempatLahir ? "Tempat Lahir harus diisi" : ""
+              }
             />
           </Grid>
           <Grid item xs={6}>
@@ -156,7 +168,9 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
               variant="outlined"
               margin="normal"
               error={dataDiri.errorTanggalLahir}
-              helperText={dataDiri.errorTanggalLahir ? "Tanggal Lahir harus diisi" : ""}
+              helperText={
+                dataDiri.errorTanggalLahir ? "Tanggal Lahir harus diisi" : ""
+              }
             />
           </Grid>
           <Grid item xs={12}>
@@ -166,7 +180,6 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
               multiline
               name="alamat"
               maxRows={4}
-              defaultValue="Default Value"
               value={dataDiri.alamat}
               onChange={handleInputChange}
               placeholder="Alamat"
@@ -231,29 +244,82 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
               onChange={handleInputChange}
               placeholder="Deskripsi"
               variant="outlined"
-              id="outlined-multiline-flexible"
               maxRows={4}
               margin="normal"
               error={dataDiri.errorDeskripsi}
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="Linkedin" fullWidth name="linkedin" value={dataDiri.linkedin} onChange={handleInputChange} placeholder="Linkedin" variant="outlined" margin="normal" error={dataDiri.errorLinkedin} />
+            <TextField
+              label="Linkedin"
+              fullWidth
+              name="linkedin"
+              value={dataDiri.linkedin}
+              onChange={handleInputChange}
+              placeholder="Linkedin"
+              variant="outlined"
+              margin="normal"
+              error={dataDiri.errorLinkedin}
+            />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="Instagram" fullWidth name="instagram" value={dataDiri.instagram} onChange={handleInputChange} placeholder="Instagram" variant="outlined" margin="normal" error={dataDiri.errorInstagram} />
+            <TextField
+              label="Instagram"
+              fullWidth
+              name="instagram"
+              value={dataDiri.instagram}
+              onChange={handleInputChange}
+              placeholder="Instagram"
+              variant="outlined"
+              margin="normal"
+              error={dataDiri.errorInstagram}
+            />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="X" fullWidth name="x" value={dataDiri.x} onChange={handleInputChange} placeholder="X" variant="outlined" margin="normal" error={dataDiri.errorX} />
+            <TextField
+              label="X"
+              fullWidth
+              name="x"
+              value={dataDiri.x}
+              onChange={handleInputChange}
+              placeholder="X"
+              variant="outlined"
+              margin="normal"
+              error={dataDiri.errorX}
+            />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="Github" fullWidth name="github" value={dataDiri.github} onChange={handleInputChange} placeholder="Github" variant="outlined" margin="normal" error={dataDiri.errorGithub} />
+            <TextField
+              label="Github"
+              fullWidth
+              name="github"
+              value={dataDiri.github}
+              onChange={handleInputChange}
+              placeholder="Github"
+              variant="outlined"
+              margin="normal"
+              error={dataDiri.errorGithub}
+            />
           </Grid>
-          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+          <Grid
+            container
+            justifyContent="flex-end"
+            sx={{ marginTop: "10px", marginBottom: "10px" }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ marginTop: 2 }}
+            >
               Save
             </Button>
-            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 2, marginLeft: 1 }}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </Grid>

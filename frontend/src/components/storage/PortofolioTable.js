@@ -8,7 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -16,13 +15,11 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MuiAlert from "@mui/material/Alert";
 import AddPortofolio from "../portofolio/AddPortofolio";
-import EditPortofolio from "../portofolio/EditPortofolio";
+import UpdatePortofolio from "../portofolio/EditPortofolio";
 import Snackbar from "@mui/material/Snackbar";
 import { Transition } from "react-transition-group";
 import SourceIcon from "@mui/icons-material/Source";
 import "../style.css";
-import { Card, CardContent } from "@mui/material";
-import { useParams } from "react-router-dom";
 import { Card, CardContent } from "@mui/material";
 
 const columns = [
@@ -146,11 +143,7 @@ const PortofolioTable = () => {
     setAddPortofolioDialogOpen(false);
   };
 
-    const handleDeleteClick = (id) => {
-      setPortofolioToDelete(id);
-      setDeleteConfirmationOpen(true);
-    };
-
+  
   const iconStyle = {
     fontSize: "40px", // Sesuaikan dengan ukuran yang Anda inginkan
     color: "black", // Sesuaikan dengan warna ikon Anda
@@ -202,7 +195,7 @@ const PortofolioTable = () => {
                         <IconButton
                           aria-label="Edit"
                           color="primary"
-                          onClick={() => handleEditClick(params.row.id)}
+                          onClick={() => handleEditClick(params.row)}
                         >
                           <EditIcon />
                         </IconButton>
@@ -289,6 +282,45 @@ const PortofolioTable = () => {
             </DialogTitle>
             <DialogContent sx={{ marginTop: "-30px" }}>
               <AddPortofolio
+                onCancelAdd={handleAddPortofolioClose}
+                onSuccess={getPortofolio}
+              />
+            </DialogContent>
+          </Dialog>
+        )}
+      </Transition>
+
+      <Transition in={isEditPortofolioDialogOpen} timeout={300} unmountOnExit>
+        {(state) => (
+          <Dialog
+            open={isEditPortofolioDialogOpen}
+            onClose={handleEditPortofolioClose}
+          >
+            <DialogTitle
+              sx={{
+                display: "flex",
+                marginTop: "10px",
+                marginLeft: "10px",
+                height: "110px",
+              }}
+            >
+              <div style={iconStyle}>
+                <SourceIcon />
+              </div>
+              <span
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  marginTop: "10px",
+                  marginLeft: "20px",
+                }}
+              >
+                Update Data Pendidikan
+              </span>
+            </DialogTitle>
+            <DialogContent sx={{ marginTop: "-30px" }}>
+              <UpdatePortofolio
+                data={dataToEdit}
                 onCancelAdd={handleAddPortofolioClose}
                 onSuccess={getPortofolio}
               />
