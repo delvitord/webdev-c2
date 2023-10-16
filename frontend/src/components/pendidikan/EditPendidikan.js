@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Alert } from "@mui/material";
 
-const UpdatePendidikan = (props) => {
-  const [Pendidikan, setPendidikan] = useState({
-    nama_instansi: "",
-    awal_periode: "",
-    akhir_periode: "",
-    jurusan: "",
+const UpdatePendidikan = ({ data, onCancelAdd, onSuccess }) => {
+  const [Pendidikans, setPendidikan] = useState({
+    id: data ? data.id : "", // Mengecek apakah data ada sebelum mengakses properti 'id'
+    nama_instansi: data ? data.nama_instansi : "",
+    awal_periode: data ? data.awal_periode : "",
+    akhir_periode: data ? data.akhir_periode : "",
+    jurusan: data ? data.jurusan : "",
   });
   const navigate = useNavigate();
-  const { id } = useParams();
 
   useEffect(() => {
-    getPendidikanById();
+    console.log(data);
   }, []);
 
   const accessToken = localStorage.getItem("accessToken");
@@ -31,32 +31,19 @@ const UpdatePendidikan = (props) => {
   const updatePendidikan = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/datadiri/pendidikan/${id}`, Pendidikan, {
-        headers,
-      });
-      navigate("/pendidikan");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getPendidikanById = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/datadiri/pendidikan/${id}`, {
-        headers,
-      });
-      if (response.data) {
-        const dataServer = response.data; // Gunakan data sebagai objek langsung
-
-        // Set nilai dari data yang diperoleh ke dalam state
-        setPendidikan({
-          nama_instansi: dataServer.nama_instansi,
-          awal_periode: dataServer.awal_periode,
-          akhir_periode: dataServer.akhir_periode,
-          jurusan: dataServer.jurusan,
-        });
-      }
-      console.log(response);
+      await axios.patch(
+        `http://localhost:5000/datadiri/pendidikan/${Pendidikans.id}`,
+        Pendidikans,
+        {
+          headers,
+        }
+      );
+      setShowSuccessAlert(true);
+      setTimeout(() => {
+        setShowSuccessAlert(false);
+        onSuccess(); // Call the `onSuccess` function passed from SkillList
+        onCancelAdd(); // Close the AddSkill dialog
+      }, 2000);
     } catch (error) {
       console.log(error);
     }
@@ -81,10 +68,10 @@ const UpdatePendidikan = (props) => {
               label="Nama Instansi"
               fullWidth
               name="nama_instansi"
-              value={Pendidikan.nama_instansi} // Gunakan nilai dari state
+              value={Pendidikans.nama_instansi}
               onChange={(e) =>
                 setPendidikan({
-                  ...Pendidikan,
+                  ...Pendidikans,
                   nama_instansi: e.target.value,
                 })
               }
@@ -99,10 +86,10 @@ const UpdatePendidikan = (props) => {
               fullWidth
               type="date"
               name="awal_periode"
-              value={Pendidikan.awal_periode}
+              value={Pendidikans.awal_periode}
               onChange={(e) =>
                 setPendidikan({
-                  ...Pendidikan,
+                  ...Pendidikans,
                   awal_periode: e.target.value,
                 })
               }
@@ -119,10 +106,10 @@ const UpdatePendidikan = (props) => {
               fullWidth
               type="date"
               name="akhir_periode"
-              value={Pendidikan.akhir_periode}
+              value={Pendidikans.akhir_periode}
               onChange={(e) =>
                 setPendidikan({
-                  ...Pendidikan,
+                  ...Pendidikans,
                   akhir_periode: e.target.value,
                 })
               }
@@ -138,10 +125,10 @@ const UpdatePendidikan = (props) => {
               label="Jurusan"
               fullWidth
               name="jurusan"
-              value={Pendidikan.jurusan}
+              value={Pendidikans.jurusan}
               onChange={(e) =>
                 setPendidikan({
-                  ...Pendidikan,
+                  ...Pendidikans,
                   jurusan: e.target.value,
                 })
               }
@@ -150,11 +137,26 @@ const UpdatePendidikan = (props) => {
               margin="normal"
             />
           </Grid>
-          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+          <Grid
+            container
+            justifyContent="flex-end"
+            sx={{ marginTop: "10px", marginBottom: "10px" }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ marginTop: 2 }}
+              onClick={updatePendidikan}
+            >
               Update
             </Button>
-            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 2, marginLeft: 1 }}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </Grid>

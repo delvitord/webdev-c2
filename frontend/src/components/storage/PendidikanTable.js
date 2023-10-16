@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Card, CardContent } from "@mui/material";
 import DataTable from "./DataTable";
 import Content from "../layout/Content";
@@ -16,7 +16,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MuiAlert from "@mui/material/Alert";
 import AddPendidikan from "../pendidikan/AddPendidikan";
-import EditPendidikan from "../pendidikan/EditPendidikan";
+import UpdatePendidikan from "../pendidikan/EditPendidikan";
 import Snackbar from "@mui/material/Snackbar";
 import { Transition } from "react-transition-group";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
@@ -85,10 +85,10 @@ const PendidikanTable = () => {
     setAddPendidikanDialogOpen(true);
   };
 
-  // const handleDeleteClick = (id) => {
-  //   setPendidikanToDelete(id);
-  //   setDeleteConfirmationOpen(true);
-  // };
+  const handleDeleteClick = (id) => {
+    setPendidikanToDelete(id);
+    setDeleteConfirmationOpen(true);
+  };
 
   const confirmDelete = () => {
     const id = pendidikanToDelete;
@@ -244,7 +244,7 @@ const PendidikanTable = () => {
               <span style={{ fontSize: "24px", fontWeight: "bold", marginTop: "10px", marginLeft: "20px" }}>Update Data Pendidikan</span>
             </DialogTitle>
             <DialogContent sx={{ marginTop: "-30px" }}>
-              <EditPendidikan data={dataToEdit} onCancelAdd={handleEditPendidikanClose} onSuccess={getPendidikan} />
+              <UpdatePendidikan data={dataToEdit} onCancelAdd={handleEditPendidikanClose} onSuccess={getPendidikan} />
             </DialogContent>
           </Dialog>
         )}

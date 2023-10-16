@@ -13,13 +13,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
-
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { useAppCv } from "../../appCv";
+import LogoImg from "../.././assets/logo-white.png";
+
 
 const AppBar = styled(
   MuiAppBar,
@@ -141,7 +142,7 @@ export default function Navbar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed">
+      <AppBar position="fixed" style={{ background: "#333333" }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -159,7 +160,10 @@ export default function Navbar() {
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
           >
-            • PERSONAL WEB •
+              <img src={LogoImg} 
+              width={250} 
+              height={0}
+              alt="PersonalWeb Logo" />
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />
