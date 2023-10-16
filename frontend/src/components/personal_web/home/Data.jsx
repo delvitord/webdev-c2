@@ -1,11 +1,59 @@
-import React from "react";
-import "./homepersonal.css";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const Data = () => {
+  const [datadiris, setDatadiri] = useState([]);
+  const [token, setToken] = useState("");
+  const [expire, setExpire] = useState("");
+  const [showNoDataMessage, setShowNoDataMessage] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    refreshToken();
+    getDatadiri();
+  }, []);
+
+  const refreshToken = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/token");
+      setToken(response.data.accessToken);
+      const decoded = jwt_decode(response.data.accessToken);
+      setDatadiri(decoded.nama); // Assuming "nama" is the name field.
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (decoded.exp < currentTime) {
+      }
+      setExpire(decoded.exp);
+    } catch (error) {
+      if (error.response) {
+        navigate("/login");
+      }
+    }
+  };
+
+  const getDatadiri = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+
+      const response = await axios.get("http://localhost:5000/data_diri", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const namaData = response.data.map(item => item.nama); // Extract "nama" (name) data
+      setDatadiri(namaData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setShowNoDataMessage(true);
+    }
+  };
+  
   return (
     <div className="home__data">
       <h1 className="home__title">
-        Sze
+      {Array.isArray(datadiris) && datadiris.length > 0 ? datadiris.join(', ') : "No Data"}
         <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="home__hand">
           <path d="M25.4995 32.0305L31.3495 33.1555L36.1495 8.48051C36.4495 6.83051 35.3995 5.18051 33.8245 4.88051C32.1745 4.58051 30.5995 5.70551 30.2995 7.35551L25.4995 32.0305Z" fill="#FFDD67"></path>
           <path

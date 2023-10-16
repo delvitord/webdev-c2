@@ -75,7 +75,7 @@ const DatadiriTable = () => {
     }
   };
 
-  const getDatadiri = async () => {
+const getDatadiri = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
 

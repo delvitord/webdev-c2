@@ -23,7 +23,6 @@ import SourceIcon from "@mui/icons-material/Source";
 import "../style.css";
 import { Card, CardContent } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { Card, CardContent } from "@mui/material";
 
 const columns = [
   { field: "id", headerName: "ID", minWidth: 30 },
@@ -95,10 +94,7 @@ const PortofolioTable = () => {
     setSnackbarOpen(true);
   };
 
-  const handleDeleteClick = (id) => {
-    setPortofolioToDelete(id);
-    setDeleteConfirmationOpen(true);
-  };
+
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") {

@@ -20,7 +20,6 @@ import UpdatePendidikan from "../pendidikan/EditPendidikan";
 import Snackbar from "@mui/material/Snackbar";
 import { Transition } from "react-transition-group";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
-import { useParams } from "react-router-dom";
 import "../style.css";
 
 const columns = [

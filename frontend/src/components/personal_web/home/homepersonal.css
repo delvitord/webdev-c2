@@ -223,3 +223,13 @@
     height: 22px;
   }
 }
+
+.social-icons-container {
+  display: flex;
+  flex-direction: column; /* Membuat ikon-ikon berjajar ke bawah */
+  align-items: center; /* Pusatkan ikon-ikon secara horizontal */
+}
+
+.social-icon {
+  margin: 10px 0; /* Beri jarak antara ikon-ikon */
+}
