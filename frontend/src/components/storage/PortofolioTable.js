@@ -14,11 +14,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MuiAlert from "@mui/material/Alert";
 import AddPortofolio from "../portofolio/AddPortofolio";
+import EditPortofolio from "../portofolio/AddPortofolio";
 import Snackbar from "@mui/material/Snackbar";
 import { Transition } from "react-transition-group";
 import SourceIcon from "@mui/icons-material/Source";
 import "../style.css";
-import { Card } from "@mui/material";
+import { Card, CardContent } from "@mui/material";
+import Button from "@mui/material/Button";
 
 const columns = [
   { field: "id", headerName: "ID", minWidth: 50 },
@@ -37,6 +39,8 @@ const PortofolioTable = () => {
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [portofolioToDelete, setPortofolioToDelete] = useState(null);
   const [isAddPortofolioDialogOpen, setAddPortofolioDialogOpen] = useState(false);
+  const [isEditPortofolioDialogOpen, setEditPortofolioDialogOpen] = useState(false);
+  const [dataToEdit, setDataToEdit] = useState(null);
 
   useEffect(() => {
     refreshToken();
@@ -137,6 +141,17 @@ const PortofolioTable = () => {
     setAddPortofolioDialogOpen(false);
   };
 
+  const handleDeleteClick = (id) => {
+    setPortofolioToDelete(id);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const handleEditClick = (data) => {
+    setDataToEdit(data);
+    setEditPortofolioDialogOpen(true);
+    console.log(data);
+  };
+
   const iconStyle = {
     fontSize: "40px", // Sesuaikan dengan ukuran yang Anda inginkan
     color: "black", // Sesuaikan dengan warna ikon Anda
@@ -157,7 +172,7 @@ const PortofolioTable = () => {
           <Button variant="contained" color="success" sx={{ mb: 3 }} onClick={handleAddPortofolioClick}>
             Add New
           </Button>
-          {portofolios && portofolio.length > 0 ? (
+          {portofolios && portofolios.length > 0 ? (
             <DataTable
               rows={portofolios}
               columns={columns.map((column) => ({
@@ -217,7 +232,7 @@ const PortofolioTable = () => {
           <Dialog open={isAddPortofolioDialogOpen} onClose={handleAddPortofolioClose}>
             <DialogTitle sx={{ display: "flex", marginTop: "10px", marginLeft: "10px", height: "110px" }}>
               <div style={iconStyle}>
-                <SchoolRoundedIcon />
+                <SourceIcon />
               </div>
               <span style={{ fontSize: "24px", fontWeight: "bold", marginTop: "10px", marginLeft: "20px" }}>Add New Data Portofolio</span>
             </DialogTitle>

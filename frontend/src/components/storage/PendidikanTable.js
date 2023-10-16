@@ -84,10 +84,10 @@ const PendidikanTable = () => {
     setAddPendidikanDialogOpen(true);
   };
 
-  // const handleDeleteClick = (id) => {
-  //   setPendidikanToDelete(id);
-  //   setDeleteConfirmationOpen(true);
-  // };
+  const handleDeleteClick = (id) => {
+    setPendidikanToDelete(id);
+    setDeleteConfirmationOpen(true);
+  };
 
   const confirmDelete = () => {
     const id = pendidikanToDelete;
@@ -123,6 +123,7 @@ const PendidikanTable = () => {
     setPendidikanToDelete(null);
     setDeleteConfirmationOpen(false);
   };
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const handleSnackbarOpen = () => {
     setSnackbarOpen(true);
