@@ -66,7 +66,7 @@ function App() {
           }
         />
         <Route
-          path="/edit/:id"
+          path="/edit-datadiri"
           element={
             <>
               <UpdateDatadiri />
@@ -116,14 +116,14 @@ function App() {
             </>
           }
         />
-        <Route
+        {/* <Route
           path="/edit-portofolio/:id"
           element={
             <>
               <UpdatePortofolio />
             </>
           }
-        />
+        /> */}
         <Route
           path="/skill"
           element={

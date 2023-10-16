@@ -1,0 +1,17 @@
+/* DatadiriTable.css */
+
+.add-datadiri-dialog {
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.add-datadiri-dialog-entering,
+.add-datadiri-dialog-exiting,
+.add-datadiri-dialog-exited {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.add-datadiri-dialog-entered {
+  opacity: 1;
+}

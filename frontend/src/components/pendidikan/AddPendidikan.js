@@ -1,102 +1,152 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { Card, CardContent } from "@mui/material";
+import Alert from "@mui/material/Alert";
 
-const AddPendidikan = () => {
-  const [Pendidikan, setPendidikan] = useState({
+const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
+  const [pendidikan, setPendidikan] = useState({
     nama_instansi: "",
     awal_periode: "",
     akhir_periode: "",
     jurusan: "",
+    errorNamaInstansi: false,
+    errorAwalPeriode: false,
+    errorAkhirPeriode: false,
+    errorJurusan: false,
   });
-  const navigate = useNavigate();
 
-  const savePendidikan = async (e) => {
-    e.preventDefault();
-    try {
-      const accessToken = localStorage.getItem("accessToken");
-      await axios.post(`http://localhost:5000/datadiri/pendidikan`, Pendidikan, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      navigate("/pendidikan");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [isCanceled, setIsCanceled] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setPendidikan({ ...Pendidikan, [name]: value });
+    setPendidikan((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  const handleCancel = () => {
+    setIsCanceled(true);
+    navigate(-1);
+  };
+
+  const savePendidikan = async (e) => {
+    e.preventDefault();
+
+    // Validasi input
+    if (!pendidikan.nama_instansi || !pendidikan.awal_periode || !pendidikan.akhir_periode || !pendidikan.jurusan) {
+      // Menampilkan pesan error pada setiap TextField yang kosong
+      setPendidikan((prevState) => ({
+        ...prevState,
+        errorNamaInstansi: !pendidikan.nama_instansi,
+        errorAwalPeriode: !pendidikan.awal_periode,
+        errorAkhirPeriode: !pendidikan.akhir_periode,
+        errorJurusan: !pendidikan.jurusan,
+      }));
+    } else {
+      // Jika semua input terisi, lanjutkan
+      if (!isCanceled) {
+        const accessToken = localStorage.getItem("accessToken");
+
+        const formData = new FormData();
+        formData.append("nama_instansi", pendidikan.nama_instansi);
+        formData.append("awal_periode", pendidikan.awal_periode);
+        formData.append("akhir_periode", pendidikan.akhir_periode);
+        formData.append("jurusan", pendidikan.jurusan);
+
+        try {
+          await axios.post("http://localhost:5000/datadiri/pendidikan", formData, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          setShowSuccessAlert(true);
+          setTimeout(() => {
+            setShowSuccessAlert(false);
+            onSuccess(); // Call the `onSuccess` function passed from SkillList
+            onCancelAdd(); // Close the AddSkill dialog
+          }, 2000);
+        } catch (error) {
+          console.log(error);
+          // Handle errors here
+        }
+      }
+    }
+  };
 
   return (
     <>
-      <Grid container spacing={2} mt={5} justifyContent="center">
-        <Grid>
-          <Card sx={{ maxWidth: 450 }}>
-            <CardContent>
-              <form onSubmit={savePendidikan}>
-                <TextField
-                  label="Nama Instansi"
-                  fullWidth
-                  name="nama_instansi"
-                  value={Pendidikan.nama_instansi}
-                  onChange={handleInputChange}
-                  placeholder="Nama Instansi"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Tahun Masuk"
-                  fullWidth
-                  type="date"
-                  name="awal_periode"
-                  value={Pendidikan.awal_periode}
-                  onChange={handleInputChange}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Tahun Lulus"
-                  fullWidth
-                  type="date"
-                  name="akhir_periode"
-                  value={Pendidikan.akhir_periode}
-                  onChange={handleInputChange}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  margin="normal"
-                />
-                <TextField
-                  label="Jurusan"
-                  fullWidth
-                  name="jurusan"
-                  value={Pendidikan.jurusan}
-                  onChange={handleInputChange}
-                  placeholder="Jurusan"
-                  variant="outlined"
-                  margin="normal"
-                />
-                <Button type="submit" variant="contained" color="primary">
-                  Save
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+      {showSuccessAlert && (
+        <Alert severity="success" sx={{ marginBottom: 1 }}>
+          Data Pendidikan berhasil disimpan
+        </Alert>
+      )}
+      <form onSubmit={savePendidikan}>
+        <Grid container spacing={0.8} mt={0.5} justifyContent="center">
+          <Grid item sm={12}>
+            <TextField
+              label="Nama Instansi"
+              fullWidth
+              name="nama_instansi"
+              value={pendidikan.nama_instansi}
+              onChange={handleInputChange}
+              placeholder="Nama Instansi"
+              variant="outlined"
+              margin="normal"
+              error={pendidikan.errorNamaInstansi}
+              helperText={pendidikan.errorNamaInstansi ? "Nama Instansi harus diisi" : ""}
+            />
+          </Grid>
+          <Grid item sm={6}>
+            <TextField
+              label="Tahun Masuk"
+              fullWidth
+              type="date"
+              name="awal_periode"
+              value={pendidikan.awal_periode}
+              onChange={handleInputChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant="outlined"
+              margin="normal"
+              error={pendidikan.errorAwalPeriode}
+              helperText={pendidikan.errorAwalPeriode ? "Tahun Masuk harus diisi" : ""}
+            />
+          </Grid>
+          <Grid item sm={6}>
+            <TextField
+              label="Tahun Lulus"
+              fullWidth
+              type="date"
+              name="akhir_periode"
+              value={pendidikan.akhir_periode}
+              onChange={handleInputChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              variant="outlined"
+              margin="normal"
+              error={pendidikan.errorAkhirPeriode}
+              helperText={pendidikan.errorAkhirPeriode ? "Tahun Lulus harus diisi" : ""}
+            />
+          </Grid>
+          <Grid item sm={12}>
+            <TextField label="Jurusan" fullWidth name="jurusan" value={pendidikan.jurusan} onChange={handleInputChange} placeholder="Jurusan" variant="outlined" margin="normal" />
+          </Grid>
+          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+              Save
+            </Button>
+            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+              Cancel
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      </form>
     </>
   );
 };

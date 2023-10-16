@@ -21,20 +21,11 @@ const PortofolioList = () => {
   return (
     <>
       <Navbar />
-      <Box height={100}/>
-      <Box sx={{ display: 'flex' }}>
+      <Box height={100} />
+      <Box sx={{ display: "flex" }}>
         <Sidebar />
-        <Box component="main" sx={{ flexGrow: 1, p: 2 }}>
-          <Card>
-            <CardContent>
-              <Link to={`/add-portofolio`}>
-                <Button variant="contained" color="success">
-                  Add New
-                </Button>
-              </Link>
-              <PortofolioTable/ >
-            </CardContent>
-          </Card>
+        <Box component="main" sx={{ flexGrow: 1 }}>
+          <PortofolioTable />
         </Box>
       </Box>
     </>

@@ -234,7 +234,7 @@ const SkillList = () => {
       </Dialog>
 
       {/* Add Skill Dialog */}
-      <Dialog open={isAddSkillDialogOpen} onClose={handleAddSkillClose} width="500">
+      <Dialog open={isAddSkillDialogOpen} onClose={handleAddSkillClose}>
         <DialogTitle>Add New Skill</DialogTitle>
         <DialogContent>
           <AddSkill onCancelAdd={handleAddSkillClose} onSuccess={getSkill} />
