@@ -1,16 +1,91 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+import axios from "axios";
 import "./about.css";
-import AboutImg from "../../../assets/SZE.jpg";
+import AboutImg from "../../../assets/Reza.JPG";
 import CV from "../../../assets/John-Cv.pdf";
 import Info from "./InfoPersonal";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import CvMaker from "./CvMaker"; 
 
 const About = () => {
+  const [datadiris, setDatadiri] = useState([]);
+  const [token, setToken] = useState("");
+  const [expire, setExpire] = useState("");
+  const [showNoDataMessage, setShowNoDataMessage] = useState(true);
+  const navigate = useNavigate();
+  const accessToken = localStorage.getItem("accessToken");
 
-  const handleDownloadCV = () => {
-    
-    };
+  useEffect(() => {
+    refreshToken();
+    getDatadiri();
+  }, []);
+
+  const refreshToken = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/token");
+      setToken(response.data.accessToken);
+      const decoded = jwt_decode(response.data.accessToken);
+      setDatadiri(decoded.nama); // Assuming "nama" is the name field.
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (decoded.exp < currentTime) {
+      }
+      setExpire(decoded.exp);
+    } catch (error) {
+      if (error.response) {
+        navigate("/login");
+      }
+    }
+  };
+
+  const getDatadiri = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+
+      const response = await axios.get("http://localhost:5000/data_diri", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const data = response.data.map((item) => ({
+        nama: item.nama,
+        deskripsi: item.deskripsi,
+      }));
+
+      setDatadiri(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setShowNoDataMessage(true);
+    }
+  };
+
+  const imageUrl = datadiris && datadiris.foto;
+
+  // If there's an `imageUrl`, fetch it with the Authorization header
+  if (imageUrl) {
+    fetch(imageUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          // Image was successfully fetched
+        } else {
+          console.error(
+            "Failed to fetch image. Status code: " + response.status
+          );
+          return response.text();
+        }
+      })
+      .then((errorText) => {
+        console.error("Error response from server:", errorText);
+      })
+      .catch((error) => {
+        console.error("Error fetching image:", error);
+      });
+  }
+
 
   return (
     <section className="about section" id="about">
@@ -24,9 +99,9 @@ const About = () => {
           <Info />
 
           <p className="about__description">
-            Frontend developer, I create web pages with UI / UX user interface,
-            I have years of experience and many clients are happy with the
-            projects carried out.
+            {datadiris && datadiris.length > 0
+              ? datadiris[0].deskripsi || "Description not available."
+              : "Description not available."}
           </p>
 
           <a
@@ -34,6 +109,7 @@ const About = () => {
             href={CV}
             className="button button--flex"
             id="button-download"
+            onClick={() => window.print()}
           >
             Download CV
             <svg

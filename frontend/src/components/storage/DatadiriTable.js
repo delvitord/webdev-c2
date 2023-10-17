@@ -21,23 +21,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import AddDatadiri from "../datadiri/AddDatadiri";
 import EditDatadiri from "../datadiri/EditDatadiri";
+import InfoIcon from "@mui/icons-material/Info"
+
 import "../style.css";
 
 const columns = [
   { field: "id", headerName: "No", width: 30 },
-  { field: "nama", headerName: "Nama", minWidth: 100 },
-  { field: "tempat_lahir", headerName: "Tempat Lahir", minWidth: 100 },
-  { field: "tanggal_lahir", headerName: "Tanggal Lahir", minWidth: 100 },
-  { field: "alamat", headerName: "Alamat", minWidth: 100 },
-  { field: "email", headerName: "Email", minWidth: 100 },
-  { field: "no_telp", headerName: "No.Telp", minWidth: 100 },
-  { field: "foto", headerName: "Foto", minWidth: 100 },
-  { field: "deskripsi", headerName: "Deskripsi", minWidth: 100 },
-  { field: "linkedin", headerName: "LinkedIn", minWidth: 100 },
-  { field: "instagram", headerName: "Instagram", minWidth: 100 },
-  { field: "x", headerName: "X", minWidth: 100 },
-  { field: "github", headerName: "GitHub", minWidth: 100 },
-  { field: "actions", headerName: "Actions", minWidth: 100 },
+  { field: "nama", headerName: "Nama", minWidth: 250 },
+  { field: "email", headerName: "Email", minWidth: 350 },
+  { field: "no_telp", headerName: "No.Telp", minWidth: 250 },
+  { field: "actions", headerName: "Actions", minWidth: 250 },
 ];
 
 const DatadiriTable = () => {
@@ -118,6 +111,10 @@ const getDatadiri = async () => {
   const handleDeleteClick = () => {
     setDatadiriToDelete();
     setDeleteConfirmationOpen(true);
+  };
+  
+  const handleDetailClick = () => {
+    navigate("/detail-datadiri")
   };
 
   const confirmDelete = () => {
@@ -209,11 +206,26 @@ const getDatadiri = async () => {
                   if (column.field === "actions") {
                     return (
                       <div>
-                        <IconButton aria-label="Edit" color="primary" onClick={() => handleEditClick(params.row.id)}>
+                        <IconButton
+                          aria-label="Edit"
+                          color="primary"
+                          onClick={() => handleEditClick(params.row.id)}
+                        >
                           <EditIcon />
                         </IconButton>
-                        <IconButton aria-label="Delete" color="error" onClick={() => handleDeleteClick(params.row.id)}>
+                        <IconButton
+                          aria-label="Delete"
+                          color="error"
+                          onClick={() => handleDeleteClick(params.row.id)}
+                        >
                           <DeleteIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label="Delete"
+                          color="primary"
+                          onClick={() => handleDetailClick(params.row.id)}
+                        >
+                          <InfoIcon />
                         </IconButton>
                       </div>
                     );

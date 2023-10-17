@@ -1,6 +1,6 @@
 import React from "react";
 import "./aboutlanding.css";
-import AboutImg from "../../../assets/SZE.jpg";
+import AmelImg from "../../../assets/Amel.jpg";
 import RezaImg from "../../../assets/Reza.JPG";
 import GianImg from "../../../assets/Gian.jpeg";
 import DelvitoImg from "../../../assets/Delvito.jpg";
@@ -12,7 +12,7 @@ const About = () => {
       <span className="section__subtitle">My Team Introduction</span>
 
       <div className="about__container container grid mt-6 mb-6">
-        <img src={AboutImg} alt="" className="about__img" />
+        <img src={AmelImg} alt="" className="about__img" />
 
         <div className="about__data">
           <p className="about__description">
