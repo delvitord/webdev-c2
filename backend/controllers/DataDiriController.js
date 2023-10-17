@@ -80,7 +80,6 @@ export const createData_diri = async (req, res) => {
       instagram,
       x,
       github,
-      foto,
     } = req.body;
 
     // Cek apakah data diri sudah ada untuk akun dengan accountId yang sama
@@ -151,7 +150,6 @@ export const createData_diri = async (req, res) => {
         x,
         github,
         accountId,
-        
       });
 
       res
@@ -167,7 +165,7 @@ export const createData_diri = async (req, res) => {
 export const updateData_diri = async (req, res) => {
   try {
     const { accountId } = req.user;
-    const { nama, tempat_lahir, tanggal_lahir, alamat, email, no_telp, deskripsi, linkedin, instagram, x, github } = req.body;
+    const { nama, tempat_lahir, tanggal_lahir, alamat, email, no_telp, deskripsi, linkedin, instagram, x, github, foto } = req.body;
 
     // Mencari data_diri yang sesuai dengan accountId
     let dataDiri = await Data_diri.findOne({
@@ -178,7 +176,8 @@ export const updateData_diri = async (req, res) => {
       return res.status(404).json({ msg: "Data Diri not found" });
     }
 
-    let fotoUrl = dataDiri.foto;
+    let fotoUrl = foto;
+    console.log(fotoUrl);
 
     // Mengecek apakah ada file foto yang diunggah
     if (req.files && req.files.foto) {
@@ -241,6 +240,7 @@ export const updateData_diri = async (req, res) => {
         linkedin,
         instagram,
         x,
+        foto: fotoUrl,
         github,
       });
 
