@@ -95,10 +95,7 @@ const PortofolioTable = () => {
     setSnackbarOpen(true);
   };
 
-  const handleDeleteClick = (id) => {
-    setPortofolioToDelete(id);
-    setDeleteConfirmationOpen(true);
-  };
+
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") {
