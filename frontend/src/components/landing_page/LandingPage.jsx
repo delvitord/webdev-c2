@@ -1,8 +1,8 @@
 import React from "react";
-import Header from "./header/Header";
+import Header from "./header/HeaderLanding";
 import Home from "./home/HomeLanding";
-import About from "./about/About";
-import Footer from "./footer/Footer";
+import About from "./about/AboutLanding";
+import Footer from "./footer/FooterLanding";
 
 
 function PersonalWeb() {

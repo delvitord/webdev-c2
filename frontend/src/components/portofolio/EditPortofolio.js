@@ -26,7 +26,7 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
   const [isCanceled, setIsCanceled] = useState(false);
 
   useEffect(() => {
-    getPortofolioById();
+    console.log(data)
   }, []);
 
   useEffect(() => {

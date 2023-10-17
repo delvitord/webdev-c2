@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Alert } from "@mui/material";
 
-const UpdateOrganisasi = () => {
+const UpdateOrganisasi = ({ data, onCancelAdd, onSuccess }) => {
   const [organisasi, setOrganisasi] = useState({
-    nama_organisasi: "",
-    jabatan: "",
-    awal_periode: "",
-    akhir_periode: "",
-    deskripsi: "",
+    id: data ? data.id : "",
+    nama_organisasi: data ? data.nama_organisasi : "",
+    jabatan: data ? data.jabatan : "",
+    awal_periode: data ? data.awal_periode : "",
+    akhir_periode: data ? data.akhir_periode : "",
+    deskripsi: data ? data.deskripsi : "",
   });
   const navigate = useNavigate();
-  const { id } = useParams();
 
   useEffect(() => {
-    getOrganisasiById();
-  }, [id]);
+    console.log(data);
+  }, []);
 
   const accessToken = localStorage.getItem("accessToken");
   const [isCanceled, setIsCanceled] = useState(false);
@@ -28,37 +28,21 @@ const UpdateOrganisasi = () => {
   const updateOrganisasi = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/datadiri/organisasi/${id}`, organisasi, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      navigate("/organisasi");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getOrganisasiById = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/datadiri/organisasi/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      if (response.data) {
-        const dataServer = response.data;
-
-        setOrganisasi({
-          nama_organisasi: dataServer.nama_organisasi,
-          jabatan: dataServer.jabatan,
-          awal_periode: dataServer.awal_periode,
-          akhir_periode: dataServer.akhir_periode,
-          deskripsi: dataServer.deskripsi,
-        });
-      }
-      console.log(response);
+      await axios.patch(
+        `http://localhost:5000/datadiri/organisasi/${organisasi.id}`,
+        organisasi,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setShowSuccessAlert(true);
+      setTimeout(() => {
+        setShowSuccessAlert(false);
+        onSuccess(); // Call the `onSuccess` function passed from SkillList
+        onCancelAdd(); // Close the AddSkill dialog
+      }, 2000);
     } catch (error) {
       console.log(error);
     }
@@ -83,7 +67,7 @@ const UpdateOrganisasi = () => {
               label="Nama Organisasi"
               fullWidth
               name="nama_organisasi"
-              value={organisasi.nama_organisasi || ""}
+              value={organisasi.nama_organisasi}
               onChange={(e) =>
                 setOrganisasi({
                   ...organisasi,
@@ -100,7 +84,7 @@ const UpdateOrganisasi = () => {
               label="Jabatan"
               fullWidth
               name="jabatan"
-              value={organisasi.jabatan || ""}
+              value={organisasi.jabatan}
               onChange={(e) =>
                 setOrganisasi({
                   ...organisasi,
@@ -118,7 +102,7 @@ const UpdateOrganisasi = () => {
               fullWidth
               type="date"
               name="awal_periode"
-              value={organisasi.awal_periode || ""}
+              value={organisasi.awal_periode}
               onChange={(e) =>
                 setOrganisasi({
                   ...organisasi,
@@ -138,7 +122,7 @@ const UpdateOrganisasi = () => {
               fullWidth
               type="date"
               name="akhir_periode"
-              value={organisasi.akhir_periode || ""}
+              value={organisasi.akhir_periode}
               onChange={(e) =>
                 setOrganisasi({
                   ...organisasi,
@@ -157,7 +141,7 @@ const UpdateOrganisasi = () => {
               label="Deskripsi"
               fullWidth
               name="deskripsi"
-              value={organisasi.deskripsi || ""}
+              value={organisasi.deskripsi}
               onChange={(e) =>
                 setOrganisasi({
                   ...organisasi,
@@ -169,11 +153,26 @@ const UpdateOrganisasi = () => {
               margin="normal"
             />
           </Grid>
-          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+          <Grid
+            container
+            justifyContent="flex-end"
+            sx={{ marginTop: "10px", marginBottom: "10px" }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ marginTop: 2 }}
+              onClick={updateOrganisasi}
+            >
               Update
             </Button>
-            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 2, marginLeft: 1 }}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </Grid>

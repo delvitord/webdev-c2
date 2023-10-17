@@ -1,5 +1,5 @@
 import React from "react";
-import "./about.css";
+import "./aboutlanding.css";
 import AboutImg from "../../../assets/SZE.jpg";
 import RezaImg from "../../../assets/Reza.JPG";
 import GianImg from "../../../assets/Gian.jpeg";
