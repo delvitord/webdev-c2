@@ -29,6 +29,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
     errorNoTelp: false,
   });
 
+  const [fileSelected, setFileSelected] = useState(false);
   const [token, setToken] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const navigate = useNavigate();
@@ -61,12 +62,25 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setDataDiri({ ...dataDiri, foto: file });
+    const selectedFile = e.target.files[0];
+    setDataDiri({
+      ...dataDiri,
+      foto: selectedFile,
+    });
+    setFileSelected(true);
   };
+
+  const handleCancelFile = () => {
+    setDataDiri({
+      ...dataDiri,
+      foto: "",
+    });
+    setFileSelected(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("datadiriiii", dataDiri);
     if (!dataDiri.nama || !dataDiri.tempat_lahir || !dataDiri.tanggal_lahir || !dataDiri.alamat || !dataDiri.email || !dataDiri.no_telp) {
       // Display an error message for each empty field
       setDataDiri((prevState) => ({
@@ -78,14 +92,31 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
         errorEmail: !dataDiri.email,
         errorNoTelp: !dataDiri.no_telp,
       }));
-
+      console.log("datadqaqwdd");
       try {
         const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.post("http://localhost:5000/data_diri", dataDiri, {
+        const formData = new FormData();
+        formData.append("nama", dataDiri.nama);
+        formData.append("tempat_lahir", dataDiri.tempat_lahir);
+        formData.append("tanggal_lahir", dataDiri.tanggal_lahir);
+        formData.append("alamat", dataDiri.alamat);
+        formData.append("email", dataDiri.email);
+        formData.append("no_telp", dataDiri.no_telp);
+        formData.append("foto", dataDiri.foto); // Assuming "foto" is the file input name
+        formData.append("deskripsi", dataDiri.deskripsi);
+        formData.append("linkedin", dataDiri.linkedin);
+        formData.append("instagram", dataDiri.instagram);
+        formData.append("x", dataDiri.x);
+        formData.append("github", dataDiri.github);
+        console.log("formdata");
+  
+        const response = await axios.post("http://localhost:5000/data_diri", formData, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
           },
         });
+  
         console.log(response);
         setShowSuccessAlert(true);
         setTimeout(() => {
@@ -99,6 +130,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
       }
     }
   };
+  
 
   const handleCancel = () => {
     setIsCanceled(true);
@@ -207,19 +239,107 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              label="Foto"
-              fullWidth
-              type="file"
-              name="foto"
-              onChange={handleFileChange}
-              inputProps={{ accept: "image/*" }}
-              InputLabelProps={{
-                shrink: true,
+          <div
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "6px",
+                marginTop: "10px",
+                marginBottom: "20px",
+                position: "relative",
+                paddingTop: "18px",
+                paddingLeft: "15px",
+                paddingBottom: "3px",
               }}
-              variant="outlined"
-              margin="normal"
-            />
+            >
+              <div
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                  padding: "4px",
+                  borderTopLeftRadius: "6px",
+                  borderTopRightRadius: "6px",
+                  fontSize: "14px",
+                  position: "absolute",
+                  top: "-18px",
+                  left: "10%",
+                  transform: "translateX(-50%)",
+                  marginBottom: "30px",
+                }}
+              >
+                File
+              </div>
+              {fileSelected ? (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    border: "1px solid #ccc",
+                    padding: "4px",
+                    borderRadius: "6px",
+                    marginTop: "10px",
+                    marginBottom: "20px",
+                    backgroundColor: "white",
+                    width: "50%",
+                    color: "#1976d2",
+                    borderColor: "#1976d2",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#1976d2",
+                      color: "white",
+                      padding: "2px 4px",
+                      borderRadius: "5px",
+                      marginRight: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    PDF
+                  </div>
+                  <p
+                    style={{
+                      marginRight: "8px",
+                      flexGrow: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {dataDiri.foto ? dataDiri.foto.name : ''}
+                  </p>
+                  <Button
+                    type="button"
+                    color="primary"
+                    onClick={handleCancelFile}
+                    style={{
+                      marginRight: "5px",
+                      paddingTop: "2px",
+                      fontSize: "12px",
+                    }}
+                    sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
+                  >
+                    X
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <input type="file" accept=".gif,.jpg,.jpeg,.png," id="file-upload" style={{ display: "none" }} onChange={handleFileChange} />
+                  <label htmlFor="file-upload">
+                    <Button
+                      component="span"
+                      variant="outlined"
+                      color="primary"
+                      style={{
+                        marginBottom: "10px",
+                      }}
+                    >
+                      Pilih File
+                    </Button>
+                  </label>
+                </>
+              )}
+            </div>
           </Grid>
           <Grid item xs={12}>
             <TextField

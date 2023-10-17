@@ -7,16 +7,19 @@ import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
 import { Card, CardContent } from "@mui/material";
 
-const UpdatePortofolio = (onCancelAdd, onSuccess) => {
+const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
   const [Portofolio, setPortofolio] = useState({
-    judul: "",
-    deskripsi: "",
-    file: "",
-    image: [""],
-    link: "",
+    id: data ? data.id : "",
+    judul: data ? data.judul : "",
+    deskripsi: data ? data.deskripsi : "",
+    file: data ? data.file :  "",
+    image: data ? data.image : [""],
+    link: data ? data.link : "",
   });
+  console.log("ini data PORTOOO", Portofolio)
+  let id = data ? data.id : "";
+  
   const navigate = useNavigate();
-  const { id } = useParams();
   const [image, setImage] = useState([]);
   const [imageSelected, setImageSelected] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -39,23 +42,25 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
     
     // Hapus gambar yang terdaftar dalam state imageToDelete dari daftar Portofolio.image
     console.log("diLUARRR",Portofolio)
+    console.log("diLUARRR ID",id)
     const newPortofolio = Portofolio;
 
-
+    if (imageSelected) {
       //Add image to setPortofolio.image
       setPortofolio(prev => ({
         ...prev, 
         image: [...prev.image, image],
       }));
       newPortofolio.image = [...Portofolio.image, ...image.flat()];
+    } else {
 
-
-    if(Portofolio.image.length === 0){
-      const arrayEmpty = [""]
-      setPortofolio({
-        ...Portofolio,
-        image: arrayEmpty, // Perbarui daftar gambar ya ng dipilih
-      });
+      if(Portofolio.image?.length === 0){
+        const arrayEmpty = [""]
+        setPortofolio({
+          ...Portofolio,
+          image: arrayEmpty, // Perbarui daftar gambar ya ng dipilih
+        });
+      }
     }
 
     console.log("diLUARRR Portofolio",Portofolio)
@@ -81,7 +86,12 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
             "Content-Type": `multipart/form-data`,
           },
         });
-        navigate("/portofolio");
+        setShowSuccessAlert(true);
+        setTimeout(() => {
+          setShowSuccessAlert(false);
+          onSuccess(); // Call the `onSuccess` function passed from SkillList
+          onCancelAdd(); // Close the AddSkill dialog
+        }, 2000);
       } catch (error) {
         console.log(error);
       }
@@ -92,7 +102,12 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        navigate("/portofolio");
+        setShowSuccessAlert(true);
+        setTimeout(() => {
+        setShowSuccessAlert(false);
+        onSuccess(); // Call the `onSuccess` function passed from SkillList
+        onCancelAdd(); // Close the AddSkill dialog
+      }, 2000);
       } catch (error) {
         console.log(error);
       }
@@ -138,12 +153,20 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
     });
   };
 
-  const handleImagesChange = (e) => {
-    const selectedImages = e.target.files; // Menggunakan e.target.files untuk mendapatkan multiple files
-    setPortofolio({
-      ...Portofolio,
-      images: selectedImages, // Perbarui daftar gambar yang dipilih
-    });
+  const handleImageChange = (e) => {
+    const selectedImage = Array.from(e.target.files);
+    setImage((prevImage) => [...prevImage, ...selectedImage]);
+    setImageSelected(true);
+    console.log("ini image",image)
+  };
+
+  const handleCancelNewImage = (index) => {
+    const updatedImages = [...image];
+    updatedImages.splice(index, 1);
+    setImage(updatedImages);
+    if (updatedImages.length === 0) {
+      setImageSelected(false);
+    }
   };
 
  const handleCancelImage = (index) => {
@@ -155,8 +178,11 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
       image: updatedImage,
     }));
     
+  };  
+  const handleCancel = () => {
+    setIsCanceled(true);
+    navigate("/portofolio");
   };
-
   return (
     <>
       {showSuccessAlert && (
@@ -167,50 +193,50 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
       <form onSubmit={updatePortofolio} sx={{ margin: "auto" }}>
         <Grid container spacing={0.8} mt={0.5} justifyContent="center">
           <Grid item>
-            <TextField
-              label="Judul"
-              fullWidth
-              name="judul"
-              value={Portofolio.judul || ""}
-              onChange={(e) =>
-                setPortofolio({
-                  ...Portofolio,
-                  judul: e.target.value,
-                })
-              }
-              placeholder="Judul"
-              variant="outlined"
-              margin="normal"
-            />
-            <TextField
-              label="Deskripsi"
-              fullWidth
-              multiline
-              value={Portofolio.deskripsi || ""}
-              onChange={(e) =>
-                setPortofolio({
-                  ...Portofolio,
-                  deskripsi: e.target.value,
-                })
-              }
-              placeholder="Deskripsi"
-              variant="outlined"
-              margin="normal"
-            />
-            <TextField
-              label="Link"
-              fullWidth
-              value={Portofolio.link || ""}
-              onChange={(e) =>
-                setPortofolio({
-                  ...Portofolio,
-                  link: e.target.value,
-                })
-              }
-              placeholder="Link"
-              variant="outlined"
-              margin="normal"
-            />
+                <TextField
+                  label="Judul"
+                  fullWidth
+                  name="judul"
+                  value={Portofolio.judul || ""}
+                  onChange={(e) =>
+                    setPortofolio({
+                      ...Portofolio,
+                      judul: e.target.value,
+                    })
+                  }
+                  placeholder="Judul"
+                  variant="outlined"
+                  margin="normal"
+                />
+                <TextField
+                  label="Deskripsi"
+                  fullWidth
+                  multiline
+                  value={Portofolio.deskripsi || ""}
+                  onChange={(e) =>
+                    setPortofolio({
+                      ...Portofolio,
+                      deskripsi: e.target.value,
+                    })
+                  }
+                  placeholder="Deskripsi"
+                  variant="outlined"
+                  margin="normal"
+                />
+                <TextField
+                  label="Link"
+                  fullWidth
+                  value={Portofolio.link || ""}
+                  onChange={(e) =>
+                    setPortofolio({
+                      ...Portofolio,
+                      link: e.target.value,
+                    })
+                  }
+                  placeholder="Link"
+                  variant="outlined"
+                  margin="normal"
+                />
 
                 <div
                   style={{
@@ -559,15 +585,32 @@ const UpdatePortofolio = (onCancelAdd, onSuccess) => {
             </>
           )}
         </div>
-
-                <Button type="submit" variant="contained" color="primary">
-                  Update
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </Grid>
-      </form>
+        <Grid
+            container
+            justifyContent="flex-end"
+            sx={{ marginTop: "10px", marginBottom: "10px" }}
+          >
+        <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ marginTop: 2 }}
+              onClick={updatePortofolio}
+            >
+              Update
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 2, marginLeft: 1 }}
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+            </Grid>
+            </Grid>
+          </Grid>
+        </form>
     </>
   );
 };

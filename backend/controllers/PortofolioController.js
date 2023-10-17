@@ -110,6 +110,7 @@ export const createPortofolio = async (req, res) => {
 async function addImage(dataDiriId, imgLength, urlFile, req, res) {
   const { judul, deskripsi, link } = req.body;
   const imageFiles = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
+  console.log("imagefileCreate", imageFiles);
   const imageUrls = [];
   if (imgLength) {
     for (const file of imageFiles) {
