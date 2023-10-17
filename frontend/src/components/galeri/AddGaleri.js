@@ -59,7 +59,7 @@ const AddGaleri = () => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate("/galeri");
+    window.location.reload();
   };
 
 

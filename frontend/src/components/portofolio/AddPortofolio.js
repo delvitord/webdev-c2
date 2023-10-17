@@ -27,7 +27,7 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate("/portofolio");
+    window.location.reload();
   };
 
   const handleFileChange = (e) => {

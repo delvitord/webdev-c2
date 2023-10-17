@@ -141,7 +141,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate("/datadiri");
+    window.location.reload();
   };
 
   return (

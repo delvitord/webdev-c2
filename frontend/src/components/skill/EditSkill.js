@@ -53,7 +53,7 @@ const EditSkill = ({ data, onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true); // Set isCanceled to true when Cancel is clicked
-    navigate("/skill");
+    window.location.reload();
   };
 
   return (

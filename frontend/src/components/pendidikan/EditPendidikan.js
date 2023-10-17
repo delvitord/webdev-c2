@@ -51,7 +51,7 @@ const UpdatePendidikan = ({ data, onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate("/pendidikan");
+    window.location.reload();
   };
 
   return (

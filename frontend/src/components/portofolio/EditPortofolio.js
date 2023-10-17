@@ -166,7 +166,7 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
   };  
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate("/portofolio");
+    window.location.reload();
   };
   return (
     <>

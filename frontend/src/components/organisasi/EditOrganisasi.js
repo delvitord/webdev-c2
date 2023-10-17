@@ -50,7 +50,7 @@ const UpdateOrganisasi = ({ data, onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate("/organisasi");
+    window.location.reload();
   };
 
   return (

@@ -123,7 +123,7 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true)
-    navigate("/datadiri");
+    window.location.reload();
   };
 
   const handleCancelFile = () => {

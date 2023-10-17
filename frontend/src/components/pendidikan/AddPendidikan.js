@@ -29,7 +29,7 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate("/pendidikan");
+    window.location.reload();
   };
 
   const savePendidikan = async (e) => {
