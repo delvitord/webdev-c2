@@ -23,6 +23,7 @@ import LandingPage from "./components/landing_page/LandingPage";
 import UpdateOrganisasi from "./components/organisasi/EditOrganisasi";
 import GaleriList from "./components/galeri/Galeri";
 import AddGaleri from "./components/galeri/AddGaleri";
+import DetailDatadiri from "./components/datadiri/DetailDatadiri"
 import { NotFound } from "./components/layout/NotFound";
 
 
@@ -64,6 +65,14 @@ function App() {
           element={
             <>
               <UpdateDatadiri />
+            </>
+          }
+        />
+        <Route
+          path="/detail-datadiri"
+          element={
+            <>
+              <DetailDatadiri />
             </>
           }
         />

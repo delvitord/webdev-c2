@@ -1,49 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import { projectsData } from './Data';
-import { projectsNav } from './Data';
-import WorkItems from './WorkItem';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import WorkItem from './WorkItem';
 
 const Works = () => {
-  const[item, setItem] = useState({name:'all'});
-  const[projects, setProjects] = useState([]);
-  const[active, setActive] = useState(0)
+  const [projects, setProjects] = useState([]);
 
-  useEffect(() =>{
-    if(item.name === "all"){
-      setProjects(projectsData);
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.get("http://localhost:5000/datadiri/portofolio", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        const projectsData = response.data.map((project, index) => ({
+          id: index + 1,
+          image: project.image, // Sesuaikan dengan nama field di database
+          title: project.judul, // Sesuaikan dengan nama field di database
+          link:project.link,
+          file:project.file,
+        }));
+        setProjects(projectsData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-    else {
-      const newProjects = projectsData.filter((project) => {
-        return project.category.toLowerCase()===item.name;
-      });
-      setProjects(newProjects);
-    }
-  },[item]);
+    fetchData();
+  }, []);
 
-  const handleClick = (e, index) => {
-    setItem({name: e.target.textContent.toLowerCase()});
-    setActive(index);
-  };
   return (
     <div>
-          <div className="work__filters">
-      {projectsNav.map((item, index) => {
-        return (
-          <span onClick={(e) => {
-            handleClick(e, index);
-          }}  className={`${active === index ? 'active-work':''} work__item`} 
-          key={index}>{item.name}</span>
-        )
-      })}
-    </div>
-
-    <div className="work__container grid">
-      {projects.map((item) => {
-        return <WorkItems item={item} key={item.id} />
-      }
-      )}
-    </div>
+      <div className="work__container grid">
+        {projects.map((item) => {
+          return <WorkItem item={item} key={item.id} />;
+        })}
+      </div>
     </div>
   );
 };

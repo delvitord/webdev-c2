@@ -60,7 +60,7 @@
 }
 
 .home__img {
-  background: url(../../../assets/SZE.jpg);
+  background: url(../../../assets/Reza.JPG);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -222,4 +222,14 @@
     width: 22px;
     height: 22px;
   }
+}
+
+.social-icons-container {
+  display: flex;
+  flex-direction: column; /* Membuat ikon-ikon berjajar ke bawah */
+  align-items: center; /* Pusatkan ikon-ikon secara horizontal */
+}
+
+.social-icon {
+  margin: 10px 0; /* Beri jarak antara ikon-ikon */
 }

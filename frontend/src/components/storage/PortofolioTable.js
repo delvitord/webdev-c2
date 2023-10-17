@@ -8,7 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -21,7 +20,6 @@ import { Transition } from "react-transition-group";
 import SourceIcon from "@mui/icons-material/Source";
 import "../style.css";
 import { Card, CardContent } from "@mui/material";
-import { useParams } from "react-router-dom";
 import UpdatePortofolio from "../portofolio/EditPortofolio";
 import SchoolRoundedIcon from "@mui/icons-material/SchoolRounded";
 
@@ -95,10 +93,7 @@ const PortofolioTable = () => {
     setSnackbarOpen(true);
   };
 
-  const handleDeleteClick = (id) => {
-    setPortofolioToDelete(id);
-    setDeleteConfirmationOpen(true);
-  };
+
 
   const handleSnackbarClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -146,7 +141,10 @@ const PortofolioTable = () => {
     setAddPortofolioDialogOpen(false);
   };
 
-
+  const handleDeleteClick = (id) => {
+    setPortofolioToDelete(id);
+    setDeleteConfirmationOpen(true);
+  };
 
   const iconStyle = {
     fontSize: "40px", // Sesuaikan dengan ukuran yang Anda inginkan

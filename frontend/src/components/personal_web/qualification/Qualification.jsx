@@ -1,25 +1,58 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Qualification.css";
-const Qualification = () => {
-    const[toggleState,setToggleState] = useState(1);
 
-    const toggleTab = (index) => {
-        setToggleState(index);
+const Qualification = () => {
+  const [toggleState, setToggleState] = useState(1);
+  const [organisasi, setOrganisasi] = useState([]);
+  const [pendidikan, setPendidikan] = useState([]);
+
+  useEffect(() => {
+    const getOrganisasi = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.get("http://localhost:5000/datadiri/organisasi", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setOrganisasi(response.data);
+      } catch (error) {
+        console.error("Error fetching organization data:", error);
+      }
     };
+
+    const getPendidikan = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.get("http://localhost:5000/datadiri/pendidikan", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        setPendidikan(response.data);
+      } catch (error) {
+        console.error("Error fetching education data:", error);
+      }
+    };
+
+    getOrganisasi();
+    getPendidikan();
+  }, []);
+
+  const toggleTab = (index) => {
+    setToggleState(index);
+  };
 
   return (
     <section className="qualification section" id="qualification">
       <h2 className="section__title mt-6">History</h2>
-      <span className="section__subtitle">My Personal Jurney</span>
+      <span className="section__subtitle">My Personal Journey</span>
 
       <div className="qualification__container container">
         <div className="qualification__tabs">
           <div
-            className={
-              toggleState === 1
-                ? "qualification__button qualification__active button--flex"
-                : "qualification__button button--flex"
-            }
+            className={`qualification__button ${toggleState === 1 ? "qualification__active" : ""} button--flex`}
             onClick={() => toggleTab(1)}
           >
             <i className="uil uil-briefcase-alt qualification__icon"></i>{" "}
@@ -27,11 +60,7 @@ const Qualification = () => {
           </div>
 
           <div
-            className={
-              toggleState === 2
-                ? "qualification__button qualification__active button--flex"
-                : "qualification__button button--flex"
-            }
+            className={`qualification__button ${toggleState === 2 ? "qualification__active" : ""} button--flex`}
             onClick={() => toggleTab(2)}
           >
             <i className="uil uil-graduation-cap qualification__icon"></i>{" "}
@@ -47,75 +76,23 @@ const Qualification = () => {
                 : "qualification__content"
             }
           >
-            <div className="qualification__data">
-              <div>
-                <h3 className="qualification__title">Web Design</h3>
-                <span className="qualification__subtitle">
-                  Spain - Institute
-                </span>
-                <div className="qualification__calendar">
-                  <i className="uil uil-calendar-alt"></i> 2021 - Present
+            {organisasi.map((org, index) => (
+              <div className="qualification__data" key={index}>
+                <div>
+                  <h3 className="qualification__title">{org.nama_organisasi}</h3>
+                  <span className="qualification__subtitle">{org.jabatan}</span>
+                  <div className="qualification__calendar">
+                    <i className="uil uil-calendar-alt"></i>{' '}
+                    {org.awal_periode} - {org.akhir_periode}
+                  </div>
+                </div>
+
+                <div>
+                  <span className="qualification__rounder"></span>
+                  <span className="qualification__line"></span>
                 </div>
               </div>
-
-              <div>
-                <span className="qualification__rounder"></span>
-                <span className="qualification__line"></span>
-              </div>
-            </div>
-
-            <div className="qualification__data">
-              <div></div>
-
-              <div>
-                <span className="qualification__rounder"></span>
-                <span className="qualification__line"></span>
-              </div>
-              <div>
-                <h3 className="qualification__title">Art Director</h3>
-                <span className="qualification__subtitle">
-                  Spain - Institute
-                </span>
-                <div className="qualification__calendar">
-                  <i className="uil uil-calendar-alt"></i> 2021 - Present
-                </div>
-              </div>
-            </div>
-
-            <div className="qualification__data">
-              <div>
-                <h3 className="qualification__title">Web Development</h3>
-                <span className="qualification__subtitle">
-                  Spain - Institute
-                </span>
-                <div className="qualification__calendar">
-                  <i className="uil uil-calendar-alt"></i> 2021 - Present
-                </div>
-              </div>
-
-              <div>
-                <span className="qualification__rounder"></span>
-                <span className="qualification__line"></span>
-              </div>
-            </div>
-
-            <div className="qualification__data">
-              <div></div>
-
-              <div>
-                <span className="qualification__rounder"></span>
-                <span className="qualification__line"></span>
-              </div>
-              <div>
-                <h3 className="qualification__title">UX Expert</h3>
-                <span className="qualification__subtitle">
-                  Spain - Institute
-                </span>
-                <div className="qualification__calendar">
-                  <i className="uil uil-calendar-alt"></i> 2021 - Present
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
 
           <div
@@ -125,55 +102,23 @@ const Qualification = () => {
                 : "qualification__content"
             }
           >
-            <div className="qualification__data">
-              <div>
-                <h3 className="qualification__title">Produk Designer</h3>
-                <span className="qualification__subtitle">
-                  Microsoft - Spain
-                </span>
-                <div className="qualification__calendar">
-                  <i className="uil uil-calendar-alt"></i> 2021 - Present
+            {pendidikan.map((edu, index) => (
+              <div className="qualification__data" key={index}>
+                <div>
+                  <h3 className="qualification__title">{edu.nama_instansi}</h3>
+                  <span className="qualification__subtitle">{edu.jurusan}</span>
+                  <div className="qualification__calendar">
+                    <i className="uil uil-calendar-alt"></i>{' '}
+                    {edu.awal_periode} - {edu.akhir_periode}
+                  </div>
+                </div>
+
+                <div>
+                  <span className="qualification__rounder"></span>
+                  <span className="qualification__line"></span>
                 </div>
               </div>
-
-              <div>
-                <span className="qualification__rounder"></span>
-                <span className="qualification__line"></span>
-              </div>
-            </div>
-
-            <div className="qualification__data">
-              <div></div>
-
-              <div>
-                <span className="qualification__rounder"></span>
-                <span className="qualification__line"></span>
-              </div>
-              <div>
-                <h3 className="qualification__title">UX Designer</h3>
-                <span className="qualification__subtitle">
-                  Apple INC- Spain
-                </span>
-                <div className="qualification__calendar">
-                  <i className="uil uil-calendar-alt"></i> 2021 - Present
-                </div>
-              </div>
-            </div>
-
-            <div className="qualification__data">
-              <div>
-                <h3 className="qualification__title">Web Designer</h3>
-                <span className="qualification__subtitle">Figma - Spain</span>
-                <div className="qualification__calendar">
-                  <i className="uil uil-calendar-alt"></i> 2021 - Present
-                </div>
-              </div>
-
-              <div>
-                <span className="qualification__rounder"></span>
-                <span className="qualification__line"></span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
@@ -181,4 +126,4 @@ const Qualification = () => {
   );
 };
 
-export default Qualification
+export default Qualification;

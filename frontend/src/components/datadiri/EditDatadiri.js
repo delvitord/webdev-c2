@@ -5,32 +5,32 @@ import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { Card, CardContent } from "@mui/material";
 import Alert from "@mui/material/Alert";
 
-const UpdateDatadiri = () => {
+const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
   const [dataDiri, setDataDiri] = useState({
-    nama: "",
-    tempat_lahir: "",
-    tanggal_lahir: "",
-    alamat: "",
-    email: "",
-    no_telp: "",
-    foto: null, // Menggunakan null untuk elemen input file
-    deskripsi: "",
-    linkedin: "",
-    instagram: "",
-    x: "",
-    github: "",
+    id: data ? data.id : "",
+    nama: data ? data.nama : "",
+    tempat_lahir: data ? data.tempat_lahir : "",
+    tanggal_lahir: data ? data.tanggal_lahir : "",
+    alamat: data ? data.alamat : "",
+    email: data ? data.email : "",
+    no_telp: data ? data.no_telp : "",
+    foto: data ? data.foto : null, // Menggunakan null untuk elemen input file
+    deskripsi: data ? data.deskripsi : "",
+    linkedin: data ? data.linkedin : "",
+    instagram: data ? data.instagram : "",
+    x: data ? data.x : "",
+    github: data ? data.github : "",
   });
-
   const navigate = useNavigate();
+
   const [token, setToken] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   useEffect(() => {
-    refreshToken(); // Refresh the token when the component mounts
-    getDatadiri(); // Fetch data from the server when the component mounts
+    refreshToken(); 
+    console.log(data);
   }, []);
   useEffect(() => {
       console.log("EFFECT File state cleared!", dataDiri.foto);
@@ -75,39 +75,8 @@ const UpdateDatadiri = () => {
 
   const accessToken = localStorage.getItem("accessToken");
 
-  const getDatadiri = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/data_diri`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      if (Array.isArray(response.data) && response.data.length > 0) {
-        // Ambil data diri pertama dalam array
-        const dataDiriServer = response.data[0];
+  const [isCanceled, setIsCanceled] = useState(false);
 
-        // Set nilai dari data yang diperoleh ke dalam state
-        setDataDiri({
-          nama: dataDiriServer.nama,
-          tempat_lahir: dataDiriServer.tempat_lahir,
-          tanggal_lahir: dataDiriServer.tanggal_lahir,
-          alamat: dataDiriServer.alamat,
-          email: dataDiriServer.email,
-          no_telp: dataDiriServer.no_telp,
-          foto: dataDiriServer.foto,
-          deskripsi: dataDiriServer.deskripsi,
-          linkedin: dataDiriServer.linkedin,
-          instagram: dataDiriServer.instagram,
-          x: dataDiriServer.x,
-          github: dataDiriServer.github,
-        });
-      }
-      console.log(response.data);
-      console.log("Token in local storage: ", localStorage.getItem("accessToken"));
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const updateDatadiri = async (e) => {
     e.preventDefault();
@@ -136,6 +105,11 @@ const UpdateDatadiri = () => {
 
       console.log("Server Response: ", response);
       setShowSuccessAlert(true);
+      setTimeout(() => {
+        setShowSuccessAlert(false);
+        onSuccess(); // Call the `onSuccess` function passed from SkillList
+        onCancelAdd(); // Close the AddSkill dialog
+      }, 2000);
       navigate("/datadiri");
     } catch (error) {
       console.log(error);
@@ -148,6 +122,7 @@ const UpdateDatadiri = () => {
   };
 
   const handleCancel = () => {
+    setIsCanceled(true)
     navigate("/datadiri");
   };
 
@@ -169,7 +144,18 @@ const UpdateDatadiri = () => {
       <form onSubmit={updateDatadiri}>
         <Grid container spacing={0.8} mt={0.5} justifyContent="center">
           <Grid item xs={12}>
-            <TextField label="Nama" fullWidth name="nama" value={dataDiri.nama || ""} onChange={(e) => setDataDiri({ ...dataDiri, nama: e.target.value })} placeholder="Nama" variant="outlined" margin="normal" />
+            <TextField
+              label="Nama"
+              fullWidth
+              name="nama"
+              value={dataDiri.nama || ""}
+              onChange={(e) =>
+                setDataDiri({ ...dataDiri, nama: e.target.value })
+              }
+              placeholder="Nama"
+              variant="outlined"
+              margin="normal"
+            />
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -177,7 +163,9 @@ const UpdateDatadiri = () => {
               fullWidth
               name="tempat_lahir"
               value={dataDiri.tempat_lahir || ""}
-              onChange={(e) => setDataDiri({ ...dataDiri, tempat_lahir: e.target.value })}
+              onChange={(e) =>
+                setDataDiri({ ...dataDiri, tempat_lahir: e.target.value })
+              }
               placeholder="Tempat Lahir"
               variant="outlined"
               margin="normal"
@@ -190,7 +178,9 @@ const UpdateDatadiri = () => {
               type="date"
               name="tanggal_lahir"
               value={dataDiri.tanggal_lahir || ""}
-              onChange={(e) => setDataDiri({ ...dataDiri, tanggal_lahir: e.target.value })}
+              onChange={(e) =>
+                setDataDiri({ ...dataDiri, tanggal_lahir: e.target.value })
+              }
               InputLabelProps={{
                 shrink: true,
               }}
@@ -199,13 +189,35 @@ const UpdateDatadiri = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField label="Alamat" fullWidth name="alamat" value={dataDiri.alamat || ""} onChange={(e) => setDataDiri({ ...dataDiri, alamat: e.target.value })} placeholder="Alamat" variant="outlined" margin="normal" />
+            <TextField
+              label="Alamat"
+              fullWidth
+              name="alamat"
+              value={dataDiri.alamat || ""}
+              onChange={(e) =>
+                setDataDiri({ ...dataDiri, alamat: e.target.value })
+              }
+              placeholder="Alamat"
+              variant="outlined"
+              margin="normal"
+            />
           </Grid>
           <Grid item xs={12}>
             <TextField label="Email" fullWidth type="email" name="email" value={dataDiri.email || ""} onChange={(e) => setDataDiri({ ...dataDiri, email: e.target.value })} placeholder="Email" variant="outlined" margin="normal" />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="No Telepon" fullWidth name="no_telp" value={dataDiri.no_telp || ""} onChange={(e) => setDataDiri({ ...dataDiri, no_telp: e.target.value })} placeholder="No Telepon" variant="outlined" margin="normal" />
+            <TextField
+              label="No Telepon"
+              fullWidth
+              name="no_telp"
+              value={dataDiri.no_telp || ""}
+              onChange={(e) =>
+                setDataDiri({ ...dataDiri, no_telp: e.target.value })
+              }
+              placeholder="No Telepon"
+              variant="outlined"
+              margin="normal"
+            />
           </Grid>
           <Grid item xs={6}>
           <div
@@ -324,7 +336,9 @@ const UpdateDatadiri = () => {
               fullWidth
               name="deskripsi"
               value={dataDiri.deskripsi || ""}
-              onChange={(e) => setDataDiri({ ...dataDiri, deskripsi: e.target.value })}
+              onChange={(e) =>
+                setDataDiri({ ...dataDiri, deskripsi: e.target.value })
+              }
               placeholder="Deskripsi"
               variant="outlined"
               id="outlined-multiline-flexible"
@@ -334,22 +348,78 @@ const UpdateDatadiri = () => {
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="Linkedin" fullWidth name="linkedin" value={dataDiri.linkedin || ""} onChange={(e) => setDataDiri({ ...dataDiri, linkedin: e.target.value })} placeholder="Linkedin" variant="outlined" margin="normal" />
+            <TextField
+              label="Linkedin"
+              fullWidth
+              name="linkedin"
+              value={dataDiri.linkedin || ""}
+              onChange={(e) =>
+                setDataDiri({ ...dataDiri, linkedin: e.target.value })
+              }
+              placeholder="Linkedin"
+              variant="outlined"
+              margin="normal"
+            />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="Instagram" fullWidth name="instagram" value={dataDiri.instagram || ""} onChange={(e) => setDataDiri({ ...dataDiri, instagram: e.target.value })} placeholder="Instagram" variant="outlined" margin="normal" />
+            <TextField
+              label="Instagram"
+              fullWidth
+              name="instagram"
+              value={dataDiri.instagram || ""}
+              onChange={(e) =>
+                setDataDiri({ ...dataDiri, instagram: e.target.value })
+              }
+              placeholder="Instagram"
+              variant="outlined"
+              margin="normal"
+            />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="X" fullWidth name="x" value={dataDiri.x || ""} onChange={(e) => setDataDiri({ ...dataDiri, x: e.target.value })} placeholder="X" variant="outlined" margin="normal" />
+            <TextField
+              label="X"
+              fullWidth
+              name="x"
+              value={dataDiri.x || ""}
+              onChange={(e) => setDataDiri({ ...dataDiri, x: e.target.value })}
+              placeholder="X"
+              variant="outlined"
+              margin="normal"
+            />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="Github" fullWidth name="github" value={dataDiri.github || ""} onChange={(e) => setDataDiri({ ...dataDiri, github: e.target.value })} placeholder="Github" variant="outlined" margin="normal" />
+            <TextField
+              label="Github"
+              fullWidth
+              name="github"
+              value={dataDiri.github || ""}
+              onChange={(e) =>
+                setDataDiri({ ...dataDiri, github: e.target.value })
+              }
+              placeholder="Github"
+              variant="outlined"
+              margin="normal"
+            />
           </Grid>
-          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+          <Grid
+            container
+            justifyContent="flex-end"
+            sx={{ marginTop: "10px", marginBottom: "10px" }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ marginTop: 2 }}
+            >
               Save
             </Button>
-            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 2, marginLeft: 1 }}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </Grid>

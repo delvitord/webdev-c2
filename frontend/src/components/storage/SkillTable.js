@@ -67,20 +67,12 @@ const SkillTable = () => {
 
   const getSkill = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-
       const response = await axios.get("http://localhost:5000/datadiri/skill", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
-      const dataWithId = response.data.map((item, index) => ({
-        ...item,
-        id: index + 1,
-        _originalId: item.id,
-      }));
-      setSkill(dataWithId);
+      setSkill(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -90,6 +82,11 @@ const SkillTable = () => {
 
   const handleAddSkillClick = () => {
     setAddSkillDialogOpen(true);
+  };
+
+  const handleDeleteClick = (id) => {
+    setSkillToDelete(id);
+    setDeleteConfirmationOpen(true);
   };
 
   const confirmDelete = () => {
@@ -153,11 +150,6 @@ const SkillTable = () => {
     // Menutup dialog edit
     setEditSkillDialogOpen(false);
     setDataToEdit(null); // Kosongkan `editId`
-  };
-
-  const handleDeleteClick = (id) => {
-    setSkillToDelete(id);
-    setDeleteConfirmationOpen(true);
   };
 
   const iconStyle = {

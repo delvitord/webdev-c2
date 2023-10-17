@@ -7,48 +7,60 @@ import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
 
 const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
-  const [nama_organisasi, setNamaOrganisasi] = useState("");
-  const [jabatan, setJabatan] = useState("");
-  const [awal_periode, setAwalPeriode] = useState("");
-  const [akhir_periode, setAkhirPeriode] = useState("");
-  const [deskripsi, setDeskripsi] = useState("");
-
-  // State untuk pesan kesalahan pada setiap input
-  const [namaOrganisasiError, setNamaOrganisasiError] = useState(false);
-  const [jabatanError, setJabatanError] = useState(false);
-  const [awalPeriodeError, setAwalPeriodeError] = useState(false);
-  const [akhirPeriodeError, setAkhirPeriodeError] = useState(false);
-  const [deskripsiError, setDeskripsiError] = useState(false);
+  const [organisasi, setOrganisasi] = useState({
+    nama_organisasi: "",
+    jabatan: "",
+    awal_periode: "",
+    akhir_periode: "",
+    deskripsi: "",
+    errorNamaOrganisasi: false,
+    errorJabatan: false,
+    errorAwalPeriode: false,
+    errorAkhirPeriode: false,
+    errorDeskripsi: false,
+  });
 
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const navigate = useNavigate();
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setOrganisasi((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleCancel = () => {
+    setIsCanceled(true);
+    navigate(-1);
+  };
+
   const saveOrganisasi = async (e) => {
     e.preventDefault();
 
-    if (!nama_organisasi || !jabatan || !awal_periode || !akhir_periode || !deskripsi) {
+    if (!organisasi.nama_organisasi || !organisasi.jabatan || !organisasi.awal_periode || !organisasi.akhir_periode || !organisasi.deskripsi) {
       // Mengatur pesan kesalahan sesuai dengan input yang kosong
-      setNamaOrganisasiError(!nama_organisasi);
-      setJabatanError(!jabatan);
-      setAwalPeriodeError(!awal_periode);
-      setAkhirPeriodeError(!akhir_periode);
-      setDeskripsiError(!deskripsi);
+      setOrganisasi((prevState) => ({
+        ...prevState,
+        errorNamaOrganisasi: !organisasi.nama_organisasi,
+        errorJabatan: !organisasi.jabatan,
+        errorAwalPeriode: !organisasi.awal_periode,
+        errorAkhirPeriode: !organisasi.akhir_periode,
+        errorDeskripsi: !organisasi.deskripsi,
+      }));
     } else {
       // Jika semua input terisi, lanjutkan
       if (!isCanceled) {
         const accessToken = localStorage.getItem("accessToken");
 
-        const data = {
-          nama_organisasi,
-          awal_periode,
-          akhir_periode,
-          jabatan,
-          deskripsi,
-        };
+        const formData = new FormData();
+        formData.append("nama_organisasi", organisasi.nama_organisasi);
+        formData.append("jabatan", organisasi.jabatan);
+        formData.append("awal_periode", organisasi.awal_periode);
+        formData.append("akhir_periode", organisasi.akhir_periode);
+        formData.append("deskripsi", organisasi.deskripsi);
 
         try {
-          await axios.post("http://localhost:5000/datadiri/organisasi", data, {
+          await axios.post("http://localhost:5000/datadiri/organisasi", formData, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
               "Content-Type": "application/json",
@@ -68,11 +80,6 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
     }
   };
 
-  const handleCancel = () => {
-    setIsCanceled(true);
-    navigate("/organisasi");
-  };
-
   return (
     <>
       {showSuccessAlert && (
@@ -86,79 +93,108 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
             <TextField
               label="Nama Organisasi"
               fullWidth
-              value={nama_organisasi}
-              onChange={(e) => setNamaOrganisasi(e.target.value)}
+              name="nama_organisasi"
+              value={organisasi.nama_organisasi}
+              onChange={handleInputChange}
               placeholder="Nama Organisasi"
               variant="outlined"
               margin="normal"
-              error={namaOrganisasiError}
-              helperText={namaOrganisasiError ? "Nama Organisasi harus diisi" : ""}
+              error={organisasi.namaOrganisasiError}
+              helperText={
+                organisasi.namaOrganisasiError
+                  ? "Nama Organisasi harus diisi"
+                  : ""
+              }
             />
           </Grid>
           <Grid item sm={12}>
             <TextField
               label="Jabatan"
               fullWidth
-              value={jabatan}
-              onChange={(e) => setJabatan(e.target.value)}
+              name="jabatan"
+              value={organisasi.jabatan}
+              onChange={handleInputChange}
               placeholder="Jabatan"
               variant="outlined"
               margin="normal"
-              error={jabatanError}
-              helperText={jabatanError ? "Jabatan harus diisi" : ""}
+              error={organisasi.jabatanError}
+              helperText={organisasi.jabatanError ? "Jabatan harus diisi" : ""}
             />
           </Grid>
           <Grid item sm={6}>
             <TextField
               label="Awal Periode"
               fullWidth
+              name="awal_periode"
               type="date"
-              value={awal_periode}
-              onChange={(e) => setAwalPeriode(e.target.value)}
+              value={organisasi.awal_periode}
+              onChange={handleInputChange}
               InputLabelProps={{
                 shrink: true,
               }}
               variant="outlined"
               margin="normal"
-              error={awalPeriodeError}
-              helperText={awalPeriodeError ? "Awal Periode harus diisi" : ""}
+              error={organisasi.awalPeriodeError}
+              helperText={
+                organisasi.awalPeriodeError ? "Awal Periode harus diisi" : ""
+              }
             />
           </Grid>
           <Grid item sm={6}>
             <TextField
               label="Akhir Periode"
               fullWidth
+              name="akhir_periode"
               type="date"
-              value={akhir_periode}
-              onChange={(e) => setAkhirPeriode(e.target.value)}
+              value={organisasi.akhir_periode}
+              onChange={handleInputChange}
               InputLabelProps={{
                 shrink: true,
               }}
               variant="outlined"
               margin="normal"
-              error={akhirPeriodeError}
-              helperText={akhirPeriodeError ? "Akhir Periode harus diisi" : ""}
+              error={organisasi.akhirPeriodeError}
+              helperText={
+                organisasi.akhirPeriodeError ? "Akhir Periode harus diisi" : ""
+              }
             />
           </Grid>
           <Grid item sm={12}>
             <TextField
               label="Deskripsi"
               fullWidth
+              name="deskripsi"
               multiline
-              value={deskripsi}
-              onChange={(e) => setDeskripsi(e.target.value)}
+              value={organisasi.deskripsi}
+              onChange={handleInputChange}
               placeholder="Deskripsi"
               variant="outlined"
               margin="normal"
-              error={deskripsiError}
-              helperText={deskripsiError ? "Deskripsi harus diisi" : ""}
+              error={organisasi.deskripsiError}
+              helperText={
+                organisasi.deskripsiError ? "Deskripsi harus diisi" : ""
+              }
             />
           </Grid>
-          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
+          <Grid
+            container
+            justifyContent="flex-end"
+            sx={{ marginTop: "10px", marginBottom: "10px" }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ marginTop: 2 }}
+            >
               Save
             </Button>
-            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 2, marginLeft: 1 }}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </Grid>
