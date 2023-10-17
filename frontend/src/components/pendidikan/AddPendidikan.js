@@ -29,21 +29,20 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate(-1);
+    navigate("/pendidikan");
   };
 
   const savePendidikan = async (e) => {
     e.preventDefault();
 
     // Validasi input
-    if (!pendidikan.nama_instansi || !pendidikan.awal_periode || !pendidikan.akhir_periode || !pendidikan.jurusan) {
+    if (!pendidikan.nama_instansi || !pendidikan.awal_periode) {
       // Menampilkan pesan error pada setiap TextField yang kosong
       setPendidikan((prevState) => ({
         ...prevState,
         errorNamaInstansi: !pendidikan.nama_instansi,
         errorAwalPeriode: !pendidikan.awal_periode,
         errorAkhirPeriode: !pendidikan.akhir_periode,
-        errorJurusan: !pendidikan.jurusan,
       }));
     } else {
       // Jika semua input terisi, lanjutkan

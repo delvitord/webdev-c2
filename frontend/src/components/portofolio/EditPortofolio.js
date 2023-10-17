@@ -74,9 +74,11 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
       formData.append("link", newPortofolio.link);
       formData.append("file", newPortofolio.file);
       //append formData with image
-      for (let i = 0; i < newPortofolio.image.length; i++) {
-        formData.append("image", newPortofolio.image[i]);
-      }
+      const imageArray = Array.isArray(newPortofolio.image) ? newPortofolio.image : [newPortofolio.image];
+      imageArray.forEach((image) => {
+          formData.append(`image`, image);
+      });
+
       console.log("ini formdata",formData.get("image"))
 
       try {

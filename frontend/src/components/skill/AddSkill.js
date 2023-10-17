@@ -64,7 +64,7 @@ const AddSkill = ({ onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate("/navigasi");
+    navigate("/skill");
   };
 
   return (

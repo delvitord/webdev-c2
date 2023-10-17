@@ -59,8 +59,9 @@ const AddGaleri = () => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate(-1);
+    navigate("/galeri");
   };
+
 
   const handleImagesChange = (e) => {
     const selectedImages = Array.from(e.target.files);

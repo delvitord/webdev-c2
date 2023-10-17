@@ -31,7 +31,7 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
 
   const handleCancel = () => {
     setIsCanceled(true);
-    navigate(-1);
+    navigate("/organisasi");
   };
 
   const saveOrganisasi = async (e) => {
