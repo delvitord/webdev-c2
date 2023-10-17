@@ -80,6 +80,7 @@ export const createData_diri = async (req, res) => {
       instagram,
       x,
       github,
+      foto,
     } = req.body;
 
     // Cek apakah data diri sudah ada untuk akun dengan accountId yang sama
@@ -150,6 +151,7 @@ export const createData_diri = async (req, res) => {
         x,
         github,
         accountId,
+        
       });
 
       res

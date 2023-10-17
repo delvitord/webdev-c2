@@ -321,11 +321,12 @@ export const updatePortofolio = async (req, res) => {
             return res.status(500).json({ msg: "File Upload Failed" });
           }
           newImageUrls.push(url);
+          console.log("newImageUrls", newImageUrls);
   
         });
       }
       const updatedImageUrls = existingImageUrls.concat(newImageUrls);
-            
+      console.log("updatedImageUrls", updatedImageUrls);
             try {
               portofolio.update({
                 judul: judul,

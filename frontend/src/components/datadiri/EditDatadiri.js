@@ -32,6 +32,9 @@ const UpdateDatadiri = () => {
     refreshToken(); // Refresh the token when the component mounts
     getDatadiri(); // Fetch data from the server when the component mounts
   }, []);
+  useEffect(() => {
+      console.log("EFFECT File state cleared!", dataDiri.foto);
+  }, [dataDiri]);
 
   const refreshToken = async () => {
     try {
@@ -109,6 +112,7 @@ const UpdateDatadiri = () => {
   const updateDatadiri = async (e) => {
     e.preventDefault();
     try {
+      console.log("UPDATE File state cleared!", dataDiri.foto);
       const formData = new FormData();
       formData.append("nama", dataDiri.nama);
       formData.append("tempat_lahir", dataDiri.tempat_lahir);
@@ -147,6 +151,14 @@ const UpdateDatadiri = () => {
     navigate("/datadiri");
   };
 
+  const handleCancelFile = () => {
+    // Clear the selected file in the state
+    setDataDiri(prev => ({
+      ...prev,
+      foto: "",
+    }));
+
+  };
   return (
     <>
       {showSuccessAlert && (
@@ -196,19 +208,115 @@ const UpdateDatadiri = () => {
             <TextField label="No Telepon" fullWidth name="no_telp" value={dataDiri.no_telp || ""} onChange={(e) => setDataDiri({ ...dataDiri, no_telp: e.target.value })} placeholder="No Telepon" variant="outlined" margin="normal" />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              label="Foto"
-              fullWidth
-              type="file"
-              name="foto"
-              onChange={handleFileChange}
-              inputProps={{ accept: "image/*" }}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              variant="outlined"
-              margin="normal"
-            />
+          <div
+                  style={{
+                    border: "1px solid #ccc",
+                    borderRadius: "6px",
+                    marginTop: "10px",
+                    marginBottom: "20px",
+                    position: "relative",
+                    paddingTop: "18px",
+                    paddingLeft: "15px",
+                    paddingBottom: "3px",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      padding: "4px",
+                      borderTopLeftRadius: "6px",
+                      borderTopRightRadius: "6px",
+                      fontSize: "14px",
+                      position: "absolute",
+                      top: "-18px",
+                      left: "10%",
+                      transform: "translateX(-50%)",
+                      marginBottom: "30px",
+                    }}
+                  >
+                    Foto
+                  </div>
+                  {dataDiri.foto ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        border: "1px solid #ccc",
+                        padding: "4px",
+                        borderRadius: "6px",
+                        marginTop: "10px",
+                        marginBottom: "20px",
+                        backgroundColor: "white",
+                        width: "50%",
+                        color: "#1976d2",
+                        borderColor: "#1976d2",
+                      }}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: "#1976d2",
+                          color: "white",
+                          padding: "2px 4px",
+                          borderRadius: "5px",
+                          marginRight: "8px",
+                          fontSize: "14px",
+                        }}
+                      >
+                        PDF
+                      </div>
+                      <p
+                        style={{
+                          marginRight: "8px",
+                          flexGrow: 1,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          fontSize: "14px",
+                        }}
+                      >
+                        <a href={dataDiri.foto} target="_blank" rel="noopener noreferrer">
+                            View File
+                        </a>
+                      </p>
+                      <Button
+                        type="button"
+                        color="primary"
+                        onClick={handleCancelFile}
+                        style={{
+                          marginRight: "5px",
+                          paddingTop: "2px",
+                          fontSize: "12px",
+                        }}
+                        sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
+                      >
+                        X
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <input
+                        type="file"
+                        accept=".gif,.jpg,.jpeg,.png"
+                        id="file-upload"
+                        style={{ display: "none" }}
+                        onChange={handleFileChange}
+                      />
+                      <label htmlFor="file-upload">
+                        <Button
+                          component="span"
+                          variant="outlined"
+                          color="primary"
+                          style={{
+                            marginBottom: "10px",
+                          }}
+                        >
+                          Pilih File
+                        </Button>
+                      </label>
+                    </>
+                  )}
+                </div>
           </Grid>
           <Grid item xs={12}>
             <TextField

@@ -266,7 +266,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
                   marginBottom: "30px",
                 }}
               >
-                File
+                Foto
               </div>
               {fileSelected ? (
                 <div

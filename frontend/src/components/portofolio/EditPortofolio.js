@@ -65,7 +65,7 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
 
     console.log("diLUARRR Portofolio",Portofolio)
     console.log("diLUARRR nwPortofolio",newPortofolio)
-    if(imageSelected){
+
       console.log("image selected")
       const formData = new FormData();
       //append formData with field in portofolio
@@ -95,23 +95,6 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
       } catch (error) {
         console.log(error);
       }
-    } else {
-      try {
-        await axios.patch(`http://localhost:5000/datadiri/portofolio/${id}`, newPortofolio, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setShowSuccessAlert(true);
-        setTimeout(() => {
-        setShowSuccessAlert(false);
-        onSuccess(); // Call the `onSuccess` function passed from SkillList
-        onCancelAdd(); // Close the AddSkill dialog
-      }, 2000);
-      } catch (error) {
-        console.log(error);
-      }
-    }
   };
 
   const getPortofolioById = async () => {
