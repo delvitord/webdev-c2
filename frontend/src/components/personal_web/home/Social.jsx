@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const Social = () => {
   const [social, setSocial] = useState({});
+  const { url_custom } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.get("http://localhost:5000/data_diri", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const url = await axios.get(`http://localhost:5000/custom_url/${url_custom}`);
+        const id = url.data[0].dataDiriId;
+        const response = await axios.get(`http://localhost:5000/data_diri_full/${id}`);
         const socialData = response.data.map((social, index) => ({
           id: index + 1,
           linkedin: social.linkedin,

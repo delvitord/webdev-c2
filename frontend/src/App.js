@@ -24,6 +24,9 @@ import UpdateOrganisasi from "./components/organisasi/EditOrganisasi";
 import GaleriList from "./components/galeri/Galeri";
 import AddGaleri from "./components/galeri/AddGaleri";
 import DetailDatadiri from "./components/datadiri/DetailDatadiri"
+import CustomUrl from "./components/customurl/CustomUrl.js";
+import AddCustomUrl from "./components/customurl/AddCustomUrl.js";
+import UpdateCustomUrl from "./components/customurl/EditCustomUrl.js";
 import { NotFound } from "./components/layout/NotFound";
 
 
@@ -33,7 +36,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/datadiri/personal-web" element={<PersonalWeb />} />
+        <Route path="/personal-web/:url_custom" element={<PersonalWeb />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
@@ -146,6 +149,9 @@ function App() {
         <Route path="/edit-skill/:id" element={<EditSkill />} />
         <Route path="/galeri" element={<GaleriList />} />
         <Route path="/add-galeri" element={<AddGaleri />} />
+        <Route path="/custom-url" element={<CustomUrl />} />
+        <Route path="/add-custom-url" element={<AddCustomUrl />} />
+        <Route path="/edit-custom-url" element={<UpdateCustomUrl />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

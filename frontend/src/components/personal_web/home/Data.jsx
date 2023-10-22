@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 const Data = () => {
   const [datadiris, setDatadiri] = useState([]);
@@ -9,38 +10,18 @@ const Data = () => {
   const [expire, setExpire] = useState("");
   const [showNoDataMessage, setShowNoDataMessage] = useState(true);
   const navigate = useNavigate();
+  const { url_custom } = useParams();
 
   useEffect(() => {
-    refreshToken();
     getDatadiri();
   }, []);
 
-  const refreshToken = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/token");
-      setToken(response.data.accessToken);
-      const decoded = jwt_decode(response.data.accessToken);
-      setDatadiri(decoded.nama); // Assuming "nama" is the name field.
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (decoded.exp < currentTime) {
-      }
-      setExpire(decoded.exp);
-    } catch (error) {
-      if (error.response) {
-        navigate("/login");
-      }
-    }
-  };
 
   const getDatadiri = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-
-      const response = await axios.get("http://localhost:5000/data_diri", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const url = await axios.get(`http://localhost:5000/custom_url/${url_custom}`);
+      const id = url.data[0].dataDiriId;
+      const response = await axios.get(`http://localhost:5000/data_diri_full/${id}`);
 
       const data = response.data.map((item) => ({
         nama: item.nama,
@@ -110,7 +91,7 @@ const Data = () => {
           ></path>
         </svg>
       </h1>
-      <h3 className="home__subtitle">Fullstack Developer</h3>
+      <h3 className="home__subtitle">Mobile Developer</h3>
       <p className="home__description">
         {datadiris && datadiris.length > 0
           ? datadiris[0].deskripsi || "Description not available."

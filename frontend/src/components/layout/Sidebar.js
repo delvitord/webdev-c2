@@ -16,6 +16,7 @@ import ListItemText from "@mui/material/ListItemText";
 import PersonIcon from "@mui/icons-material/Person";
 import SchoolIcon from "@mui/icons-material/School";
 import CorporateFareIcon from "@mui/icons-material/CorporateFare";
+import LinkIcon from '@mui/icons-material/Link';
 import SourceIcon from "@mui/icons-material/Source";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import CollectionsIcon from "@mui/icons-material/Collections";
@@ -24,7 +25,7 @@ import { useAppCv } from "../../appCv";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 265;
-const iconArray = [PersonIcon, SchoolIcon, CorporateFareIcon, SourceIcon, TipsAndUpdatesIcon, CollectionsIcon];
+const iconArray = [PersonIcon, SchoolIcon, CorporateFareIcon, SourceIcon, TipsAndUpdatesIcon, CollectionsIcon, LinkIcon];
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -78,9 +79,7 @@ export default function MiniDrawer() {
   const open = useAppCv((state) => state.dopen);
   const navigate = useNavigate()
 
-  const handleButton = () => {
-    navigate("/datadiri/personal-web")
-  }
+
 
   return (
     <Box
@@ -113,6 +112,7 @@ export default function MiniDrawer() {
             "Portofolio",
             "Skill",
             "Galeri",
+            "Personal Web",
           ].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: "block" }}>
               <ListItemButton
@@ -135,6 +135,8 @@ export default function MiniDrawer() {
                     ? "/skill"
                     : index === 5
                     ? "/galeri"
+                    : index === 6
+                    ? "/custom-url"
                     : "/"
                 } // Sesuaikan rute
               >
@@ -154,22 +156,6 @@ export default function MiniDrawer() {
         </List>
         <Box sx={{ flexGrow: 1 }} />{" "}
         {/* Add a flexible box to push the button to the bottom */}
-        <Button
-          variant="contained"
-          size="small" // Make the button smaller
-          sx={{
-            color:"white",
-            mb: 3,
-            width: 180,
-            height: 35,
-            alignSelf: "center",
-            backgroundColor: "#333333",
-          }}
-          onClick={handleButton}
-          endIcon={<SendIcon />}
-        >
-          Lauch Your Web
-        </Button>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1 }}></Box>
     </Box>

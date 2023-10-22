@@ -16,7 +16,7 @@ const Header = () => {
   return (
     <header className="header">
       <nav className="nav container" id="container">
-        <a href="#home" className="nav__logo">
+        <a href="/" className="nav__logo">
           <img
             src={LogoImg}
             width={ 250 }

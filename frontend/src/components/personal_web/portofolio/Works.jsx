@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import WorkItem from './WorkItem';
+import { useParams } from 'react-router-dom';
 
 const Works = () => {
   const [projects, setProjects] = useState([]);
+  const { url_custom } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.get("http://localhost:5000/datadiri/portofolio", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        const projectsData = response.data.map((project, index) => ({
+        const url = await axios.get(`http://localhost:5000/custom_url/${url_custom}`);
+        const id = url.data[0].dataDiriId;
+        const response = await axios.get(`http://localhost:5000/data_diri_full/${id}`);
+        const dataDiri = response.data[0]; // Mengambil data diri pertama dalam array (indeks 0)
+        const portofolioData = dataDiri.portofolio;
+
+        const projectsData = portofolioData.map((project, index) => ({
           id: index + 1,
-          image: project.image, // Sesuaikan dengan nama field di database
-          title: project.judul, // Sesuaikan dengan nama field di database
-          link:project.link,
-          file:project.file,
+          image: project.image, 
+          title: project.judul,
+          link: project.link,
+          file: project.file,
         }));
+
         setProjects(projectsData);
       } catch (error) {
         console.error("Error fetching data:", error);

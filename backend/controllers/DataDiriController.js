@@ -25,29 +25,48 @@ export const getData_diri = async (req, res) => {
   }
 };
 
-export const getData_diriByIdWithChild = async (req, res) => {
+export const getData_diriById = async (req, res) => {
   try {
-    const { accountId } = req.user;
+    const { id } = req.params;
     const response = await Data_diri.findAll({
       where: {
-        // Make sure the field name matches the one in your Data_diri model
-        accountId: accountId,
+        id: id,
+      },
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getData_diriByIdWithChild = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await Data_diri.findAll({
+      where: {
+        id: id,
       },
       include: [
         {
           model: Pendidikan,
+          as: "pendidikan",
         },
         {
           model: Organisasi,
+          as: "organisasi",
         },
         {
           model: Skill,
+          as: "skill",
         },
         {
           model: Portofolio,
+          as: "portofolio",
         },
         {
           model: Galeri,
+          as: "galeri",
         },
       ],
     });

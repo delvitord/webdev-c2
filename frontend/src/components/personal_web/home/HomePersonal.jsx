@@ -6,6 +6,7 @@ import axios from "axios";
 import Social from "./Social";
 import Data from "./Data";
 import ScrollDown from "./ScrollDown";
+import { useParams } from 'react-router-dom';
 
 const Home = () => {
   const [datadiris, setDatadiri] = useState([]);
@@ -14,59 +15,31 @@ const Home = () => {
   const [showNoDataMessage, setShowNoDataMessage] = useState(true);
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
+  const [imageUrl, setImageUrl] = useState(""); 
+  const { url_custom } = useParams();
 
   useEffect(() => {
-    refreshToken();
     getDatadiri();
   }, []);
 
-  const refreshToken = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/token");
-      setToken(response.data.accessToken);
-      const decoded = jwt_decode(response.data.accessToken);
-      setDatadiri(decoded.nama); // Assuming "nama" is the name field.
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (decoded.exp < currentTime) {
-      }
-      setExpire(decoded.exp);
-    } catch (error) {
-      if (error.response) {
-        navigate("/login");
-      }
-    }
-  };
 
   const getDatadiri = async () => {
     try {
-      if (!accessToken) {
-        // Handle the case where the token is not found (e.g., the user is not authenticated)
-        navigate("/login");
-        return;
-      }
-
-      // Use the access token to make the API request
-      const response = await axios.get("http://localhost:5000/data_diri", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
+      const url = await axios.get(`http://localhost:5000/custom_url/${url_custom}`);
+      const id = url.data[0].dataDiriId;
+      const response = await axios.get(`http://localhost:5000/data_diri_full/${id}`);
+      setImageUrl(response.data[0].foto);
       const namaData = response.data.map((item) => item.nama);
       setDatadiri(namaData);
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        // Unauthorized, redirect the user to the login page
-        navigate("/login");
-      } else {
+     
         console.error("Error fetching data:", error);
         setShowNoDataMessage(true);
-      }
+  
     }
   };
   
 
-  const imageUrl = datadiris && datadiris.foto;
 
   const divStyle = {
     backgroundImage: imageUrl ? `url(${imageUrl})` : "url_default_image.jpg",
@@ -104,7 +77,7 @@ const Home = () => {
         <div className="home__content grid">
           <Social />
 
-          <div className="home__img"></div>
+          <div className="home__img" style={{ backgroundImage: `url(${imageUrl})` }}></div>
 
           <Data />
         </div>

@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Qualification.css";
+import { useParams } from 'react-router-dom';
 
 const Qualification = () => {
   const [toggleState, setToggleState] = useState(1);
   const [organisasi, setOrganisasi] = useState([]);
   const [pendidikan, setPendidikan] = useState([]);
+  const { url_custom } = useParams();
 
   useEffect(() => {
     const getOrganisasi = async () => {
       try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.get("http://localhost:5000/datadiri/organisasi", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setOrganisasi(response.data);
+        const url = await axios.get(`http://localhost:5000/custom_url/${url_custom}`);
+        const id = url.data[0].dataDiriId;
+        const response = await axios.get(`http://localhost:5000/data_diri_full/${id}`);
+        setOrganisasi(response.data[0].organisasi);
       } catch (error) {
         console.error("Error fetching organization data:", error);
       }
@@ -24,13 +23,10 @@ const Qualification = () => {
 
     const getPendidikan = async () => {
       try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.get("http://localhost:5000/datadiri/pendidikan", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setPendidikan(response.data);
+        const url = await axios.get(`http://localhost:5000/custom_url/${url_custom}`);
+        const id = url.data[0].dataDiriId;
+        const response = await axios.get(`http://localhost:5000/data_diri_full/${id}`);
+        setPendidikan(response.data[0].pendidikan);
       } catch (error) {
         console.error("Error fetching education data:", error);
       }

@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import "./about.css";
-import AboutImg from "../../../assets/Reza.JPG";
 import CV from "../../../assets/John-Cv.pdf";
 import Info from "./InfoPersonal";
+import { useParams } from 'react-router-dom';
 
 const About = () => {
   const [datadiris, setDatadiri] = useState([]);
@@ -14,39 +14,20 @@ const About = () => {
   const [showNoDataMessage, setShowNoDataMessage] = useState(true);
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
+  const [imageUrl, setImageUrl] = useState(""); 
+  const { url_custom } = useParams();
 
   useEffect(() => {
-    refreshToken();
     getDatadiri();
   }, []);
 
-  const refreshToken = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/token");
-      setToken(response.data.accessToken);
-      const decoded = jwt_decode(response.data.accessToken);
-      setDatadiri(decoded.nama); // Assuming "nama" is the name field.
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (decoded.exp < currentTime) {
-      }
-      setExpire(decoded.exp);
-    } catch (error) {
-      if (error.response) {
-        navigate("/login");
-      }
-    }
-  };
 
   const getDatadiri = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-
-      const response = await axios.get("http://localhost:5000/data_diri", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
+      const url = await axios.get(`http://localhost:5000/custom_url/${url_custom}`);
+      const id = url.data[0].dataDiriId;
+      const response = await axios.get(`http://localhost:5000/data_diri_full/${id}`);
+      setImageUrl(response.data[0].foto);
       const data = response.data.map((item) => ({
         nama: item.nama,
         deskripsi: item.deskripsi,
@@ -59,32 +40,6 @@ const About = () => {
     }
   };
 
-  const imageUrl = datadiris && datadiris.foto;
-
-  // If there's an `imageUrl`, fetch it with the Authorization header
-  if (imageUrl) {
-    fetch(imageUrl, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          // Image was successfully fetched
-        } else {
-          console.error(
-            "Failed to fetch image. Status code: " + response.status
-          );
-          return response.text();
-        }
-      })
-      .then((errorText) => {
-        console.error("Error response from server:", errorText);
-      })
-      .catch((error) => {
-        console.error("Error fetching image:", error);
-      });
-  }
 
 
   return (
@@ -93,7 +48,8 @@ const About = () => {
       <span className="section__subtitle">My Introduction</span>
 
       <div className="about__container container grid">
-        <img src={AboutImg} alt="" className="about__img" />
+        
+        <img src={imageUrl} alt="" className="about__img" />
 
         <div className="about__data">
           <Info />

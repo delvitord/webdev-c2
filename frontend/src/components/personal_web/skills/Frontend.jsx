@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from 'react-router-dom';
 
 const getLevelText = (level) => {
   switch (level) {
@@ -16,17 +17,15 @@ const getLevelText = (level) => {
 
 const Frontend = () => {
   const [skills, setSkills] = useState([]);
+  const { url_custom } = useParams();
 
   useEffect(() => {
     const getSkills = async () => {
       try {
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await axios.get("http://localhost:5000/datadiri/skill", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setSkills(response.data);
+        const url = await axios.get(`http://localhost:5000/custom_url/${url_custom}`);
+        const id = url.data[0].dataDiriId;
+        const response = await axios.get(`http://localhost:5000/data_diri_full/${id}`);
+        setSkills(response.data[0].skill);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
