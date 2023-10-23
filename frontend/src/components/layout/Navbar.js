@@ -21,7 +21,6 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import { useAppCv } from "../../appCv";
 import LogoImg from "../.././assets/logo-white.png";
 
-
 const AppBar = styled(
   MuiAppBar,
   {}
@@ -61,10 +60,6 @@ export default function Navbar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -96,13 +91,7 @@ export default function Navbar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleDialogOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
+        <IconButton size="large" aria-label="account of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
           <LogoutIcon />
         </IconButton>
       </MenuItem>
@@ -127,13 +116,7 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem onClick={handleDialogOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
+        <IconButton size="large" aria-label="account of current user" aria-controls="primary-search-account-menu" aria-haspopup="true" color="inherit">
           <LogoutIcon />
         </IconButton>
       </MenuItem>
@@ -144,51 +127,21 @@ export default function Navbar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" style={{ background: "#333333" }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-            onClick={() => updateOpen(!dopen)}
-          >
+          <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }} onClick={() => updateOpen(!dopen)}>
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-              <img src={LogoImg} 
-              width={250} 
-              height={0}
-              alt="PersonalWeb Logo" />
+          <Typography variant="h6" noWrap component="div" sx={{ display: { xs: "none", sm: "block" } }}>
+            <img src={LogoImg} width={250} height={0} alt="PersonalWeb Logo" />
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
+            <IconButton size="large" edge="end" aria-label="account of current user" aria-controls={menuId} aria-haspopup="true" onClick={handleDialogOpen} color="inherit">
               <LogoutIcon />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
+            <IconButton size="large" aria-label="show more" aria-controls={mobileMenuId} aria-haspopup="true" onClick={handleMobileMenuOpen} color="inherit">
               <MoreIcon />
             </IconButton>
           </Box>
@@ -199,9 +152,7 @@ export default function Navbar() {
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <DialogTitle>Logout Confirmation</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to logout?
-          </DialogContentText>
+          <DialogContentText>Are you sure you want to logout?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleLogout} color="primary">

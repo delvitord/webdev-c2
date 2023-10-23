@@ -1,15 +1,15 @@
 import Organisasi from "../models/OrganisasiModel.js";
-import Data_diri from "../models/DataDiriModel.js"; 
+import Data_diri from "../models/DataDiriModel.js";
 
 // Mendapatkan semua organisasi berdasarkan dataDiriId
 export const getOrganisasi = async (req, res) => {
   try {
-    const { accountId } = req.user; 
+    const { accountId } = req.user;
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
     const response = await Organisasi.findAll({
       where: {
-        dataDiriId: dataDiriId, 
+        dataDiriId: dataDiriId,
       },
     });
     res.status(200).json(response);
@@ -21,14 +21,14 @@ export const getOrganisasi = async (req, res) => {
 // Mendapatkan organisasi berdasarkan ID
 export const getOrganisasiById = async (req, res) => {
   try {
-    const { id } = req.params; 
-    const { accountId } = req.user; 
+    const { id } = req.params;
+    const { accountId } = req.user;
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
     const response = await Organisasi.findOne({
       where: {
-        id: id, 
-        dataDiriId: dataDiriId, 
+        id: id,
+        dataDiriId: dataDiriId,
       },
     });
     res.status(200).json(response);
@@ -37,11 +37,10 @@ export const getOrganisasiById = async (req, res) => {
   }
 };
 
-
 // Membuat organisasi untuk dataDiriId tertentu
 export const createOrganisasi = async (req, res) => {
   try {
-    const { accountId } = req.user; 
+    const { accountId } = req.user;
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
     const { nama_organisasi, jabatan, awal_periode, akhir_periode, deskripsi } = req.body;
@@ -54,7 +53,7 @@ export const createOrganisasi = async (req, res) => {
       awal_periode,
       akhir_periode,
       deskripsi,
-      dataDiriId, 
+      dataDiriId,
     });
 
 
@@ -68,8 +67,8 @@ export const createOrganisasi = async (req, res) => {
 // Memperbarui organisasi berdasarkan ID dan dataDiriId
 export const updateOrganisasi = async (req, res) => {
   try {
-    const { id } = req.params; 
-    const { accountId } = req.user; 
+    const { id } = req.params;
+    const { accountId } = req.user;
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
     
@@ -85,8 +84,8 @@ export const updateOrganisasi = async (req, res) => {
 
     const [updatedRowCount] = await Organisasi.update(req.body, {
       where: {
-        id: id, 
-        dataDiriId: dataDiriId, 
+        id: id,
+        dataDiriId: dataDiriId,
       },
     });
 
@@ -105,8 +104,8 @@ export const updateOrganisasi = async (req, res) => {
 // Menghapus organisasi berdasarkan ID dan dataDiriId
 export const deleteOrganisasi = async (req, res) => {
   try {
-    const { id } = req.params; 
-    const { accountId } = req.user; 
+    const { id } = req.params;
+    const { accountId } = req.user;
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
     const result = await Organisasi.destroy({

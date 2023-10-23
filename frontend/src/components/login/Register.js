@@ -23,6 +23,7 @@ const Register = () => {
   const [confPassword, setConfPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [isFormValid, setIsFormValid] = useState(true);
+  const [role, setRole] = useState("");
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
 
@@ -47,7 +48,9 @@ const Register = () => {
         email: email,
         password: password,
         confPassword: confPassword,
+        role: 2, // Menambahkan role ke data pengguna yang didaftarkan.
       });
+
       navigate("/login");
     } catch (error) {
       if (error.response) {
@@ -136,8 +139,7 @@ const Register = () => {
                   ? "Password must be at least 8 characters and contain letters and numbers"
                   : ""
               }
-            />
-            <TextField
+              <TextField
               margin="normal"
               required
               fullWidth

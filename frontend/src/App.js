@@ -23,13 +23,12 @@ import LandingPage from "./components/landing_page/LandingPage";
 import UpdateOrganisasi from "./components/organisasi/EditOrganisasi";
 import GaleriList from "./components/galeri/Galeri";
 import AddGaleri from "./components/galeri/AddGaleri";
-import DetailDatadiri from "./components/datadiri/DetailDatadiri"
+import DetailDatadiri from "./components/datadiri/DetailDatadiri";
+import UserList from "./components/user/User";
 import CustomUrl from "./components/customurl/CustomUrl.js";
 import AddCustomUrl from "./components/customurl/AddCustomUrl.js";
 import UpdateCustomUrl from "./components/customurl/EditCustomUrl.js";
 import { NotFound } from "./components/layout/NotFound";
-
-
 
 function App() {
   return (
@@ -44,6 +43,14 @@ function App() {
           element={
             <>
               <Dashboard />
+            </>
+          }
+        />
+        <Route
+          path="/user"
+          element={
+            <>
+              <UserList />
             </>
           }
         />

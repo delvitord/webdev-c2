@@ -6,7 +6,7 @@ import { createGaleri, deleteGaleri, getGaleri, getGaleriById, updateGaleri } fr
 import { createOrganisasi, deleteOrganisasi, getOrganisasi, updateOrganisasi, getOrganisasiById } from "../controllers/OrganisasiController.js";
 import { createPortofolio, deletePortofolio, getPortofolio, getPortofolioById, updatePortofolio } from "../controllers/PortofolioController.js";
 import { createCustomUrl, deleteCustomUrl, getCustomUrl, getCustomUrlById ,getCustomUrlByName, updateCustomUrl } from "../controllers/CustomUrlController.js";   
-import { Login, Logout, Register, getAccount} from "../controllers/AccountController.js";
+import { Login, Logout, Register, getAccount, updateAccount, deleteAccount } from "../controllers/AccountController.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 
@@ -31,6 +31,8 @@ router.delete("/custom_url/:dataDiriId", deleteCustomUrl);
 router.use(verifyToken)
 
 router.get("/admin/:id", getAccount);
+router.patch("/admin/:id", updateAccount);
+router.delete("/admin/:id", deleteAccount);
 router.post("/login", Login);
 router.delete("/logout", Logout);
 
@@ -55,12 +57,10 @@ router.post("/datadiri/organisasi", createOrganisasi);
 router.patch("/datadiri/organisasi/:id", updateOrganisasi);
 router.delete("/datadiri/organisasi/:id", deleteOrganisasi);
 
-
-
 // SKILL
-router.get("/datadiri/skill", getSkill); 
+router.get("/datadiri/skill", getSkill);
 router.get("/datadiri/skill/:id", getSkillById);
-router.post("/datadiri/skill", createSkill); 
+router.post("/datadiri/skill", createSkill);
 router.patch("/datadiri/skill/:id", updateSkill);
 router.delete("/datadiri/skill/:id", deleteSkill);
 
