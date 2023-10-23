@@ -52,6 +52,7 @@ export const createPendidikan = async (req, res) => {
           error:
             "Tahun masuk harus lebih awal dari tahun lulus",
         });
+    
     const newPendidikan = await Pendidikan.create({
       nama_instansi,
       awal_periode,
