@@ -37,6 +37,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
   const [isCanceled, setIsCanceled] = useState(false);
   const [isLoading, setLoading] = useState(false); 
   const [isNameValid, setIsNameValid] = useState(true);
+  const [msg, setMsg] = useState("");
 
   useEffect(() => {
     refreshToken();
@@ -146,6 +147,10 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
           onCancelAdd();
         }, 2000);
       } catch (error) {
+        if (error.response && error.response.data && error.response.data.msg) {
+          const errorMsg = error.response.data.msg;
+          setMsg(errorMsg);
+        }
         setLoading(false);
         console.log(error);
         console.log(error.response);
@@ -164,6 +169,11 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
       {showSuccessAlert && (
         <Alert severity="success" sx={{ marginBottom: 1 }}>
           Data Pendidikan berhasil disimpan
+        </Alert>
+      )}
+      {msg && (
+        <Alert severity="error" sx={{ marginBottom: 1 }}>
+          {msg}
         </Alert>
       )}
       <form onSubmit={handleSubmit}>
