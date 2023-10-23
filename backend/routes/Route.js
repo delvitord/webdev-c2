@@ -18,7 +18,7 @@ router.post("/login", Login);
 router.post("/admin", Register);
 router.get("/token", refreshToken);
 
-router.get("/datadiri/:id", getData_diriById);
+router.get("/datadiri_id/:id", getData_diriById);
 router.get("/data_diri_full/:id", getData_diriByIdWithChild);
 
 router.get("/custom_url", getCustomUrl);
