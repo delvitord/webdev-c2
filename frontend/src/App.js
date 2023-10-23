@@ -23,6 +23,7 @@ import LandingPage from "./components/landing_page/LandingPage";
 import UpdateOrganisasi from "./components/organisasi/EditOrganisasi";
 import GaleriList from "./components/galeri/Galeri";
 import AddGaleri from "./components/galeri/AddGaleri";
+import CV from "./components/cvFormal/CV";
 import { NotFound } from "./components/layout/NotFound";
 
 
@@ -137,6 +138,7 @@ function App() {
         <Route path="/edit-skill/:id" element={<EditSkill />} />
         <Route path="/galeri" element={<GaleriList />} />
         <Route path="/add-galeri" element={<AddGaleri />} />
+        <Route path="/cv" element={<CV />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
