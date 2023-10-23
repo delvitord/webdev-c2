@@ -100,9 +100,6 @@ export default function MiniDrawer() {
   const [activePage, setActivePage] = useState("");
   const userRole = parseInt(localStorage.getItem("role"), 10);
   console.log("userRole:", userRole);
-  const handleButton = () => {
-    navigate("/datadiri/personal-web");
-  };
 
   const userMenuItems = menuItems[userRole];
 
@@ -209,24 +206,6 @@ export default function MiniDrawer() {
             </ListItem>
           ))}
         </List>
-        {userRole === 2 && (
-          <Button
-            variant="contained"
-            size="small"
-            sx={{
-              color: "white",
-              mb: 3,
-              width: 180,
-              height: 35,
-              alignSelf: "center",
-              backgroundColor: "#333333",
-            }}
-            onClick={handleButton}
-            endIcon={<SendIcon />}
-          >
-            Launch Your Web
-          </Button>
-        )}
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1 }}></Box>
     </Box>

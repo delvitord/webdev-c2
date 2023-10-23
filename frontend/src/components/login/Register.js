@@ -139,6 +139,7 @@ const Register = () => {
                   ? "Password must be at least 8 characters and contain letters and numbers"
                   : ""
               }
+              />
               <TextField
               margin="normal"
               required
