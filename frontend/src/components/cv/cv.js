@@ -12,6 +12,17 @@ function CV() {
     const [datadiris, setDatadiri] = useState([]);
     const { url_custom } = useParams();
     const [imageUrl, setImageUrl] = useState(""); 
+    const getLevelText = (level) => {
+      switch (level) {
+        case 1:
+          return "Pemula";
+        case 2:
+          return "Menengah";
+        case 3:
+          return "Ahli";
+        default:
+          return "Tidak Diketahui";
+      }}
 
   
     useEffect(() => {
@@ -21,6 +32,7 @@ function CV() {
           const id = url.data[0].dataDiriId;
           const response = await axios.get(`http://localhost:5000/data_diri_full/${id}`);
           setSkills(response.data[0].skill);
+          
           
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -143,11 +155,25 @@ function CV() {
             </section>
 
             <section className="section">
+                <h2>Pendidikan</h2>
+                <ul className="Pendidikan">
+                {pendidikan.map((edu, index) => (
+                        <li key={index}>
+                            <strong>{edu.nama_instansi}, {edu.jurusan}</strong><br />
+                            <em>{edu.awal_periode} s.d. {edu.akhir_periode}</em><br />
+                        </li>
+                ))}
+                </ul>
+            </section>
+
+            <section className="section">
                 <h2>Skill</h2>
                 <ul className="Skill">
                     {skills.map((skill, index) => (
                         <li key={index}>
-                            <p>{skill.nama_skill}</p>
+                            <strong>{skill.nama_skill}</strong><br />
+                            <em>{getLevelText(skill.level_keahlian)}</em>
+                            
                         </li>
                     ))}
                 </ul>
@@ -159,26 +185,13 @@ function CV() {
                 <ul className="Organisasi">
                 {organisasi.map((org, index) => (
                     <li key={index}>
-                        <strong>{org.awal_periode} - {org.akhir_periode}</strong><br />
-                        <em>{org.nama_organisasi}</em><br />
+                        <strong>{org.nama_organisasi}</strong><br />
+                        <em>{org.awal_periode} s.d. {org.akhir_periode}</em><br />
                         {org.deskripsi}
                     </li>
                 ))}
                 </ul>
             </section>
-
-            <section className="section">
-                <h2>Pendidikan</h2>
-                <ul className="Pendidikan">
-                {pendidikan.map((edu, index) => (
-                        <li key={index}>
-                            <strong>{edu.jurusan}, {edu.nama_instansi}</strong><br />
-                            <em>{edu.awal_periode} - {edu.akhir_periode}</em><br />
-                        </li>
-                ))}
-                </ul>
-            </section>
-
 
             <section className="section">
                 <h2>Portofolio</h2>
@@ -187,6 +200,7 @@ function CV() {
                         <li key={index}>
                             <h3 style={{ fontWeight: 'bold' }}>{project.title}</h3>
                             <p>{project.deskripsi}</p>
+                            <p>{project.link}</p>
                             {/* Anda juga dapat menambahkan tautan atau elemen lain sesuai kebutuhan */}
                         </li>
                     ))}
