@@ -66,7 +66,6 @@ export const getData_diriByIdWithChild = async (req, res) => {
         },
         {
           model: Galeri,
-          as: "galeri",
         },
       ],
     });
