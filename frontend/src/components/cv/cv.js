@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import "./cv.css"
-import myImage from "../../assets/Delvito.jpg"
 import axios from 'axios';  // Import Axios
 import { useParams } from 'react-router-dom';
 
@@ -100,6 +99,7 @@ function CV() {
           const id = url.data[0].dataDiriId;
           const response = await axios.get(`http://localhost:5000/data_diri_full/${id}`);
           setImageUrl(response.data[0].foto);
+          console.log(response.data[0].foto);
           const data = response.data.map((item) => ({
             nama: item.nama,
             deskripsi: item.deskripsi,
@@ -122,7 +122,7 @@ function CV() {
         <div className="page">
             <header>
               <div className="header-container">
-                <img src={myImage} alt="Your Name" className="my-image" />
+                <img src={imageUrl} alt="Your Name" className="my-image" />
                 <h1>{Array.isArray(datadiris) && datadiris.length > 0
                 ? datadiris.map((data) => data.nama).join(", ")
                  : "No Data"}</h1>
