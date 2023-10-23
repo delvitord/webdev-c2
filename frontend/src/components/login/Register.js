@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -8,6 +8,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -20,11 +21,26 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(true);
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const isPasswordValidValue = isPasswordValid(password);
+    const isConfPasswordValid = password === confPassword;
+
+    setIsFormValid(isPasswordValidValue && isConfPasswordValid);
+  }, [password, confPassword]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isPasswordValid(password)) {
+      setPasswordError(true);
+      return;
+    }
+
+    setPasswordError(false);
     try {
       await axios.post("http://localhost:5000/admin", {
         username: username,
@@ -38,6 +54,12 @@ const Register = () => {
         setMsg(error.response.data.msg);
       }
     }
+  };
+
+  const isPasswordValid = (password) => {
+    // Password must be at least 8 characters and contain at least one letter and one number
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return passwordRegex.test(password);
   };
 
   const theme = createTheme();
@@ -66,6 +88,14 @@ const Register = () => {
             noValidate
             sx={{ mt: 3 }}
           >
+            {msg && (
+              <Alert
+                severity="error"
+                style={{ marginTop: "10px", marginBottom: "10px" }}
+              >
+                {msg}{" "}
+              </Alert>
+            )}
             <TextField
               margin="normal"
               required
@@ -100,6 +130,12 @@ const Register = () => {
               autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              error={passwordError}
+              helperText={
+                passwordError
+                  ? "Password must be at least 8 characters and contain letters and numbers"
+                  : ""
+              }
             />
             <TextField
               margin="normal"
@@ -112,6 +148,8 @@ const Register = () => {
               autoComplete="new-password"
               value={confPassword}
               onChange={(e) => setConfPassword(e.target.value)}
+              error={passwordError}
+              helperText={passwordError ? "Passwords do not match" : ""}
             />
             <FormControlLabel
               control={<Checkbox value="allowExtraEmails" color="primary" />}
@@ -132,7 +170,6 @@ const Register = () => {
                 </Link>
               </Grid>
             </Grid>
-            {msg && <p className="has-text-centered">{msg}</p>}
           </Box>
         </Box>
       </Container>

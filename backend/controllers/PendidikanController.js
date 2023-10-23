@@ -45,6 +45,13 @@ export const createPendidikan = async (req, res) => {
     const dataDiriId = userData.id;
     const { nama_instansi, awal_periode, akhir_periode, jurusan } = req.body;
 
+    if (awal_periode > akhir_periode)
+      return res
+        .status(404)
+        .json({
+          error:
+            "Tahun masuk harus lebih awal dari tahun lulus",
+        });
     const newPendidikan = await Pendidikan.create({
       nama_instansi,
       awal_periode,
@@ -67,6 +74,13 @@ export const updatePendidikan = async (req, res) => {
     const { accountId } = req.user; 
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
+
+    const { awal_periode, akhir_periode } = req.body;
+
+    if (awal_periode > akhir_periode)
+      return res.status(404).json({
+        error: "Tahun masuk harus lebih awal dari tahun lulus",
+      });
     const [updatedRowCount] = await Pendidikan.update(req.body, {
       where: {
         id: id, 

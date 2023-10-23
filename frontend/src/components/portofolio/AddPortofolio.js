@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress"; 
 
 const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
   const [judul, setJudul] = useState("");
@@ -17,6 +18,7 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
   const [imagesSelected, setImagesSelected] = useState(false);
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false); 
 
   const [errors, setErrors] = useState({
     judul: "",
@@ -99,16 +101,19 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
         });
 
         try {
+          setLoading(true);
           await axios.post("http://localhost:5000/datadiri/portofolio", formData, {
             headers,
           });
           setShowSuccessAlert(true);
           setTimeout(() => {
+            setLoading(false);
             setShowSuccessAlert(false);
             onSuccess(); // Panggil fungsi `onSuccess` yang dilewatkan dari SkillList
             onCancelAdd(); // Tutup dialog AddSkill
           }, 2000);
         } catch (error) {
+          setLoading(false);
           console.log(error);
         }
       }
@@ -125,7 +130,17 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
       <form onSubmit={savePortofolio} sx={{ margin: "auto" }}>
         <Grid container spacing={0.8} mt={0.5} justifyContent="center">
           <Grid>
-            <TextField label="Judul" fullWidth value={judul} onChange={(e) => setJudul(e.target.value)} placeholder="Judul" variant="outlined" margin="normal" helperText={errors.judul} error={!!errors.judul} />
+            <TextField
+              label="Judul"
+              fullWidth
+              value={judul}
+              onChange={(e) => setJudul(e.target.value)}
+              placeholder="Judul"
+              variant="outlined"
+              margin="normal"
+              helperText={errors.judul}
+              error={!!errors.judul}
+            />
             <TextField
               label="Deskripsi"
               fullWidth
@@ -138,7 +153,17 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
               helperText={errors.deskripsi}
               error={!!errors.deskripsi}
             />
-            <TextField label="Link" fullWidth value={link} onChange={(e) => setLink(e.target.value)} placeholder="Link" variant="outlined" margin="normal" helperText={errors.link} error={!!errors.link} />
+            <TextField
+              label="Link"
+              fullWidth
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+              placeholder="Link"
+              variant="outlined"
+              margin="normal"
+              helperText={errors.link}
+              error={!!errors.link}
+            />
             {/* Tambahkan pesan kesalahan untuk file */}
             {errors.file && (
               <Alert severity="error" sx={{ marginBottom: 1 }}>
@@ -231,7 +256,13 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
                 </div>
               ) : (
                 <>
-                  <input type="file" accept=".pdf," id="file-upload" style={{ display: "none" }} onChange={handleFileChange} />
+                  <input
+                    type="file"
+                    accept=".pdf,"
+                    id="file-upload"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
                   <label htmlFor="file-upload">
                     <Button
                       component="span"
@@ -333,7 +364,14 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
                       </Button>
                     </div>
                   ))}
-                  <input type="file" accept=".gif,.jpg,.jpeg,.png" multiple id="image-upload" style={{ display: "none" }} onChange={handleImagesChange} />
+                  <input
+                    type="file"
+                    accept=".gif,.jpg,.jpeg,.png"
+                    multiple
+                    id="image-upload"
+                    style={{ display: "none" }}
+                    onChange={handleImagesChange}
+                  />
                   <label htmlFor="image-upload">
                     <Button
                       component="span"
@@ -349,20 +387,51 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
                 </>
               ) : (
                 <>
-                  <input type="file" accept=".gif,.jpg,.jpeg,.png" multiple id="image-upload" style={{ display: "none" }} onChange={handleImagesChange} />
+                  <input
+                    type="file"
+                    accept=".gif,.jpg,.jpeg,.png"
+                    multiple
+                    id="image-upload"
+                    style={{ display: "none" }}
+                    onChange={handleImagesChange}
+                  />
                   <label htmlFor="image-upload">
-                    <Button component="span" variant="outlined" color="primary" style={{ marginBottom: "15px", marginTop: "2px" }}>
+                    <Button
+                      component="span"
+                      variant="outlined"
+                      color="primary"
+                      style={{ marginBottom: "15px", marginTop: "2px" }}
+                    >
                       Pilih File
                     </Button>
                   </label>
                 </>
               )}
             </div>
-            <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
-              <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
-                Save
+            <Grid
+              container
+              justifyContent="flex-end"
+              sx={{ marginTop: "10px", marginBottom: "10px" }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ marginTop: 2 }}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Save"
+                )}
               </Button>
-              <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{ marginTop: 2, marginLeft: 1 }}
+                onClick={handleCancel}
+              >
                 Cancel
               </Button>
             </Grid>

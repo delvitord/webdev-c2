@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import { CardContent } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress"; 
 
 const AddSkill = ({ onCancelAdd, onSuccess }) => {
   const [nama_skill, setSkill] = useState("");
@@ -14,6 +15,7 @@ const AddSkill = ({ onCancelAdd, onSuccess }) => {
   const [error, setError] = useState("");
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   const options = [
@@ -47,16 +49,19 @@ const AddSkill = ({ onCancelAdd, onSuccess }) => {
       formData.append("level_keahlian", level_keahlian.id);
 
       try {
+        setLoading(true); // Start loading animation
         await axios.post("http://localhost:5000/datadiri/skill", formData, {
           headers,
         });
         setShowSuccessAlert(true);
         setTimeout(() => {
           setShowSuccessAlert(false);
-          onSuccess(); // Call the `onSuccess` function passed from SkillList
-          onCancelAdd(); // Close the AddSkill dialog
+          setLoading(false); // Stop loading animation
+          onSuccess();
+          onCancelAdd();
         }, 2000);
       } catch (error) {
+        setLoading(false); // Stop loading animation in case of an error
         console.log(error);
       }
     }
@@ -77,7 +82,14 @@ const AddSkill = ({ onCancelAdd, onSuccess }) => {
       <form onSubmit={saveSkill}>
         <Grid container spacing={0.8} mt={0.5} justifyContent="center">
           <Grid item sm={12}>
-            <TextField label="Nama Skill" fullWidth value={nama_skill} onChange={(e) => setSkill(e.target.value)} variant="outlined" margin="normal" />
+            <TextField
+              label="Nama Skill"
+              fullWidth
+              value={nama_skill}
+              onChange={(e) => setSkill(e.target.value)}
+              variant="outlined"
+              margin="normal"
+            />
           </Grid>
           <Grid item sm={12}>
             <Autocomplete
@@ -86,14 +98,35 @@ const AddSkill = ({ onCancelAdd, onSuccess }) => {
               value={level_keahlian}
               onChange={(event, newValue) => setLevelKeahlian(newValue)}
               getOptionLabel={(option) => option.level_keahlian}
-              renderInput={(params) => <TextField {...params} label="Level keahlian" sx={{ marginTop: 1 }} />}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Level keahlian"
+                  sx={{ marginTop: 1 }}
+                />
+              )}
             />
           </Grid>
           <Grid container justifyContent="flex-end">
-            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
-              Save
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ marginTop: 2 }}
+              disabled={isLoading} 
+            >
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Save"
+              )}
             </Button>
-            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 2, marginLeft: 1 }}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </Grid>

@@ -34,22 +34,43 @@ export const getAccountById = async (req, res) => {
 };
 
 
-export const Register = async(req, res)=> {
-    const { username, email, password, confPassword } = req.body
-    if(password != confPassword) return res.status(400).json({msg: "Password dan Confirm Password tidak sesuai!!"})
-    const salt = await bcrypt.genSalt()
-    const hashPass = await bcrypt.hash(password ,salt )
-    try {
-        await Account.create({
-            username: username,
-            email: email,
-            password: hashPass 
-        })
-        res.json({msg: "Register Berhasil"})
-    } catch (error) {
-        console.log(error)
+export const Register = async (req, res) => {
+  const { username, email, password, confPassword } = req.body;
+
+  try {
+    // Cek apakah email sudah terdaftar
+    const existingAccount = await Account.findOne({
+      where: { email: email },
+    });
+
+    if (existingAccount) {
+      return res.status(400).json({ msg: "Email sudah terdaftar!!" });
     }
-}
+
+    if (password !== confPassword) {
+      return res
+        .status(400)
+        .json({ msg: "Password dan Confirm Password tidak sesuai!!" });
+    }
+
+    // Generate salt and hash password
+    const salt = await bcrypt.genSalt(10); // Jumlah putaran garam
+    const hashPass = await bcrypt.hash(password, salt);
+
+    // Buat akun baru
+    await Account.create({
+      username: username,
+      email: email,
+      password: hashPass,
+    });
+
+    res.json({ msg: "Register Berhasil" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Terjadi kesalahan saat registrasi" });
+  }
+};
+
 
 export const Login = async(req, res)=>{
     try {
