@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Alert } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress"; 
 
 const UpdateCustomUrl = ({ data, onCancelAdd, onSuccess }) => {
   const [CustomUrls, setCustomUrl] = useState({
@@ -20,6 +21,7 @@ const UpdateCustomUrl = ({ data, onCancelAdd, onSuccess }) => {
   const accessToken = localStorage.getItem("accessToken");
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false); 
 
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -28,6 +30,7 @@ const UpdateCustomUrl = ({ data, onCancelAdd, onSuccess }) => {
   const updateCustomUrl = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const accessToken = localStorage.getItem("accessToken");
       //get id from id in find data diri
       const dataDiri = await axios.get("http://localhost:5000/datadiri", {
@@ -45,11 +48,13 @@ const UpdateCustomUrl = ({ data, onCancelAdd, onSuccess }) => {
       );
       setShowSuccessAlert(true);
       setTimeout(() => {
+        setLoading(true);
         setShowSuccessAlert(false);
         onSuccess(); // Call the `onSuccess` function passed from SkillList
         onCancelAdd(); // Close the AddSkill dialog
       }, 2000);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -85,7 +90,7 @@ const UpdateCustomUrl = ({ data, onCancelAdd, onSuccess }) => {
               margin="normal"
             />
           </Grid>
-         
+
           <Grid
             container
             justifyContent="flex-end"
@@ -97,8 +102,13 @@ const UpdateCustomUrl = ({ data, onCancelAdd, onSuccess }) => {
               color="primary"
               sx={{ marginTop: 2 }}
               onClick={updateCustomUrl}
+              disabled={isLoading} // Disable the button when loading
             >
-              Update
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Update"
+              )}
             </Button>
             <Button
               variant="contained"

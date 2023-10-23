@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress"; 
 
 const AddCustomUrl = ({ onCancelAdd, onSuccess }) => {
   const [customUrl, setCustomUrl] = useState({
@@ -14,6 +15,7 @@ const AddCustomUrl = ({ onCancelAdd, onSuccess }) => {
 
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -52,14 +54,17 @@ const AddCustomUrl = ({ onCancelAdd, onSuccess }) => {
         formData.append("url_custom", customUrl.url_custom);
 
         try {
+          setLoading(true);
           await axios.post(`http://localhost:5000/custom_url/${id}`, formData);
           setShowSuccessAlert(true);
           setTimeout(() => {
+            setLoading(true);
             setShowSuccessAlert(false);
             onSuccess(); // Call the `onSuccess` function passed from SkillList
             onCancelAdd(); // Close the AddSkill dialog
           }, 2000);
         } catch (error) {
+          setLoading(false);
           console.log(error);
           // Handle errors here
         }
@@ -87,14 +92,35 @@ const AddCustomUrl = ({ onCancelAdd, onSuccess }) => {
               variant="outlined"
               margin="normal"
               error={customUrl.errorUrlCustom}
-              helperText={customUrl.errorUrlCustom ? "Url Custom harus diisi" : ""}
+              helperText={
+                customUrl.errorUrlCustom ? "Url Custom harus diisi" : ""
+              }
             />
           </Grid>
-          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
-              Save
+          <Grid
+            container
+            justifyContent="flex-end"
+            sx={{ marginTop: "10px", marginBottom: "10px" }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ marginTop: 2 }}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Save"
+              )}
             </Button>
-            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 2, marginLeft: 1 }}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </Grid>
