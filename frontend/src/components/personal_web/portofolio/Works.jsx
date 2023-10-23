@@ -22,6 +22,7 @@ const Works = () => {
           title: project.judul,
           link: project.link,
           file: project.file,
+          deskripsi:project.deskripsi,
         }));
 
         setProjects(projectsData);

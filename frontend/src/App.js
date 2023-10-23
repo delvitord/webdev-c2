@@ -28,6 +28,7 @@ import UserList from "./components/user/User";
 import CustomUrl from "./components/customurl/CustomUrl.js";
 import AddCustomUrl from "./components/customurl/AddCustomUrl.js";
 import UpdateCustomUrl from "./components/customurl/EditCustomUrl.js";
+import CV from "./components/cv/cv.js";
 import { NotFound } from "./components/layout/NotFound";
 
 function App() {
@@ -87,6 +88,7 @@ function App() {
           }
         />
         <Route path="/pendidikan" element={<PendidikanList />} />
+        <Route path="/cv/:url_custom" element={<CV />} />
         <Route path="/add-pendidikan" element={<AddPendidikan />} />
         <Route path="/edit-pendidikan/:id" element={<UpdatePendidikan />} />
         <Route
