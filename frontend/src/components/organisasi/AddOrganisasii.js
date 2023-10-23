@@ -25,6 +25,7 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [isLoading, setLoading] = useState(false); 
   const [msg, setMsg] = useState("");
+  const [showErrorMsg, setShowErrorMsg] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -80,6 +81,10 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
         } catch (error) {
           if (error.response) {
             setMsg(error.response.data.error);
+            setShowErrorMsg(true);
+            setTimeout(() => {
+              setShowErrorMsg(false);
+            }, 2000);
           }
           setLoading(false);
           console.log(error);
@@ -96,7 +101,7 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
           Data Pengalaman Organisasi berhasil disimpan
         </Alert>
       )}
-      {msg && (
+      {showErrorMsg && (
         <Alert severity="error" sx={{ marginBottom: 1 }}>
           {msg}
         </Alert>

@@ -22,6 +22,7 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [msg, setMsg] = useState("");
+  const [showErrorMsg, setShowErrorMsg] = useState(false);
   const [isLoading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
@@ -76,6 +77,10 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
         } catch (error) {
           if (error.response) {
             setMsg(error.response.data.error);
+            setShowErrorMsg(true);
+            setTimeout(() => {
+              setShowErrorMsg(false);
+            }, 2000);
           }
           setLoading(false);
           console.log(error);
@@ -92,7 +97,7 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
           Data Pendidikan berhasil disimpan
         </Alert>
       )}
-      {msg && (
+      {showErrorMsg && (
         <Alert severity="error" sx={{ marginBottom: 1 }}>
           {msg}
         </Alert>

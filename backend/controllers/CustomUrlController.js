@@ -66,18 +66,24 @@ export const createCustomUrl = async (req, res) => {
     if (!dataDiri) {
       return res.status(400).json({ error: "DataDiri not found" });
     } else {
-      
-      //check if custom_url with this dataDiriId and url_custom already exists
-      const customUrl = await CustomUrl.findOne({ where: {url_custom: url_custom } }); 
+      //check if custom_url with dataDiriId is exist
+      const customUrl = await CustomUrl.findOne({ where: { dataDiriId: dataDiriId } });
       if (customUrl) {
-        return res.status(400).json({ error: "CustomUrl already exists" });
+        return res.status(400).json({ error: "You already have Custom Url. Use update instead." });
       } else {
-        const newCustomUrl = await CustomUrl.create({
-          url_custom: url_custom, 
-          dataDiriId,
-        });
-        res.status(201).json({ msg: "CustomUrl Created", id: newCustomUrl.id  });
-      }
+        //check if url_custom already exists
+        const customUrl = await CustomUrl.findOne({ where: {url_custom: url_custom } }); 
+        if (customUrl) {
+          return res.status(400).json({ error: "Custom Url already exists. Try Another." });
+        } else {
+          const newCustomUrl = await CustomUrl.create({
+            url_custom: url_custom, 
+            dataDiriId,
+          });
+          res.status(201).json({ msg: "CustomUrl Created", id: newCustomUrl.id  });
+        }
+      } 
+      
     }
 
   } catch (error) {

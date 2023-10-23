@@ -16,6 +16,8 @@ const AddCustomUrl = ({ onCancelAdd, onSuccess }) => {
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [isLoading, setLoading] = useState(false); 
+  const [showErrorMsg, setShowErrorMsg] = useState(false);
+  const [msg, setMsg] = useState("");
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -55,19 +57,28 @@ const AddCustomUrl = ({ onCancelAdd, onSuccess }) => {
 
         try {
           setLoading(true);
-          await axios.post(`http://localhost:5000/custom_url/${id}`, formData);
+          const response = await axios.post(`http://localhost:5000/custom_url/${id}`, formData);
+          console.log(response);
           setShowSuccessAlert(true);
           setTimeout(() => {
-            setLoading(true);
             setShowSuccessAlert(false);
-            onSuccess(); // Call the `onSuccess` function passed from SkillList
-            onCancelAdd(); // Close the AddSkill dialog
+            setLoading(false);
+            onSuccess();
+            onCancelAdd();
           }, 2000);
         } catch (error) {
+          if (error.response && error.response.data && error.response.data.error) {
+            const errorMsg = error.response.data.error;
+            setMsg(errorMsg);
+            setShowErrorMsg(true);
+            setTimeout(() => {
+              setShowErrorMsg(false);
+            }, 2000);
+          }
           setLoading(false);
           console.log(error);
-          // Handle errors here
-        }
+          console.log(error.response);
+        }        
       }
     }
   };
@@ -77,6 +88,11 @@ const AddCustomUrl = ({ onCancelAdd, onSuccess }) => {
       {showSuccessAlert && (
         <Alert severity="success" sx={{ marginBottom: 1 }}>
           Data Custom Url berhasil disimpan
+        </Alert>
+      )}
+      {showErrorMsg && (
+        <Alert severity="error" sx={{ marginBottom: 1 }}>
+          {msg}
         </Alert>
       )}
       <form onSubmit={saveCustomUrl}>
