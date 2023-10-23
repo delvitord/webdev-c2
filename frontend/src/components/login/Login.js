@@ -11,15 +11,15 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Alert  from "@mui/material/Alert";
+import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
 
@@ -29,11 +29,17 @@ const Login = () => {
       const response = await axios.post("http://localhost:5000/login", {
         email: email,
         password: password,
+        role: role,
       });
       const accessToken = response.data.access_token;
       // Store the access token in localStorage
       localStorage.setItem("accessToken", accessToken);
-      navigate("/datadiri");
+      localStorage.setItem("role", response.data.role);
+      if (response.data.role === 1) {
+        navigate("/dashboard");
+      } else if (response.data.role === 2) {
+        navigate("/datadiri");
+      }
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);
@@ -63,49 +69,14 @@ const Login = () => {
           </Typography>
           <Box component="form" onSubmit={Auth} noValidate sx={{ mt: 1 }}>
             {msg && (
-              <Alert
-                severity="error"
-                style={{ marginTop: "10px", marginBottom: "10px" }}
-              >
+              <Alert severity="error" style={{ marginTop: "10px", marginBottom: "10px" }}>
                 {msg}{" "}
               </Alert>
             )}
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              error={msg}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              error={msg}
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            <TextField margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus value={email} onChange={(e) => setEmail(e.target.value)} error={msg} />
+            <TextField margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} error={msg} />
+            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>
             <Grid container>

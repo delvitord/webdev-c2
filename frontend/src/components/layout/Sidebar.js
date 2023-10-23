@@ -1,7 +1,6 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import { Button } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,18 +12,36 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import SendIcon from "@mui/icons-material/Send";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonIcon from "@mui/icons-material/Person";
 import SchoolIcon from "@mui/icons-material/School";
 import CorporateFareIcon from "@mui/icons-material/CorporateFare";
 import SourceIcon from "@mui/icons-material/Source";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import CollectionsIcon from "@mui/icons-material/Collections";
-import SendIcon from "@mui/icons-material/Send";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { Button } from "@mui/material";
 import { useAppCv } from "../../appCv";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-const drawerWidth = 265;
-const iconArray = [PersonIcon, SchoolIcon, CorporateFareIcon, SourceIcon, TipsAndUpdatesIcon, CollectionsIcon];
+const drawerWidth = 295;
+const iconArray = [DashboardIcon, ManageAccountsIcon, PersonIcon, SchoolIcon, CorporateFareIcon, SourceIcon, TipsAndUpdatesIcon, CollectionsIcon];
+const menuItems = {
+  1: [
+    { text: "Dashboard", icon: 0 },
+    { text: "Manage User", icon: 1 },
+  ],
+  2: [
+    { text: "Data Diri", icon: 2 },
+    { text: "Riwayat Pendidikan", icon: 3 },
+    { text: "Pengalaman Organisasi", icon: 4 },
+    { text: "Portofolio", icon: 5 },
+    { text: "Skill", icon: 6 },
+    { text: "Galeri", icon: 7 },
+  ],
+};
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -52,7 +69,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -76,67 +92,101 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const theme = useTheme();
   const open = useAppCv((state) => state.dopen);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  const [activePage, setActivePage] = useState("");
+  const userRole = parseInt(localStorage.getItem("role"), 10);
+  console.log("userRole:", userRole);
   const handleButton = () => {
-    navigate("/datadiri/personal-web")
-  }
+    navigate("/datadiri/personal-web");
+  };
+
+  const userMenuItems = menuItems[userRole];
+
+  useEffect(() => {
+    // Check if userRole is valid and not NaN
+    if (!isNaN(userRole)) {
+      const path = location.pathname;
+      let activePage = "";
+
+      switch (path) {
+        case "/dashboard":
+          activePage = "Dashboard";
+          break;
+        case "/user":
+          activePage = "Manage User";
+          break;
+        case "/datadiri":
+          activePage = "Data Diri";
+          break;
+        case "/pendidikan":
+          activePage = "Riwayat Pendidikan";
+          break;
+        case "/organisasi":
+          activePage = "Pengalaman Organisasi";
+          break;
+        case "/portofolio":
+          activePage = "Portofolio";
+          break;
+        case "/skill":
+          activePage = "Skill";
+          break;
+        case "/galeri":
+          activePage = "Galeri";
+          break;
+        default:
+          activePage = "";
+      }
+
+      setActivePage(activePage);
+    }
+  }, [userRole, location]);
 
   return (
     <Box
       sx={{
         display: "flex",
-        backgroundColor: (theme) =>
-          theme.palette.mode === "light"
-            ? theme.palette.grey[100]
-            : theme.palette.grey[900],
+        backgroundColor: (theme) => (theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900]),
       }}
     >
       <CssBaseline />
       <Box height={50} />
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
+          <IconButton>{theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}</IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {[
-            "Data Diri",
-            "Riwayat Pendidikan",
-            "Pengalaman Organisasi",
-            "Portofolio",
-            "Skill",
-            "Galeri",
-          ].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+          {userMenuItems.map((item) => (
+            <ListItem key={item.text}>
               <ListItemButton
                 sx={{
                   minHeight: 40,
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
+                  backgroundColor: item.text === activePage ? "#f5f5f5" : "transparent",
                 }}
-                component="a" // Menggunakan anchor (a) sebagai tautan
+                component="a"
                 href={
-                  index === 0
-                    ? "/datadiri"
-                    : index === 1
-                    ? "/pendidikan"
-                    : index === 2
-                    ? "/organisasi"
-                    : index === 3
-                    ? "/portofolio"
-                    : index === 4
-                    ? "/skill"
-                    : index === 5
-                    ? "/galeri"
+                  item.text === "Dashboard"
+                    ? "dashboard"
+                    : item.text === "Manage User"
+                    ? "user"
+                    : item.text === "Data Diri"
+                    ? "datadiri"
+                    : item.text === "Riwayat Pendidikan"
+                    ? "pendidikan"
+                    : item.text === "Pengalaman Organisasi"
+                    ? "organisasi"
+                    : item.text === "Portofolio"
+                    ? "portofolio"
+                    : item.text === "Skill"
+                    ? "skill"
+                    : item.text === "Galeri"
+                    ? "galeri"
                     : "/"
-                } // Sesuaikan rute
+                }
               >
                 <ListItemIcon
                   sx={{
@@ -145,31 +195,31 @@ export default function MiniDrawer() {
                     justifyContent: "center",
                   }}
                 >
-                  {React.createElement(iconArray[index])}
+                  {React.createElement(iconArray[item.icon])}
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
-        <Box sx={{ flexGrow: 1 }} />{" "}
-        {/* Add a flexible box to push the button to the bottom */}
-        <Button
-          variant="contained"
-          size="small" // Make the button smaller
-          sx={{
-            color:"white",
-            mb: 3,
-            width: 180,
-            height: 35,
-            alignSelf: "center",
-            backgroundColor: "#333333",
-          }}
-          onClick={handleButton}
-          endIcon={<SendIcon />}
-        >
-          Lauch Your Web
-        </Button>
+        {userRole === 2 && (
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              color: "white",
+              mb: 3,
+              width: 180,
+              height: 35,
+              alignSelf: "center",
+              backgroundColor: "#333333",
+            }}
+            onClick={handleButton}
+            endIcon={<SendIcon />}
+          >
+            Launch Your Web
+          </Button>
+        )}
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1 }}></Box>
     </Box>
