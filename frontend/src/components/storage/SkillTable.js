@@ -21,7 +21,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { Transition } from "react-transition-group";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import { useParams } from "react-router-dom";
-import "../style.css";
+import "./style.css";
 
 const columns = [
   { field: "id", headerName: "No", minWidth: 50 },
@@ -42,6 +42,8 @@ const SkillTable = () => {
   const [isAddSkillDialogOpen, setAddSkillDialogOpen] = useState(false);
   const [isEditSkillDialogOpen, setEditSkillDialogOpen] = useState(false);
   const [dataToEdit, setDataToEdit] = useState(null);
+  const [overlayVisible, setOverlayVisible] = useState(false);
+
 
   useEffect(() => {
     refreshToken();
@@ -65,6 +67,15 @@ const SkillTable = () => {
     }
   };
 
+  const Modal = ({ open, onClose }) => {
+    return open ? (
+      <div
+        className={`modal-backdrop ${open ? "visible" : ""}`}
+        onClick={onClose}
+      ></div>
+    ) : null;
+  };
+
   const getSkill = async () => {
     try {
       const response = await axios.get("http://localhost:5000/datadiri/skill", {
@@ -81,6 +92,7 @@ const SkillTable = () => {
   const [open] = React.useState(true);
 
   const handleAddSkillClick = () => {
+    setOverlayVisible(true);
     setAddSkillDialogOpen(true);
   };
 
@@ -137,16 +149,19 @@ const SkillTable = () => {
   };
 
   const handleAddSkillClose = () => {
+    setOverlayVisible(false);
     setAddSkillDialogOpen(false);
   };
 
   const handleEditClick = (data) => {
+    setOverlayVisible(true);
     setDataToEdit(data);
     setEditSkillDialogOpen(true);
     console.log(data);
   };
 
   const handleEditSkillClose = () => {
+    setOverlayVisible(false);
     // Menutup dialog edit
     setEditSkillDialogOpen(false);
     setDataToEdit(null); // Kosongkan `editId`
@@ -166,10 +181,25 @@ const SkillTable = () => {
 
   return (
     <Content open={open}>
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>Skill</h1>
+      {/* Conditionally render the Modal component when a dialog is open */}
+      <Modal
+        open={isAddSkillDialogOpen || isEditSkillDialogOpen}
+        onClose={() => {
+          handleAddSkillClose();
+          handleEditSkillClose();
+        }}
+      />
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>
+        Skill
+      </h1>
       <Card>
         <CardContent>
-          <Button variant="contained" color="success" sx={{ mb: 3 }} onClick={handleAddSkillClick}>
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ mb: 3 }}
+            onClick={handleAddSkillClick}
+          >
             Add New
           </Button>
 
@@ -182,10 +212,18 @@ const SkillTable = () => {
                   if (column.field === "actions") {
                     return (
                       <div>
-                        <IconButton aria-label="Edit" color="primary" onClick={() => handleEditClick(params.row)}>
+                        <IconButton
+                          aria-label="Edit"
+                          color="primary"
+                          onClick={() => handleEditClick(params.row)}
+                        >
                           <EditIcon />
                         </IconButton>
-                        <IconButton aria-label="Delete" color="error" onClick={() => handleDeleteClick(params.row.id)}>
+                        <IconButton
+                          aria-label="Delete"
+                          color="error"
+                          onClick={() => handleDeleteClick(params.row.id)}
+                        >
                           <DeleteIcon />
                         </IconButton>
                       </div>
@@ -200,12 +238,18 @@ const SkillTable = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={deleteConfirmationOpen} onClose={cancelDelete} aria-labelledby="draggable-dialog-title">
+      <Dialog
+        open={deleteConfirmationOpen}
+        onClose={cancelDelete}
+        aria-labelledby="draggable-dialog-title"
+      >
         <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
           Konfirmasi Hapus Data Skill
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>Apakah Anda yakin ingin menghapus data ini?</DialogContentText>
+          <DialogContentText>
+            Apakah Anda yakin ingin menghapus data ini?
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button color="primary" autoFocus onClick={cancelDelete}>
@@ -217,18 +261,44 @@ const SkillTable = () => {
         </DialogActions>
       </Dialog>
 
+      {isAddSkillDialogOpen || isEditSkillDialogOpen ? (
+        <div
+          className="overlay"
+          style={{ display: overlayVisible ? "block" : "none" }}
+        />
+      ) : null}
+
       {/* Add or Edit Pendidikan Dialog */}
       <Transition in={isAddSkillDialogOpen} timeout={300} unmountOnExit>
         {(state) => (
           <Dialog open={isAddSkillDialogOpen} onClose={handleAddSkillClose}>
-            <DialogTitle sx={{ display: "flex", marginTop: "10px", marginLeft: "10px", height: "110px" }}>
+            <DialogTitle
+              sx={{
+                display: "flex",
+                marginTop: "10px",
+                marginLeft: "10px",
+                height: "110px",
+              }}
+            >
               <div style={iconStyle}>
                 <TipsAndUpdatesIcon />
               </div>
-              <span style={{ fontSize: "24px", fontWeight: "bold", marginTop: "10px", marginLeft: "20px" }}>Add New Data Skill</span>
+              <span
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  marginTop: "10px",
+                  marginLeft: "20px",
+                }}
+              >
+                Add New Data Skill
+              </span>
             </DialogTitle>
             <DialogContent sx={{ marginTop: "-30px" }}>
-              <AddSkill onCancelAdd={handleAddSkillClose} onSuccess={getSkill} />
+              <AddSkill
+                onCancelAdd={handleAddSkillClose}
+                onSuccess={getSkill}
+              />
             </DialogContent>
           </Dialog>
         )}
@@ -237,21 +307,50 @@ const SkillTable = () => {
       <Transition in={isEditSkillDialogOpen} timeout={300} unmountOnExit>
         {(state) => (
           <Dialog open={isEditSkillDialogOpen} onClose={handleEditSkillClose}>
-            <DialogTitle sx={{ display: "flex", marginTop: "10px", marginLeft: "10px", height: "110px" }}>
+            <DialogTitle
+              sx={{
+                display: "flex",
+                marginTop: "10px",
+                marginLeft: "10px",
+                height: "110px",
+              }}
+            >
               <div style={iconStyle}>
                 <TipsAndUpdatesIcon />
               </div>
-              <span style={{ fontSize: "24px", fontWeight: "bold", marginTop: "10px", marginLeft: "20px" }}>Update Data Skill</span>
+              <span
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  marginTop: "10px",
+                  marginLeft: "20px",
+                }}
+              >
+                Update Data Skill
+              </span>
             </DialogTitle>
             <DialogContent sx={{ marginTop: "-30px" }}>
-              <EditSkill data={dataToEdit} onCancelAdd={handleEditSkillClose} onSuccess={getSkill} />
+              <EditSkill
+                data={dataToEdit}
+                onCancelAdd={handleEditSkillClose}
+                onSuccess={getSkill}
+              />
             </DialogContent>
           </Dialog>
         )}
       </Transition>
 
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <MuiAlert elevation={6} variant="filled" severity="success" onClose={handleSnackbarClose}>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          severity="success"
+          onClose={handleSnackbarClose}
+        >
           Skill successfully deleted!
         </MuiAlert>
       </Snackbar>

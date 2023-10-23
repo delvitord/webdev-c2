@@ -46,6 +46,8 @@ export const createOrganisasi = async (req, res) => {
     const dataDiriId = userData.id;
     const { nama_organisasi, jabatan, awal_periode, akhir_periode, deskripsi } = req.body;
 
+    if(awal_periode>akhir_periode) return res.status(404).json({ error: "Tahun awal periode harus lebih awal dari tahun akhir periode" });
+
     const newOrganisasi = await Organisasi.create({
       nama_organisasi,
       jabatan,
@@ -54,6 +56,7 @@ export const createOrganisasi = async (req, res) => {
       deskripsi,
       dataDiriId, 
     });
+
 
     res.status(201).json({ msg: "Organisasi Created", id: newOrganisasi.id });
   } catch (error) {
@@ -69,12 +72,24 @@ export const updateOrganisasi = async (req, res) => {
     const { accountId } = req.user; 
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const dataDiriId = userData.id;
+    
+    const { awal_periode, akhir_periode } =
+      req.body;
+
+    if (awal_periode > akhir_periode)
+      return res
+        .status(404)
+        .json({
+          error: "Tahun awal periode harus lebih awal dari tahun akhir periode",
+        });
+
     const [updatedRowCount] = await Organisasi.update(req.body, {
       where: {
         id: id, 
         dataDiriId: dataDiriId, 
       },
     });
+
 
     if (updatedRowCount === 0) {
       res.status(404).json({ error: "Organisasi not found" });

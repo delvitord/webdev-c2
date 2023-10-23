@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress"; 
 
 const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
   const [organisasi, setOrganisasi] = useState({
@@ -22,6 +23,8 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
 
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false); 
+  const [msg, setMsg] = useState("");
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -60,6 +63,7 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
         formData.append("deskripsi", organisasi.deskripsi);
 
         try {
+        setLoading(true);
           await axios.post("http://localhost:5000/datadiri/organisasi", formData, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -68,11 +72,16 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
           });
           setShowSuccessAlert(true);
           setTimeout(() => {
+            setLoading(true);
             setShowSuccessAlert(false);
             onSuccess(); // Call the `onSuccess` function passed from SkillList
             onCancelAdd(); // Close the AddSkill dialog
           }, 2000);
         } catch (error) {
+          if (error.response) {
+            setMsg(error.response.data.error);
+          }
+          setLoading(false);
           console.log(error);
           // Handle errors here
         }
@@ -85,6 +94,11 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
       {showSuccessAlert && (
         <Alert severity="success" sx={{ marginBottom: 1 }}>
           Data Pengalaman Organisasi berhasil disimpan
+        </Alert>
+      )}
+      {msg && (
+        <Alert severity="error" sx={{ marginBottom: 1 }}>
+          {msg}
         </Alert>
       )}
       <form onSubmit={saveOrganisasi}>
@@ -186,8 +200,13 @@ const AddOrganisasi = ({ onCancelAdd, onSuccess }) => {
               variant="contained"
               color="primary"
               sx={{ marginTop: 2 }}
+              disabled={isLoading}
             >
-              Save
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Save"
+              )}
             </Button>
             <Button
               variant="contained"

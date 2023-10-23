@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const EditSkill = ({ data, onCancelAdd, onSuccess }) => {
   const [skill, setSkill] = useState({
@@ -23,12 +24,13 @@ const EditSkill = ({ data, onCancelAdd, onSuccess }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(data)
+    console.log(data);
   }, []); // Include `id` in the dependency array
 
   const accessToken = localStorage.getItem("accessToken");
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -37,22 +39,29 @@ const EditSkill = ({ data, onCancelAdd, onSuccess }) => {
   const updateSkill = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/datadiri/skill/${skill.id}`, skill, {
-        headers,
-      });
+      setLoading(true); // Start loading animation
+      await axios.patch(
+        `http://localhost:5000/datadiri/skill/${skill.id}`,
+        skill,
+        {
+          headers,
+        }
+      );
       setShowSuccessAlert(true);
       setTimeout(() => {
+        setLoading(false); // Stop loading animation
         setShowSuccessAlert(false);
-        onSuccess(); // Call the `onSuccess` function passed from SkillList
-        onCancelAdd(); // Close the AddSkill dialog
+        onSuccess();
+        onCancelAdd();
       }, 2000);
     } catch (error) {
+      setLoading(false); // Stop loading animation in case of an error
       console.log(error);
     }
   };
 
   const handleCancel = () => {
-    setIsCanceled(true); // Set isCanceled to true when Cancel is clicked
+    setIsCanceled(true);
     window.location.reload();
   };
 
@@ -110,8 +119,14 @@ const EditSkill = ({ data, onCancelAdd, onSuccess }) => {
               color="primary"
               sx={{ marginTop: 2 }}
               onClick={updateSkill}
+              disabled={isLoading} // Disable the button when loading
             >
-              Update
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Update"
+              )}
+              {/* Display loading animation when isLoading is true */}
             </Button>
             <Button
               variant="contained"

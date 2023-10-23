@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
   const [dataDiri, setDataDiri] = useState({
@@ -27,11 +28,13 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
 
   const [token, setToken] = useState("");
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     refreshToken(); 
     console.log(data);
   }, []);
+
   useEffect(() => {
       console.log("EFFECT File state cleared!", dataDiri.foto);
   }, [dataDiri]);
@@ -74,13 +77,13 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
   };
 
   const accessToken = localStorage.getItem("accessToken");
-
   const [isCanceled, setIsCanceled] = useState(false);
 
 
   const updateDatadiri = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       console.log("UPDATE File state cleared!", dataDiri.foto);
       const formData = new FormData();
       formData.append("nama", dataDiri.nama);
@@ -106,12 +109,14 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
       console.log("Server Response: ", response);
       setShowSuccessAlert(true);
       setTimeout(() => {
+        setLoading(false);
         setShowSuccessAlert(false);
         onSuccess(); // Call the `onSuccess` function passed from SkillList
         onCancelAdd(); // Close the AddSkill dialog
       }, 2000);
       navigate("/datadiri");
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -203,7 +208,19 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField label="Email" fullWidth type="email" name="email" value={dataDiri.email || ""} onChange={(e) => setDataDiri({ ...dataDiri, email: e.target.value })} placeholder="Email" variant="outlined" margin="normal" />
+            <TextField
+              label="Email"
+              fullWidth
+              type="email"
+              name="email"
+              value={dataDiri.email || ""}
+              onChange={(e) =>
+                setDataDiri({ ...dataDiri, email: e.target.value })
+              }
+              placeholder="Email"
+              variant="outlined"
+              margin="normal"
+            />
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -220,115 +237,119 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
             />
           </Grid>
           <Grid item xs={6}>
-          <div
+            <div
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "6px",
+                marginTop: "10px",
+                marginBottom: "20px",
+                position: "relative",
+                paddingTop: "18px",
+                paddingLeft: "15px",
+                paddingBottom: "3px",
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: "white",
+                  color: "black",
+                  padding: "4px",
+                  borderTopLeftRadius: "6px",
+                  borderTopRightRadius: "6px",
+                  fontSize: "14px",
+                  position: "absolute",
+                  top: "-18px",
+                  left: "10%",
+                  transform: "translateX(-50%)",
+                  marginBottom: "30px",
+                }}
+              >
+                Foto
+              </div>
+              {dataDiri.foto ? (
+                <div
                   style={{
+                    display: "flex",
+                    alignItems: "center",
                     border: "1px solid #ccc",
+                    padding: "4px",
                     borderRadius: "6px",
                     marginTop: "10px",
                     marginBottom: "20px",
-                    position: "relative",
-                    paddingTop: "18px",
-                    paddingLeft: "15px",
-                    paddingBottom: "3px",
+                    backgroundColor: "white",
+                    width: "50%",
+                    color: "#1976d2",
+                    borderColor: "#1976d2",
                   }}
                 >
                   <div
                     style={{
-                      backgroundColor: "white",
-                      color: "black",
-                      padding: "4px",
-                      borderTopLeftRadius: "6px",
-                      borderTopRightRadius: "6px",
+                      backgroundColor: "#1976d2",
+                      color: "white",
+                      padding: "2px 4px",
+                      borderRadius: "5px",
+                      marginRight: "8px",
                       fontSize: "14px",
-                      position: "absolute",
-                      top: "-18px",
-                      left: "10%",
-                      transform: "translateX(-50%)",
-                      marginBottom: "30px",
                     }}
                   >
-                    Foto
+                    PDF
                   </div>
-                  {dataDiri.foto ? (
-                    <div
+                  <p
+                    style={{
+                      marginRight: "8px",
+                      flexGrow: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      fontSize: "14px",
+                    }}
+                  >
+                    <a
+                      href={dataDiri.foto}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View File
+                    </a>
+                  </p>
+                  <Button
+                    type="button"
+                    color="primary"
+                    onClick={handleCancelFile}
+                    style={{
+                      marginRight: "5px",
+                      paddingTop: "2px",
+                      fontSize: "12px",
+                    }}
+                    sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
+                  >
+                    X
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="file"
+                    accept=".gif,.jpg,.jpeg,.png"
+                    id="file-upload"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+                  <label htmlFor="file-upload">
+                    <Button
+                      component="span"
+                      variant="outlined"
+                      color="primary"
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        border: "1px solid #ccc",
-                        padding: "4px",
-                        borderRadius: "6px",
-                        marginTop: "10px",
-                        marginBottom: "20px",
-                        backgroundColor: "white",
-                        width: "50%",
-                        color: "#1976d2",
-                        borderColor: "#1976d2",
+                        marginBottom: "10px",
                       }}
                     >
-                      <div
-                        style={{
-                          backgroundColor: "#1976d2",
-                          color: "white",
-                          padding: "2px 4px",
-                          borderRadius: "5px",
-                          marginRight: "8px",
-                          fontSize: "14px",
-                        }}
-                      >
-                        PDF
-                      </div>
-                      <p
-                        style={{
-                          marginRight: "8px",
-                          flexGrow: 1,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                          fontSize: "14px",
-                        }}
-                      >
-                        <a href={dataDiri.foto} target="_blank" rel="noopener noreferrer">
-                            View File
-                        </a>
-                      </p>
-                      <Button
-                        type="button"
-                        color="primary"
-                        onClick={handleCancelFile}
-                        style={{
-                          marginRight: "5px",
-                          paddingTop: "2px",
-                          fontSize: "12px",
-                        }}
-                        sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
-                      >
-                        X
-                      </Button>
-                    </div>
-                  ) : (
-                    <>
-                      <input
-                        type="file"
-                        accept=".gif,.jpg,.jpeg,.png"
-                        id="file-upload"
-                        style={{ display: "none" }}
-                        onChange={handleFileChange}
-                      />
-                      <label htmlFor="file-upload">
-                        <Button
-                          component="span"
-                          variant="outlined"
-                          color="primary"
-                          style={{
-                            marginBottom: "10px",
-                          }}
-                        >
-                          Pilih File
-                        </Button>
-                      </label>
-                    </>
-                  )}
-                </div>
+                      Pilih File
+                    </Button>
+                  </label>
+                </>
+              )}
+            </div>
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -411,8 +432,13 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
               variant="contained"
               color="primary"
               sx={{ marginTop: 2 }}
+              disabled={isLoading} // Disable the button when loading
             >
-              Save
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Update"
+              )}
             </Button>
             <Button
               variant="contained"

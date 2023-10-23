@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Alert } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress"; 
 
 const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
   const [dataDiri, setDataDiri] = useState({
@@ -34,6 +35,8 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const navigate = useNavigate();
   const [isCanceled, setIsCanceled] = useState(false);
+  const [isLoading, setLoading] = useState(false); 
+  const [isNameValid, setIsNameValid] = useState(true);
 
   useEffect(() => {
     refreshToken();
@@ -58,7 +61,16 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Modifikasi regex untuk hanya menerima huruf dan spasi
+    const nameRegex = /^[A-Za-z\s]+$/;
+
     setDataDiri({ ...dataDiri, [name]: value });
+
+    // Periksa apakah nilai yang dimasukkan sesuai dengan regex
+    if (name === "nama") {
+      setIsNameValid(nameRegex.test(value));
+    }
   };
 
   const handleFileChange = (e) => {
@@ -101,6 +113,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
       }));
     } else {
       try {
+        setLoading(true);
         const accessToken = localStorage.getItem("accessToken");
         const formData = new FormData();
         formData.append("nama", dataDiri.nama);
@@ -128,10 +141,12 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
         setShowSuccessAlert(true);
         setTimeout(() => {
           setShowSuccessAlert(false);
+          setLoading(false);
           onSuccess();
           onCancelAdd();
         }, 2000);
       } catch (error) {
+        setLoading(false);
         console.log(error);
         console.log(error.response);
       }
@@ -163,8 +178,14 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
               placeholder="Nama Lengkap"
               variant="outlined"
               margin="normal"
-              error={dataDiri.errorNama}
-              helperText={dataDiri.errorNama ? "Nama Lengkap harus diisi" : ""}
+              error={dataDiri.errorNama || !isNameValid}
+              helperText={
+                dataDiri.errorNama
+                  ? "Nama Lengkap harus diisi"
+                  : isNameValid
+                  ? ""
+                  : "Hanya huruf dan spasi diperbolehkan"
+              }
             />
           </Grid>
           <Grid item xs={6}>
@@ -249,7 +270,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
             />
           </Grid>
           <Grid item xs={6}>
-          <div
+            <div
               style={{
                 border: "1px solid #ccc",
                 borderRadius: "6px",
@@ -316,7 +337,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
                       fontSize: "14px",
                     }}
                   >
-                    {dataDiri.foto ? dataDiri.foto.name : ''}
+                    {dataDiri.foto ? dataDiri.foto.name : ""}
                   </p>
                   <Button
                     type="button"
@@ -334,7 +355,13 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
                 </div>
               ) : (
                 <>
-                  <input type="file" accept=".gif,.jpg,.jpeg,.png," id="file-upload" style={{ display: "none" }} onChange={handleFileChange} />
+                  <input
+                    type="file"
+                    accept=".gif,.jpg,.jpeg,.png,"
+                    id="file-upload"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
                   <label htmlFor="file-upload">
                     <Button
                       component="span"
@@ -428,8 +455,13 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
               variant="contained"
               color="primary"
               sx={{ marginTop: 2 }}
+              disabled={isLoading}
             >
-              Save
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Save"
+              )}
             </Button>
             <Button
               variant="contained"

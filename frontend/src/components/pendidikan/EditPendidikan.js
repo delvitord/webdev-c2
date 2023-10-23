@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Alert } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const UpdatePendidikan = ({ data, onCancelAdd, onSuccess }) => {
   const [Pendidikans, setPendidikan] = useState({
@@ -23,6 +24,8 @@ const UpdatePendidikan = ({ data, onCancelAdd, onSuccess }) => {
   const accessToken = localStorage.getItem("accessToken");
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [isLoading, setLoading] = useState(false);
 
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -31,6 +34,7 @@ const UpdatePendidikan = ({ data, onCancelAdd, onSuccess }) => {
   const updatePendidikan = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       await axios.patch(
         `http://localhost:5000/datadiri/pendidikan/${Pendidikans.id}`,
         Pendidikans,
@@ -40,11 +44,16 @@ const UpdatePendidikan = ({ data, onCancelAdd, onSuccess }) => {
       );
       setShowSuccessAlert(true);
       setTimeout(() => {
+        setLoading(true);
         setShowSuccessAlert(false);
         onSuccess(); // Call the `onSuccess` function passed from SkillList
         onCancelAdd(); // Close the AddSkill dialog
       }, 2000);
     } catch (error) {
+      if (error.response) {
+        setMsg(error.response.data.error);
+      }
+      setLoading(false);
       console.log(error);
     }
   };
@@ -59,6 +68,11 @@ const UpdatePendidikan = ({ data, onCancelAdd, onSuccess }) => {
       {showSuccessAlert && (
         <Alert severity="success" sx={{ marginBottom: 1 }}>
           Data Pendidikan berhasil disimpan
+        </Alert>
+      )}
+      {msg && (
+        <Alert severity="error" sx={{ marginBottom: 1 }}>
+          {msg}
         </Alert>
       )}
       <form onSubmit={updatePendidikan}>
@@ -148,8 +162,13 @@ const UpdatePendidikan = ({ data, onCancelAdd, onSuccess }) => {
               color="primary"
               sx={{ marginTop: 2 }}
               onClick={updatePendidikan}
+              disabled={isLoading} // Disable the button when loading
             >
-              Update
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Update"
+              )}
             </Button>
             <Button
               variant="contained"

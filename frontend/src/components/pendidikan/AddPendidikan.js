@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress"; 
 
 const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
   const [pendidikan, setPendidikan] = useState({
@@ -20,6 +21,8 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
 
   const [isCanceled, setIsCanceled] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [isLoading, setLoading] = useState(false); 
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -56,6 +59,7 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
         formData.append("jurusan", pendidikan.jurusan);
 
         try {
+          setLoading(true);
           await axios.post("http://localhost:5000/datadiri/pendidikan", formData, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -64,11 +68,16 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
           });
           setShowSuccessAlert(true);
           setTimeout(() => {
+            setLoading(true);
             setShowSuccessAlert(false);
             onSuccess(); // Call the `onSuccess` function passed from SkillList
             onCancelAdd(); // Close the AddSkill dialog
           }, 2000);
         } catch (error) {
+          if (error.response) {
+            setMsg(error.response.data.error);
+          }
+          setLoading(false);
           console.log(error);
           // Handle errors here
         }
@@ -81,6 +90,11 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
       {showSuccessAlert && (
         <Alert severity="success" sx={{ marginBottom: 1 }}>
           Data Pendidikan berhasil disimpan
+        </Alert>
+      )}
+      {msg && (
+        <Alert severity="error" sx={{ marginBottom: 1 }}>
+          {msg}
         </Alert>
       )}
       <form onSubmit={savePendidikan}>
@@ -96,7 +110,9 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
               variant="outlined"
               margin="normal"
               error={pendidikan.errorNamaInstansi}
-              helperText={pendidikan.errorNamaInstansi ? "Nama Instansi harus diisi" : ""}
+              helperText={
+                pendidikan.errorNamaInstansi ? "Nama Instansi harus diisi" : ""
+              }
             />
           </Grid>
           <Grid item sm={6}>
@@ -113,7 +129,9 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
               variant="outlined"
               margin="normal"
               error={pendidikan.errorAwalPeriode}
-              helperText={pendidikan.errorAwalPeriode ? "Tahun Masuk harus diisi" : ""}
+              helperText={
+                pendidikan.errorAwalPeriode ? "Tahun Masuk harus diisi" : ""
+              }
             />
           </Grid>
           <Grid item sm={6}>
@@ -130,17 +148,47 @@ const AddPendidikan = ({ onCancelAdd, onSuccess }) => {
               variant="outlined"
               margin="normal"
               error={pendidikan.errorAkhirPeriode}
-              helperText={pendidikan.errorAkhirPeriode ? "Tahun Lulus harus diisi" : ""}
+              helperText={
+                pendidikan.errorAkhirPeriode ? "Tahun Lulus harus diisi" : ""
+              }
             />
           </Grid>
           <Grid item sm={12}>
-            <TextField label="Jurusan" fullWidth name="jurusan" value={pendidikan.jurusan} onChange={handleInputChange} placeholder="Jurusan" variant="outlined" margin="normal" />
+            <TextField
+              label="Jurusan"
+              fullWidth
+              name="jurusan"
+              value={pendidikan.jurusan}
+              onChange={handleInputChange}
+              placeholder="Jurusan"
+              variant="outlined"
+              margin="normal"
+            />
           </Grid>
-          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
-            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
-              Save
+          <Grid
+            container
+            justifyContent="flex-end"
+            sx={{ marginTop: "10px", marginBottom: "10px" }}
+          >
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ marginTop: 2 }}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Save"
+              )}
             </Button>
-            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ marginTop: 2, marginLeft: 1 }}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
           </Grid>
