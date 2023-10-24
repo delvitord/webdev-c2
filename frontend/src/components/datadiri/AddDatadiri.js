@@ -37,6 +37,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
   const [isCanceled, setIsCanceled] = useState(false);
   const [isLoading, setLoading] = useState(false); 
   const [isNameValid, setIsNameValid] = useState(true);
+  const [isNoTelpValid, setIsNoTelpValid] = useState(true);
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
@@ -63,16 +64,20 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Modifikasi regex untuk hanya menerima huruf dan spasi
-    const nameRegex = /^[A-Za-z\s]+$/;
-
-    setDataDiri({ ...dataDiri, [name]: value });
-
-    // Periksa apakah nilai yang dimasukkan sesuai dengan regex
     if (name === "nama") {
+      const nameRegex = /^[A-Za-z\s]+$/;
+      setDataDiri({ ...dataDiri, [name]: value });
       setIsNameValid(nameRegex.test(value));
+    } else if (name === "no_telp") {
+      // Validasi nomor telepon (misalnya, nomor telepon harus berisi 10-12 digit angka)
+      const noTelpRegex = /^0\d{9,13}$/;
+      setDataDiri({ ...dataDiri, [name]: value });
+      setIsNoTelpValid(noTelpRegex.test(value));
+    } else {
+      setDataDiri({ ...dataDiri, [name]: value });
     }
   };
+
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -168,7 +173,7 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
     <>
       {showSuccessAlert && (
         <Alert severity="success" sx={{ marginBottom: 1 }}>
-          Data Pendidikan berhasil disimpan
+          Datadir berhasil disimpan
         </Alert>
       )}
       {msg && (
@@ -275,8 +280,14 @@ const AddDatadiri = ({ onCancelAdd, onSuccess }) => {
               placeholder="No Telepon"
               variant="outlined"
               margin="normal"
-              error={dataDiri.errorNoTelp}
-              helperText={dataDiri.errorNoTelp ? "No Telepon harus diisi" : ""}
+              error={dataDiri.errorNoTelp || !isNoTelpValid}
+              helperText={
+                dataDiri.errorNoTelp
+                  ? "No Telepon harus diisi"
+                  : !isNoTelpValid
+                  ? "No Telepon harus berisi 10-12 digit angka, dimulai dengan 0"
+                  : ""
+              }
             />
           </Grid>
           <Grid item xs={6}>

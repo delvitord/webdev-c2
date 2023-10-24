@@ -110,6 +110,7 @@ const Register = () => {
               autoFocus
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              error={msg}
             />
             <TextField
               margin="normal"
@@ -121,6 +122,7 @@ const Register = () => {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              error={msg}
             />
             <TextField
               margin="normal"
@@ -136,11 +138,11 @@ const Register = () => {
               error={passwordError}
               helperText={
                 passwordError
-                  ? "Password must be at least 8 characters and contain letters and numbers"
+                  ? "Password minamal 8 yang merupakan kombinasi huruf dan angka"
                   : ""
               }
-              />
-              <TextField
+            />
+            <TextField
               margin="normal"
               required
               fullWidth
