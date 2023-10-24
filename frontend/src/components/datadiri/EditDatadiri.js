@@ -31,12 +31,12 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    refreshToken(); 
+    refreshToken();
     console.log(data);
   }, []);
 
   useEffect(() => {
-      console.log("EFFECT File state cleared!", dataDiri.foto);
+    console.log("EFFECT File state cleared!", dataDiri.foto);
   }, [dataDiri]);
 
   const refreshToken = async () => {
@@ -78,7 +78,6 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
 
   const accessToken = localStorage.getItem("accessToken");
   const [isCanceled, setIsCanceled] = useState(false);
-
 
   const updateDatadiri = async (e) => {
     e.preventDefault();
@@ -127,40 +126,28 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
   };
 
   const handleCancel = () => {
-    setIsCanceled(true)
+    setIsCanceled(true);
     window.location.reload();
   };
 
   const handleCancelFile = () => {
     // Clear the selected file in the state
-    setDataDiri(prev => ({
+    setDataDiri((prev) => ({
       ...prev,
       foto: "",
     }));
-
   };
   return (
     <>
       {showSuccessAlert && (
         <Alert severity="success" sx={{ marginBottom: 1 }}>
-          Data berhasil disimpan
+          Data Diri berhasil disimpan
         </Alert>
       )}
       <form onSubmit={updateDatadiri}>
         <Grid container spacing={0.8} mt={0.5} justifyContent="center">
           <Grid item xs={12}>
-            <TextField
-              label="Nama"
-              fullWidth
-              name="nama"
-              value={dataDiri.nama || ""}
-              onChange={(e) =>
-                setDataDiri({ ...dataDiri, nama: e.target.value })
-              }
-              placeholder="Nama"
-              variant="outlined"
-              margin="normal"
-            />
+            <TextField label="Nama" fullWidth name="nama" value={dataDiri.nama || ""} onChange={(e) => setDataDiri({ ...dataDiri, nama: e.target.value })} placeholder="Nama" variant="outlined" margin="normal" />
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -168,9 +155,7 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
               fullWidth
               name="tempat_lahir"
               value={dataDiri.tempat_lahir || ""}
-              onChange={(e) =>
-                setDataDiri({ ...dataDiri, tempat_lahir: e.target.value })
-              }
+              onChange={(e) => setDataDiri({ ...dataDiri, tempat_lahir: e.target.value })}
               placeholder="Tempat Lahir"
               variant="outlined"
               margin="normal"
@@ -183,9 +168,7 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
               type="date"
               name="tanggal_lahir"
               value={dataDiri.tanggal_lahir || ""}
-              onChange={(e) =>
-                setDataDiri({ ...dataDiri, tanggal_lahir: e.target.value })
-              }
+              onChange={(e) => setDataDiri({ ...dataDiri, tanggal_lahir: e.target.value })}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -194,47 +177,13 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              label="Alamat"
-              fullWidth
-              name="alamat"
-              value={dataDiri.alamat || ""}
-              onChange={(e) =>
-                setDataDiri({ ...dataDiri, alamat: e.target.value })
-              }
-              placeholder="Alamat"
-              variant="outlined"
-              margin="normal"
-            />
+            <TextField label="Alamat" fullWidth name="alamat" value={dataDiri.alamat || ""} onChange={(e) => setDataDiri({ ...dataDiri, alamat: e.target.value })} placeholder="Alamat" variant="outlined" margin="normal" />
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              label="Email"
-              fullWidth
-              type="email"
-              name="email"
-              value={dataDiri.email || ""}
-              onChange={(e) =>
-                setDataDiri({ ...dataDiri, email: e.target.value })
-              }
-              placeholder="Email"
-              variant="outlined"
-              margin="normal"
-            />
+            <TextField label="Email" fullWidth type="email" name="email" value={dataDiri.email || ""} onChange={(e) => setDataDiri({ ...dataDiri, email: e.target.value })} placeholder="Email" variant="outlined" margin="normal" />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              label="No Telepon"
-              fullWidth
-              name="no_telp"
-              value={dataDiri.no_telp || ""}
-              onChange={(e) =>
-                setDataDiri({ ...dataDiri, no_telp: e.target.value })
-              }
-              placeholder="No Telepon"
-              variant="outlined"
-              margin="normal"
-            />
+            <TextField label="No Telepon" fullWidth name="no_telp" value={dataDiri.no_telp || ""} onChange={(e) => setDataDiri({ ...dataDiri, no_telp: e.target.value })} placeholder="No Telepon" variant="outlined" margin="normal" />
           </Grid>
           <Grid item xs={6}>
             <div
@@ -304,11 +253,7 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
                       fontSize: "14px",
                     }}
                   >
-                    <a
-                      href={dataDiri.foto}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <a href={dataDiri.foto} target="_blank" rel="noopener noreferrer">
                       View File
                     </a>
                   </p>
@@ -328,13 +273,7 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
                 </div>
               ) : (
                 <>
-                  <input
-                    type="file"
-                    accept=".gif,.jpg,.jpeg,.png"
-                    id="file-upload"
-                    style={{ display: "none" }}
-                    onChange={handleFileChange}
-                  />
+                  <input type="file" accept=".gif,.jpg,.jpeg,.png" id="file-upload" style={{ display: "none" }} onChange={handleFileChange} />
                   <label htmlFor="file-upload">
                     <Button
                       component="span"
@@ -357,9 +296,7 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
               fullWidth
               name="deskripsi"
               value={dataDiri.deskripsi || ""}
-              onChange={(e) =>
-                setDataDiri({ ...dataDiri, deskripsi: e.target.value })
-              }
+              onChange={(e) => setDataDiri({ ...dataDiri, deskripsi: e.target.value })}
               placeholder="Deskripsi"
               variant="outlined"
               id="outlined-multiline-flexible"
@@ -369,64 +306,18 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              label="Linkedin"
-              fullWidth
-              name="linkedin"
-              value={dataDiri.linkedin || ""}
-              onChange={(e) =>
-                setDataDiri({ ...dataDiri, linkedin: e.target.value })
-              }
-              placeholder="Linkedin"
-              variant="outlined"
-              margin="normal"
-            />
+            <TextField label="Linkedin" fullWidth name="linkedin" value={dataDiri.linkedin || ""} onChange={(e) => setDataDiri({ ...dataDiri, linkedin: e.target.value })} placeholder="Linkedin" variant="outlined" margin="normal" />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              label="Instagram"
-              fullWidth
-              name="instagram"
-              value={dataDiri.instagram || ""}
-              onChange={(e) =>
-                setDataDiri({ ...dataDiri, instagram: e.target.value })
-              }
-              placeholder="Instagram"
-              variant="outlined"
-              margin="normal"
-            />
+            <TextField label="Instagram" fullWidth name="instagram" value={dataDiri.instagram || ""} onChange={(e) => setDataDiri({ ...dataDiri, instagram: e.target.value })} placeholder="Instagram" variant="outlined" margin="normal" />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              label="X"
-              fullWidth
-              name="x"
-              value={dataDiri.x || ""}
-              onChange={(e) => setDataDiri({ ...dataDiri, x: e.target.value })}
-              placeholder="X"
-              variant="outlined"
-              margin="normal"
-            />
+            <TextField label="X" fullWidth name="x" value={dataDiri.x || ""} onChange={(e) => setDataDiri({ ...dataDiri, x: e.target.value })} placeholder="X" variant="outlined" margin="normal" />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              label="Github"
-              fullWidth
-              name="github"
-              value={dataDiri.github || ""}
-              onChange={(e) =>
-                setDataDiri({ ...dataDiri, github: e.target.value })
-              }
-              placeholder="Github"
-              variant="outlined"
-              margin="normal"
-            />
+            <TextField label="Github" fullWidth name="github" value={dataDiri.github || ""} onChange={(e) => setDataDiri({ ...dataDiri, github: e.target.value })} placeholder="Github" variant="outlined" margin="normal" />
           </Grid>
-          <Grid
-            container
-            justifyContent="flex-end"
-            sx={{ marginTop: "10px", marginBottom: "10px" }}
-          >
+          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
             <Button
               type="submit"
               variant="contained"
@@ -434,18 +325,9 @@ const UpdateDatadiri = ({ data, onCancelAdd, onSuccess }) => {
               sx={{ marginTop: 2 }}
               disabled={isLoading} // Disable the button when loading
             >
-              {isLoading ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                "Update"
-              )}
+              {isLoading ? <CircularProgress size={24} color="inherit" /> : "Update"}
             </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{ marginTop: 2, marginLeft: 1 }}
-              onClick={handleCancel}
-            >
+            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
               Cancel
             </Button>
           </Grid>

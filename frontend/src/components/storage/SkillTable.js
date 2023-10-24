@@ -44,7 +44,6 @@ const SkillTable = () => {
   const [dataToEdit, setDataToEdit] = useState(null);
   const [overlayVisible, setOverlayVisible] = useState(false);
 
-
   useEffect(() => {
     refreshToken();
     getSkill();
@@ -68,12 +67,7 @@ const SkillTable = () => {
   };
 
   const Modal = ({ open, onClose }) => {
-    return open ? (
-      <div
-        className={`modal-backdrop ${open ? "visible" : ""}`}
-        onClick={onClose}
-      ></div>
-    ) : null;
+    return open ? <div className={`modal-backdrop ${open ? "visible" : ""}`} onClick={onClose}></div> : null;
   };
 
   const getSkill = async () => {
@@ -179,6 +173,19 @@ const SkillTable = () => {
     justifyContent: "center",
   };
 
+  function convertLevelToText(levelId) {
+    switch (levelId) {
+      case 1:
+        return "Pemula";
+      case 2:
+        return "Menengah";
+      case 3:
+        return "Ahli";
+      default:
+        return null;
+    }
+  }
+
   return (
     <Content open={open}>
       {/* Conditionally render the Modal component when a dialog is open */}
@@ -189,17 +196,10 @@ const SkillTable = () => {
           handleEditSkillClose();
         }}
       />
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>
-        Skill
-      </h1>
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>Skill</h1>
       <Card>
         <CardContent>
-          <Button
-            variant="contained"
-            color="success"
-            sx={{ mb: 3 }}
-            onClick={handleAddSkillClick}
-          >
+          <Button variant="contained" color="success" sx={{ mb: 3 }} onClick={handleAddSkillClick}>
             Add New
           </Button>
 
@@ -212,22 +212,18 @@ const SkillTable = () => {
                   if (column.field === "actions") {
                     return (
                       <div>
-                        <IconButton
-                          aria-label="Edit"
-                          color="primary"
-                          onClick={() => handleEditClick(params.row)}
-                        >
+                        <IconButton aria-label="Edit" color="primary" onClick={() => handleEditClick(params.row)}>
                           <EditIcon />
                         </IconButton>
-                        <IconButton
-                          aria-label="Delete"
-                          color="error"
-                          onClick={() => handleDeleteClick(params.row.id)}
-                        >
+                        <IconButton aria-label="Delete" color="error" onClick={() => handleDeleteClick(params.row.id)}>
                           <DeleteIcon />
                         </IconButton>
                       </div>
                     );
+                  } else if (column.field === "level_keahlian") {
+                    // Gunakan fungsi convertLevelToText untuk mengonversi ID ke teks
+                    const levelText = convertLevelToText(params.row.level_keahlian);
+                    return levelText;
                   }
                 },
               }))}
@@ -238,18 +234,12 @@ const SkillTable = () => {
         </CardContent>
       </Card>
 
-      <Dialog
-        open={deleteConfirmationOpen}
-        onClose={cancelDelete}
-        aria-labelledby="draggable-dialog-title"
-      >
+      <Dialog open={deleteConfirmationOpen} onClose={cancelDelete} aria-labelledby="draggable-dialog-title">
         <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
           Konfirmasi Hapus Data Skill
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Apakah Anda yakin ingin menghapus data ini?
-          </DialogContentText>
+          <DialogContentText>Apakah Anda yakin ingin menghapus data ini?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button color="primary" autoFocus onClick={cancelDelete}>
@@ -261,12 +251,7 @@ const SkillTable = () => {
         </DialogActions>
       </Dialog>
 
-      {isAddSkillDialogOpen || isEditSkillDialogOpen ? (
-        <div
-          className="overlay"
-          style={{ display: overlayVisible ? "block" : "none" }}
-        />
-      ) : null}
+      {isAddSkillDialogOpen || isEditSkillDialogOpen ? <div className="overlay" style={{ display: overlayVisible ? "block" : "none" }} /> : null}
 
       {/* Add or Edit Pendidikan Dialog */}
       <Transition in={isAddSkillDialogOpen} timeout={300} unmountOnExit>
@@ -295,10 +280,7 @@ const SkillTable = () => {
               </span>
             </DialogTitle>
             <DialogContent sx={{ marginTop: "-30px" }}>
-              <AddSkill
-                onCancelAdd={handleAddSkillClose}
-                onSuccess={getSkill}
-              />
+              <AddSkill onCancelAdd={handleAddSkillClose} onSuccess={getSkill} />
             </DialogContent>
           </Dialog>
         )}
@@ -330,27 +312,14 @@ const SkillTable = () => {
               </span>
             </DialogTitle>
             <DialogContent sx={{ marginTop: "-30px" }}>
-              <EditSkill
-                data={dataToEdit}
-                onCancelAdd={handleEditSkillClose}
-                onSuccess={getSkill}
-              />
+              <EditSkill data={dataToEdit} onCancelAdd={handleEditSkillClose} onSuccess={getSkill} />
             </DialogContent>
           </Dialog>
         )}
       </Transition>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <MuiAlert
-          elevation={6}
-          variant="filled"
-          severity="success"
-          onClose={handleSnackbarClose}
-        >
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <MuiAlert elevation={6} variant="filled" severity="success" onClose={handleSnackbarClose}>
           Skill successfully deleted!
         </MuiAlert>
       </Snackbar>

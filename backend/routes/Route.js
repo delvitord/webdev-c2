@@ -2,10 +2,9 @@ import express from "express";
 import { createData_diri, deleteData_diri, getData_diri, getData_diriById, getData_diriByIdWithChild, updateData_diri } from "../controllers/DataDiriController.js";
 import { createPendidikan, deletePendidikan, getPendidikan, getPendidikanById, updatePendidikan } from "../controllers/PendidikanController.js";
 import { createSkill, deleteSkill, getSkill, getSkillById, updateSkill } from "../controllers/SkillController.js";
-import { createGaleri, deleteGaleri, getGaleri, getGaleriById, updateGaleri } from "../controllers/GaleriController.js";
 import { createOrganisasi, deleteOrganisasi, getOrganisasi, updateOrganisasi, getOrganisasiById } from "../controllers/OrganisasiController.js";
 import { createPortofolio, deletePortofolio, getPortofolio, getPortofolioById, updatePortofolio } from "../controllers/PortofolioController.js";
-import { createCustomUrl, deleteCustomUrl, getCustomUrl, getCustomUrlById ,getCustomUrlByName, updateCustomUrl } from "../controllers/CustomUrlController.js";   
+import { createCustomUrl, deleteCustomUrl, getCustomUrl, getCustomUrlById, getCustomUrlByName, updateCustomUrl } from "../controllers/CustomUrlController.js";
 import { Login, Logout, Register, getAccount, updateAccount, deleteAccount } from "../controllers/AccountController.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
@@ -28,7 +27,7 @@ router.post("/custom_url/:dataDiriId", createCustomUrl);
 router.patch("/custom_url/:dataDiriId", updateCustomUrl);
 router.delete("/custom_url/:dataDiriId", deleteCustomUrl);
 
-router.use(verifyToken)
+router.use(verifyToken);
 
 router.get("/admin/:id", getAccount);
 router.patch("/admin/:id", updateAccount);
@@ -63,13 +62,6 @@ router.get("/datadiri/skill/:id", getSkillById);
 router.post("/datadiri/skill", createSkill);
 router.patch("/datadiri/skill/:id", updateSkill);
 router.delete("/datadiri/skill/:id", deleteSkill);
-
-// GALERI
-router.get("/datadiri/galeri", getGaleri);
-router.get("/datadiri/galeri/:id", getGaleriById);
-router.post("/datadiri/galeri", createGaleri);
-router.patch("/datadiri/galeri/:id", updateGaleri);
-router.delete("/datadiri/galeri/:id", deleteGaleri);
 
 // Portofolio
 router.get("/datadiri/portofolio", getPortofolio);

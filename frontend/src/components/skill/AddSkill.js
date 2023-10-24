@@ -1,22 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Autocomplete } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { CardContent } from "@mui/material";
-import Autocomplete from "@mui/material/Autocomplete";
 import Alert from "@mui/material/Alert";
-import CircularProgress from "@mui/material/CircularProgress"; 
+import CircularProgress from "@mui/material/CircularProgress";
 
 const AddSkill = ({ onCancelAdd, onSuccess }) => {
-  const [nama_skill, setSkill] = useState("");
-  const [level_keahlian, setLevelKeahlian] = useState(null);
-  const [error, setError] = useState("");
-  const [isCanceled, setIsCanceled] = useState(false);
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-  const [isLoading, setLoading] = useState(false); 
-  const navigate = useNavigate();
+  const [skill, setSkill] = useState({
+    nama_skill: "",
+    level_keahlian: null,
+    errorNamaSkill: false,
+    errorLevelKeahlian: false,
+  });
 
   const options = [
     { level_keahlian: "Pemula", id: 1 },
@@ -24,52 +22,64 @@ const AddSkill = ({ onCancelAdd, onSuccess }) => {
     { level_keahlian: "Ahli", id: 3 },
   ];
 
-  const saveSkill = async (e) => {
-    e.preventDefault();
-    setError("");
+  const [isCanceled, setIsCanceled] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [errorAlert, setErrorAlert] = useState("");
 
-    if (!isCanceled) {
-      if (!nama_skill && !level_keahlian) {
-        setError("Nama Skill dan Level Keahlian harus diisi");
-      } else if (!nama_skill) {
-        setError("Nama Skill harus diisi");
-      } else if (!level_keahlian) {
-        setError("Level Keahlian harus diisi");
-      }
-    }
+  const navigate = useNavigate();
 
-    if (!isCanceled && (nama_skill || level_keahlian)) {
-      const accessToken = localStorage.getItem("accessToken");
-      const headers = {
-        Authorization: `Bearer ${accessToken}`,
-      };
-
-      const formData = new FormData();
-      formData.append("nama_skill", nama_skill);
-      formData.append("level_keahlian", level_keahlian.id);
-
-      try {
-        setLoading(true); // Start loading animation
-        await axios.post("http://localhost:5000/datadiri/skill", formData, {
-          headers,
-        });
-        setShowSuccessAlert(true);
-        setTimeout(() => {
-          setShowSuccessAlert(false);
-          setLoading(false); // Stop loading animation
-          onSuccess();
-          onCancelAdd();
-        }, 2000);
-      } catch (error) {
-        setLoading(false); // Stop loading animation in case of an error
-        console.log(error);
-      }
-    }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSkill((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleCancel = () => {
     setIsCanceled(true);
-    window.location.reload();
+    onCancelAdd();
+  };
+
+  const saveSkill = async (e) => {
+    e.preventDefault();
+
+    if (!skill.nama_skill || !skill.level_keahlian) {
+      setSkill((prevState) => ({
+        ...prevState,
+        errorNamaSkill: !skill.nama_skill,
+        errorLevelKeahlian: !skill.level_keahlian,
+      }));
+      setErrorAlert("Lengkapi semua isian sebelum menyimpan.");
+    } else {
+      if (!isCanceled) {
+        setLoading(true);
+        const accessToken = localStorage.getItem("accessToken");
+
+        const formData = new FormData();
+        formData.append("nama_skill", skill.nama_skill);
+        formData.append("level_keahlian", skill.level_keahlian);
+
+        try {
+          const response = await axios.post("http://localhost:5000/datadiri/skill", formData, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          console.log("Response from server:", response);
+          setShowSuccessAlert(true);
+          setErrorAlert("");
+          setTimeout(() => {
+            setLoading(false);
+            setShowSuccessAlert(false);
+            onSuccess();
+            onCancelAdd();
+          }, 2000);
+        } catch (error) {
+          setLoading(false);
+          console.log(error);
+          setErrorAlert("Terjadi kesalahan saat menyimpan data skill.");
+        }
+      }
+    }
   };
 
   return (
@@ -85,48 +95,32 @@ const AddSkill = ({ onCancelAdd, onSuccess }) => {
             <TextField
               label="Nama Skill"
               fullWidth
-              value={nama_skill}
-              onChange={(e) => setSkill(e.target.value)}
+              name="nama_skill"
+              value={skill.nama_skill}
+              onChange={handleInputChange}
+              placeholder="Nama Skill"
               variant="outlined"
               margin="normal"
+              error={skill.errorNamaSkill}
+              helperText={skill.errorNamaSkill ? "Nama Skill harus diisi" : ""}
             />
           </Grid>
           <Grid item sm={12}>
             <Autocomplete
-              id="level_keahlian"
+              id="skill.level_keahlian"
               options={options}
-              value={level_keahlian}
-              onChange={(event, newValue) => setLevelKeahlian(newValue)}
-              getOptionLabel={(option) => option.level_keahlian}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Level keahlian"
-                  sx={{ marginTop: 1 }}
-                />
-              )}
+              value={options.find((option) => option.id === skill.level_keahlian) || null}
+              onChange={(_, newValue) => setSkill({ ...skill, level_keahlian: newValue ? newValue.id : null })}
+              getOptionLabel={(option) => option.level_keahlian} // Menggunakan level_keahlian sebagai label
+              renderInput={(params) => <TextField {...params} label="Level Keahlian" sx={{ marginTop: 1 }} error={skill.errorLevelKeahlian} />}
+              helperText={skill.errorLevelKeahlian ? "Level Keahlian harus diisi" : ""}
             />
           </Grid>
-          <Grid container justifyContent="flex-end">
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ marginTop: 2 }}
-              disabled={isLoading} 
-            >
-              {isLoading ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                "Save"
-              )}
+          <Grid container justifyContent="flex-end" sx={{ marginTop: "10px", marginBottom: "10px" }}>
+            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }} disabled={isLoading}>
+              {isLoading ? <CircularProgress size={24} color="inherit" /> : "Save"}
             </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{ marginTop: 2, marginLeft: 1 }}
-              onClick={handleCancel}
-            >
+            <Button variant="contained" color="error" sx={{ marginTop: 2, marginLeft: 1 }} onClick={handleCancel}>
               Cancel
             </Button>
           </Grid>

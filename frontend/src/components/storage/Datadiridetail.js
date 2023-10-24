@@ -107,10 +107,7 @@ const DatadiriDetail = () => {
         });
       }
       console.log(response.data);
-      console.log(
-        "Token in local storage: ",
-        localStorage.getItem("accessToken")
-      );
+      console.log("Token in local storage: ", localStorage.getItem("accessToken"));
     } catch (error) {
       console.log(error);
     }
@@ -123,16 +120,9 @@ const DatadiriDetail = () => {
 
   return (
     <Content open={open}>
-      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>
-        Data Diri
-      </h1>
+      <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: 15 }}>Data Diri</h1>
       <Card>
-        <Button
-          variant="contained"
-          color="success"
-          sx={{ mb: 3 }}
-          onClick={handleCloseDetail}
-        >
+        <Button variant="contained" color="success" sx={{ mb: 3, mt: 3, ml: 3 }} onClick={handleCloseDetail}>
           Close Detail
         </Button>
         <CardContent>
@@ -170,9 +160,7 @@ const DatadiriDetail = () => {
                 variant="outlined"
                 margin="normal"
                 error={dataDiri.errorNama}
-                helperText={
-                  dataDiri.errorNama ? "Nama Lengkap harus diisi" : ""
-                }
+                helperText={dataDiri.errorNama ? "Nama Lengkap harus diisi" : ""}
               />
             </Grid>
             <Grid item xs={6}>
@@ -185,9 +173,7 @@ const DatadiriDetail = () => {
                 variant="outlined"
                 margin="normal"
                 error={dataDiri.errorTempatLahir}
-                helperText={
-                  dataDiri.errorTempatLahir ? "Tempat Lahir harus diisi" : ""
-                }
+                helperText={dataDiri.errorTempatLahir ? "Tempat Lahir harus diisi" : ""}
               />
             </Grid>
             <Grid item xs={6}>
@@ -203,9 +189,7 @@ const DatadiriDetail = () => {
                 variant="outlined"
                 margin="normal"
                 error={dataDiri.errorTanggalLahir}
-                helperText={
-                  dataDiri.errorTanggalLahir ? "Tanggal Lahir harus diisi" : ""
-                }
+                helperText={dataDiri.errorTanggalLahir ? "Tanggal Lahir harus diisi" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -249,9 +233,7 @@ const DatadiriDetail = () => {
                 variant="outlined"
                 margin="normal"
                 error={dataDiri.errorNoTelp}
-                helperText={
-                  dataDiri.errorNoTelp ? "No Telepon harus diisi" : ""
-                }
+                helperText={dataDiri.errorNoTelp ? "No Telepon harus diisi" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -270,52 +252,16 @@ const DatadiriDetail = () => {
               />
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                label="Linkedin"
-                fullWidth
-                name="linkedin"
-                value={dataDiri.linkedin}
-                placeholder="Linkedin"
-                variant="outlined"
-                margin="normal"
-                error={dataDiri.errorLinkedin}
-              />
+              <TextField label="Linkedin" fullWidth name="linkedin" value={dataDiri.linkedin} placeholder="Linkedin" variant="outlined" margin="normal" error={dataDiri.errorLinkedin} />
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                label="Instagram"
-                fullWidth
-                name="instagram"
-                value={dataDiri.instagram}
-                placeholder="Instagram"
-                variant="outlined"
-                margin="normal"
-                error={dataDiri.errorInstagram}
-              />
+              <TextField label="Instagram" fullWidth name="instagram" value={dataDiri.instagram} placeholder="Instagram" variant="outlined" margin="normal" error={dataDiri.errorInstagram} />
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                label="X"
-                fullWidth
-                name="x"
-                value={dataDiri.x}
-                placeholder="X"
-                variant="outlined"
-                margin="normal"
-                error={dataDiri.errorX}
-              />
+              <TextField label="X" fullWidth name="x" value={dataDiri.x} placeholder="X" variant="outlined" margin="normal" error={dataDiri.errorX} />
             </Grid>
             <Grid item xs={6}>
-              <TextField
-                label="Github"
-                fullWidth
-                name="github"
-                value={dataDiri.github}
-                placeholder="Github"
-                variant="outlined"
-                margin="normal"
-                error={dataDiri.errorGithub}
-              />
+              <TextField label="Github" fullWidth name="github" value={dataDiri.github} placeholder="Github" variant="outlined" margin="normal" error={dataDiri.errorGithub} />
             </Grid>
           </Grid>
         </CardContent>

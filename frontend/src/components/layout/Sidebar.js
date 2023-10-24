@@ -17,7 +17,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonIcon from "@mui/icons-material/Person";
 import SchoolIcon from "@mui/icons-material/School";
 import CorporateFareIcon from "@mui/icons-material/CorporateFare";
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from "@mui/icons-material/Link";
 import SourceIcon from "@mui/icons-material/Source";
 import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import CollectionsIcon from "@mui/icons-material/Collections";
@@ -40,7 +40,6 @@ const menuItems = {
     { text: "Pengalaman Organisasi", icon: 4 },
     { text: "Portofolio", icon: 5 },
     { text: "Skill", icon: 6 },
-    { text: "Galeri", icon: 7 },
     { text: "Personal Web", icon: 8 },
   ],
 };
@@ -131,9 +130,6 @@ export default function MiniDrawer() {
         case "/skill":
           activePage = "Skill";
           break;
-        case "/galeri":
-          activePage = "Galeri";
-          break;
         case "/custom-url":
           activePage = "Personal Web";
           break;
@@ -185,8 +181,6 @@ export default function MiniDrawer() {
                     ? "portofolio"
                     : item.text === "Skill"
                     ? "skill"
-                    : item.text === "Galeri"
-                    ? "galeri"
                     : item.text === "Personal Web"
                     ? "custom-url"
                     : "/"
