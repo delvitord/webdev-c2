@@ -33,7 +33,6 @@ export const getAccountById = async (req, res) => {
   }
 };
 
-
 export const Register = async (req, res) => {
   const { username, email, password, confPassword } = req.body;
 
@@ -48,9 +47,7 @@ export const Register = async (req, res) => {
     }
 
     if (password !== confPassword) {
-      return res
-        .status(400)
-        .json({ msg: "Password dan Confirm Password tidak sesuai!!" });
+      return res.status(400).json({ msg: "Password dan Confirm Password tidak sesuai!!" });
     }
 
     // Generate salt and hash password
@@ -62,6 +59,7 @@ export const Register = async (req, res) => {
       username: username,
       email: email,
       password: hashPass,
+      role: 2,
     });
 
     res.json({ msg: "Register Berhasil" });
@@ -120,7 +118,6 @@ export const deleteAccount = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 export const Login = async (req, res) => {
   try {

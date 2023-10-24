@@ -21,8 +21,6 @@ import EditSkill from "./components/skill/EditSkill";
 import PersonalWeb from "./components/personal_web/PersonalWeb";
 import LandingPage from "./components/landing_page/LandingPage";
 import UpdateOrganisasi from "./components/organisasi/EditOrganisasi";
-import GaleriList from "./components/galeri/Galeri";
-import AddGaleri from "./components/galeri/AddGaleri";
 import DetailDatadiri from "./components/datadiri/DetailDatadiri";
 import UserList from "./components/user/User";
 import CustomUrl from "./components/customurl/CustomUrl.js";
@@ -156,8 +154,6 @@ function App() {
           }
         />
         <Route path="/edit-skill/:id" element={<EditSkill />} />
-        <Route path="/galeri" element={<GaleriList />} />
-        <Route path="/add-galeri" element={<AddGaleri />} />
         <Route path="/custom-url" element={<CustomUrl />} />
         <Route path="/add-custom-url" element={<AddCustomUrl />} />
         <Route path="/edit-custom-url" element={<UpdateCustomUrl />} />
