@@ -218,17 +218,11 @@ const PortofolioTable = () => {
                     ) : "No File";
                   }
                   else if (column.field === "image") {
-                    return params.value && params.value.length > 0 ? (
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        {params.value.map((img, idx) => (
-                          <div key={idx} style={{ marginBottom: "8px" }}>
-                            <a href={img} target="_blank" rel="noopener noreferrer">
-                              View Image {idx + 1}
-                            </a>
-                          </div>
-                        ))}
-                      </div>
-                    ) : "No Images";
+                    return params.value ? (
+                      <a href={params.value} target="_blank" rel="noopener noreferrer">
+                        View Image
+                      </a>
+                    ) : "No Image";
                   } else {
                     return <span>{params.value}</span>;
                   }

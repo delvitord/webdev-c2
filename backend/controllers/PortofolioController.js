@@ -49,16 +49,7 @@ export const createPortofolio = async (req, res) => {
     const userData = await Data_diri.findOne({ where: { accountId: accountId } });
     const { judul, deskripsi, link } = req.body;
     const dataDiriId = userData.id;
-    try {
-      const imageFiles = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
-      let imgLength;
-      try {
-        imgLength = imageFiles[0].data.length;
-      } catch (error) {
-        imgLength = 0;
-      }
-      let url;
-  
+    try {  
       // Mengecek apakah ada file  yang diunggah
       if (req.files && req.files.file) {
         const file = req.files.file;
@@ -79,12 +70,12 @@ export const createPortofolio = async (req, res) => {
             console.error(err);
             return res.status(500).json({ msg: "Server Error" });
           }
-          addImage(dataDiriId, imgLength, url, req, res);
+          addImage(dataDiriId, url, req, res);
   
         });
       } else {
         // Jika tidak ada file yang diunggah, tanpa ada file
-        addImage(dataDiriId, imgLength, url, req, res);
+        addImage(dataDiriId, url, req, res);
   
       }
     } catch (error){
@@ -107,79 +98,41 @@ export const createPortofolio = async (req, res) => {
   }
 };
 
-async function addImage(dataDiriId, imgLength, urlFile, req, res) {
+async function addImage(dataDiriId, urlFile, req, res) {
   const { judul, deskripsi, link } = req.body;
-  const imageFiles = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
-  console.log("imagefileCreate", imageFiles);
-  const imageUrls = [];
-  if (imgLength) {
-    for (const file of imageFiles) {
-      const fileSize = file.data.length;
-      const ext = path.extname(file.name);
-      const fileName = file.md5 + ext;
-      const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
+  if (req.files && req.files.image) {
+    const image = req.files.image;
+    const imageSize = image.data.length;
+    const ext = path.extname(image.name);
+    const imageName = image.md5 + ext;
+    const url = `${req.protocol}://${req.get("host")}/images/${imageName}`;
 
-      if (!allowedImgType.includes(ext.toLowerCase())) {
-        return res.status(422).json({ msg: "Tipe Gambar Tidak Valid" });
-      }
-
-      if (fileSize > 5000000) {
-        return res.status(422).json({ msg: "Ukuran Gambar harus kurang dari 5 MB" });
-      }
-
-      file.mv(`./public/images/${fileName}`, async (err) => {
-        if (err) return res.status(500).json({ msg: err.message });
-        imageUrls.push(url);
-        // Jika semua file telah diunggah, simpan array imageUrls ke dalam database
-        if (imageUrls.length === imageFiles.length && urlFile) {
-          try {
-            const newPortofolio = await Portofolio.create({
-              judul,
-              deskripsi,
-              file: urlFile,
-              image: imageUrls, 
-              link,
-              dataDiriId, 
-            });
-            res.status(201).json({ msg: "Portofolio Created", id: newPortofolio.id });
-          } catch (error) {
-            console.log(error.message);
-            res.status(500).json({ msg: "Internal Server Error" });
-          }
-        } else if (imageUrls.length === imageFiles.length) {
-          try {
-            const newPortofolio = await Portofolio.create({
-              judul,
-              deskripsi,
-              image: imageUrls, 
-              link,
-              dataDiriId, 
-            });
-            res.status(201).json({ msg: "Portofolio Created", id: newPortofolio.id });
-          } catch (error) {
-            console.log(error.message);
-            res.status(500).json({ msg: "Internal Server Error" });
-          }
-        }
-
-      });
+    if (!allowedImgType.includes(ext.toLowerCase())) {
+      return res.status(422).json({ msg: "Invalid Image Type" });
     }
-  } else{
-    if (urlFile){
-      try {
-        const newPortofolio = await Portofolio.create({
-          judul,
-          deskripsi,
-          file: urlFile,
-          link,
-          dataDiriId, 
-        });
-        res.status(201).json({ msg: "Portofolio Created", id: newPortofolio.id });
-      } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ msg: "Internal Server Error" });
+    if (imageSize > 5000000) {
+      return res.status(422).json({ msg: "File must be less than 5 MB" });
+    }
+
+    image.mv(`./public/images/${imageName}`, async (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ msg: "Server Error" });
       }
-    } 
+      const newPortofolio = await Portofolio.create({
+        judul,
+        deskripsi,
+        file: urlFile,
+        image: url, 
+        link,
+        dataDiriId, 
+      });
+      res.status(201).json({ msg: "Portofolio Created", id: newPortofolio.id });
+
+    });
+  } else {
+    console.log("tidak ada image");
+
   }
 
 }
@@ -198,6 +151,8 @@ export const updatePortofolio = async (req, res) => {
     console.log(image);
     console.log(judul);
     console.log(file);
+    console.log(req.files.files);
+    console.log(req.files.image);
     if (!portofolio) {
       return res.status(404).json({ error: "Portofolio not found" });
     }
@@ -283,64 +238,56 @@ export const updatePortofolio = async (req, res) => {
       return res.status(404).json({ error: "Portofolio not found" });
     }
   
-    const { judul, deskripsi, link, image } = req.body;
+    const { judul, deskripsi, link, file, image } = req.body;
     
-    // Convert the comma-separated string of URLs in req.body.image into an array
-    let existingImageUrls;
-    
-    if (image > 1){
-      existingImageUrls = image.split(',');
-    } else if (image === 1){
-      existingImageUrls = [image];
-    }
-    else {
-      existingImageUrls = [''];
-    }
-    try {
-      const imageFiles = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
-      console.log("imagefile", imageFiles);
-      const newImageUrls = [];
-  
-      for (const file of imageFiles) {
-        const fileSize = file.data.length;
-        const ext = path.extname(file.name);
-        const fileName = file.md5 + ext;
-        const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
-  
-        if (!allowedImgType.includes(ext.toLowerCase())) {
-          return res.status(422).json({ msg: "Invalid Image Type" });
-        }
-  
-        if (fileSize > 5000000) {
-          return res.status(422).json({ msg: "Image must be less than 5 MB" });
-        }
-  
-        file.mv(`./public/images/${fileName}`, (err) => {
-          if (err) {
-            console.error(err.message);
-            return res.status(500).json({ msg: "File Upload Failed" });
-          }
-          newImageUrls.push(url);
-          console.log("newImageUrls", newImageUrls);
-  
-        });
+    let imageUrl = image;
+    console.log("Image Url1", imageUrl);
+
+     // Mengecek apakah ada file yang diunggah
+    if (req.files && req.files.image) {
+      const image = req.files.image;
+      const ext = path.extname(image.name);
+      const imageName = image.md5 + ext;
+      const url = `${req.protocol}://${req.get("host")}/images/${imageName}`;
+
+      if (!allowedImgType.includes(ext.toLowerCase())) {
+        return res.status(422).json({ msg: "Invalid Image Type" });
       }
-      const updatedImageUrls = existingImageUrls.concat(newImageUrls);
-      console.log("updatedImageUrls", updatedImageUrls);
-            try {
-              portofolio.update({
-                judul: judul,
-                deskripsi: deskripsi,
-                image: updatedImageUrls, // Store the array of image URLs
-                link: link,
-              });
-            } catch (error) {
-              console.error(error.message);
-              res.status(500).json({ msg: "Internal Server Error" });
-            }
-    } catch (error){
-      
+      if (image.size > 5000000) {
+        return res.status(422).json({ msg: "Image must be less than 5 MB" });
+      }
+
+      // Menghapus image lama (jika ada)
+      if (portofolio.image) {
+        const oldFilePath = path.join(process.cwd(), "public", "images", path.basename(portofolio.image));
+        fs.unlinkSync(oldFilePath);
+      }
+
+      // Memindahkan file baru ke direktori
+      image.mv(path.join(process.cwd(), "public", "images", imageName), async (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ msg: "Server Error" });
+        }
+
+        // Set fileUrl ke URL file yang baru
+        imageUrl = url;
+        console.log("Image Url2", imageUrl);
+
+        // Mengupdate data_diri dengan URL file yang baru
+        await portofolio.update({
+          judul,
+          deskripsi,
+          file,
+          link,
+          image: imageUrl,
+          dataDiriId, 
+        });
+      });
+    }  else {
+      console.log("tidak ada image");
     }
+    
     
 
 };

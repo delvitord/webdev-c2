@@ -12,7 +12,8 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
   const [deskripsi, setDeskripsi] = useState("");
   const [file, setFile] = useState(null);
   const [fileSelected, setFileSelected] = useState(false);
-  const [images, setImages] = useState([]);
+  const [image, setImage] = useState(null);
+  const [imageSelected, setImageSelected] = useState(false);
   const [link, setLink] = useState("");
   const navigate = useNavigate();
   const [imagesSelected, setImagesSelected] = useState(false);
@@ -25,6 +26,7 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
     deskripsi: "",
     file: "",
     link: "",
+    image: "",
   });
 
   const handleCancel = () => {
@@ -43,19 +45,15 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
     setFileSelected(false);
   };
 
-  const handleImagesChange = (e) => {
-    const selectedImages = Array.from(e.target.files);
-    setImages((prevImages) => [...prevImages, ...selectedImages]);
-    setImagesSelected(true);
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    setImage(selectedImage);
+    setImageSelected(true);
   };
 
   const handleCancelImage = (index) => {
-    const updatedImages = [...images];
-    updatedImages.splice(index, 1);
-    setImages(updatedImages);
-    if (updatedImages.length === 0) {
-      setImagesSelected(false);
-    }
+    setImage(null);
+    setImageSelected(false);
   };
 
   const savePortofolio = async (e) => {
@@ -71,10 +69,12 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
       deskripsi: "",
       file: "",
       link: "",
+      image: "",
     });
 
-    if (!judul || !deskripsi || !file || !link) {
+    if (!judul || !deskripsi || !file || !link || !image) {
       // Validasi input
+      console.log("images", image);
       if (!judul) {
         setErrors((prevErrors) => ({ ...prevErrors, judul: "Judul harus diisi." }));
       }
@@ -87,24 +87,25 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
       if (!link) {
         setErrors((prevErrors) => ({ ...prevErrors, link: "Link harus diisi." }));
       }
+      if (!image) {
+        setErrors((prevErrors) => ({ ...prevErrors, image: "Gambar harus diunggah." }));
+      }
     } else {
       // Jika semua input terisi, lanjutkan
       if (!isCanceled) {
+        setLoading(true);
         const formData = new FormData();
         formData.append("judul", judul);
         formData.append("deskripsi", deskripsi);
         formData.append("file", file);
         formData.append("link", link);
-
-        images.forEach((image) => {
-          formData.append("image", image);
-        });
+        formData.append("image", image);
 
         try {
-          setLoading(true);
-          await axios.post("http://localhost:5000/datadiri/portofolio", formData, {
+          const response =  await axios.post("http://localhost:5000/datadiri/portofolio", formData, {
             headers,
           });
+          console.log("Response from server:", response);
           setShowSuccessAlert(true);
           setTimeout(() => {
             setLoading(false);
@@ -278,6 +279,12 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
                 </>
               )}
             </div>
+            {/* Tambahkan pesan kesalahan untuk image*/}
+            {errors.image && (
+              <Alert severity="error" sx={{ marginBottom: 1 }}>
+                {errors.image}
+              </Alert>
+            )}
             <div
               style={{
                 border: "1px solid #ccc",
@@ -285,8 +292,9 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
                 marginTop: "10px",
                 marginBottom: "20px",
                 position: "relative",
-                paddingTop: "17px",
+                paddingTop: "18px",
                 paddingLeft: "15px",
+                paddingBottom: "3px",
               }}
             >
               <div
@@ -299,110 +307,86 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
                   fontSize: "14px",
                   position: "absolute",
                   top: "-18px",
-                  left: "8%",
+                  left: "6%",
                   transform: "translateX(-50%)",
                   marginBottom: "30px",
                 }}
               >
                 Image
               </div>
-              {images.length > 0 ? (
-                <>
-                  {images.map((image, index) => (
-                    <div
-                      key={image.name} // Menggunakan 'name' gambar sebagai kunci unik
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        border: "1px solid #ccc",
-                        padding: "4px",
-                        borderRadius: "6px",
-                        marginTop: "10px",
-                        marginBottom: "10px",
-                        backgroundColor: "white",
-                        width: "60%",
-                        color: "#1976d2",
-                        borderColor: "#1976d2",
-                      }}
-                    >
-                      <div
-                        style={{
-                          backgroundColor: "#1976d2",
-                          color: "white",
-                          padding: "2px 4px",
-                          borderRadius: "5px",
-                          marginRight: "8px",
-                          fontSize: "14px",
-                        }}
-                      >
-                        {image.type}
-                      </div>
-                      <p
-                        style={{
-                          marginRight: "8px",
-                          flexGrow: 1,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                          fontSize: "14px",
-                        }}
-                      >
-                        {image.name}
-                      </p>
-                      <Button
-                        type="button"
-                        color="primary"
-                        onClick={() => handleCancelImage(index)}
-                        style={{
-                          marginRight: "5px",
-                          paddingTop: "2px",
-                          fontSize: "12px",
-                        }}
-                        sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
-                      >
-                        X
-                      </Button>
-                    </div>
-                  ))}
-                  <input
-                    type="file"
-                    accept=".gif,.jpg,.jpeg,.png"
-                    multiple
-                    id="image-upload"
-                    style={{ display: "none" }}
-                    onChange={handleImagesChange}
-                  />
-                  <label htmlFor="image-upload">
-                    <Button
-                      component="span"
-                      variant="outlined"
-                      color="primary"
-                      style={{
-                        marginBottom: "15px",
-                      }}
-                    >
-                      Add More
-                    </Button>
-                  </label>
-                </>
+              {imageSelected ? (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    border: "1px solid #ccc",
+                    padding: "4px",
+                    borderRadius: "6px",
+                    marginTop: "10px",
+                    marginBottom: "20px",
+                    backgroundColor: "white",
+                    width: "50%",
+                    color: "#1976d2",
+                    borderColor: "#1976d2",
+                  }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#1976d2",
+                      color: "white",
+                      padding: "2px 4px",
+                      borderRadius: "5px",
+                      marginRight: "8px",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {image.type}
+                  </div>
+                  <p
+                    style={{
+                      marginRight: "8px",
+                      flexGrow: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {image.name}
+                  </p>
+                  <Button
+                    type="button"
+                    color="primary"
+                    onClick={handleCancelImage}
+                    style={{
+                      marginRight: "5px",
+                      paddingTop: "2px",
+                      fontSize: "12px",
+                    }}
+                    sx={{ minWidth: 0, padding: 0, textTransform: "none" }}
+                  >
+                    X
+                  </Button>
+                </div>
               ) : (
                 <>
                   <input
                     type="file"
                     accept=".gif,.jpg,.jpeg,.png"
-                    multiple
                     id="image-upload"
                     style={{ display: "none" }}
-                    onChange={handleImagesChange}
+                    onChange={handleImageChange}
                   />
                   <label htmlFor="image-upload">
                     <Button
                       component="span"
                       variant="outlined"
                       color="primary"
-                      style={{ marginBottom: "15px", marginTop: "2px" }}
+                      style={{
+                        marginBottom: "10px",
+                      }}
                     >
-                      Pilih File
+                      Pilih Image
                     </Button>
                   </label>
                 </>

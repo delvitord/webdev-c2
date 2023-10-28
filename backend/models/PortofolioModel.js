@@ -7,7 +7,7 @@ const Portofolio = db.sequelize.define(
     judul: DataTypes.STRING,
     deskripsi: DataTypes.TEXT,
     file: DataTypes.STRING,
-    image: DataTypes.ARRAY(DataTypes.STRING),
+    image: DataTypes.STRING,
     link: DataTypes.STRING
   },
   {
