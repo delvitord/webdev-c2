@@ -340,7 +340,7 @@ const AddPortofolio = ({ onCancelAdd, onSuccess }) => {
                       fontSize: "14px",
                     }}
                   >
-                    {image.type}
+                    {image.type.split("/").pop().toUpperCase()}
                   </div>
                   <p
                     style={{

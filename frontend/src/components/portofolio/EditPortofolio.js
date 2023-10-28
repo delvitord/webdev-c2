@@ -16,38 +16,51 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
     file: data ? data.file :  "",
     image: data ? data.image : "",
     link: data ? data.link : "",
+    errorJudul: "",
+    errorDeskripsi: "",
+    errorFile: "",
+    errorImage: "",
+    errorLink: "",
   });
-  console.log("ini data PORTOOO", Portofolio)
+
   let id = data ? data.id : "";
   
   const navigate = useNavigate();
-  const [image, setImage] = useState([]);
-  const [imageSelected, setImageSelected] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isCanceled, setIsCanceled] = useState(false);
+  const [imgIsNew, setImgIsNew] = useState(false);
 
   useEffect(() => {
     console.log(data)
   }, []);
 
-  useEffect(() => {
-    console.log("Ini Di EFEK",Portofolio)
-  }, [Portofolio]);
-
-  console.log(Portofolio)
-
   const accessToken = localStorage.getItem("accessToken");
 
   const updatePortofolio = async (e) => {
     e.preventDefault();
+    if (!Portofolio.judul) {
+      setPortofolio({ ...Portofolio, errorJudul: "Judul harus diisi" });
+      return; // Stop the update if nama_skill is empty
+    }
+    if (!Portofolio.deskripsi) {
+      setPortofolio({ ...Portofolio, errorDeskripsi: "Deskripsi harus diisi" });
+      return; // Stop the update if nama_skill is empty
+    }
+    if (!Portofolio.link) {
+      setPortofolio({ ...Portofolio, errorLink: "Link harus diisi" });
+      return; // Stop the update if nama_skill is empty
+    }
+    if (!Portofolio.file) {
+      setPortofolio({ ...Portofolio, errorFile: "File harus diisi" });
+      return; // Stop the update if nama_skill is empty
+    }
+    if (!Portofolio.image) {
+      setPortofolio({ ...Portofolio, errorImage: "Image harus diisi" });
+      return; // Stop the update if nama_skill is empty
+    }
+
     
-    // Hapus gambar yang terdaftar dalam state imageToDelete dari daftar Portofolio.image
-    console.log("diLUARRR",Portofolio)
-    console.log("diLUARRR ID",id)
-
-
-    console.log("image selected")
     const formData = new FormData();
     //append formData with field in portofolio
     formData.append("judul", Portofolio.judul);
@@ -98,6 +111,7 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
 
   const handleImageChange = (e) => {
     // Handle the file change and update the state with the selected file
+    setImgIsNew(true);
     const selectedImage = e.target.files[0];
     setPortofolio({
       ...Portofolio,
@@ -137,11 +151,14 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
                 setPortofolio({
                   ...Portofolio,
                   judul: e.target.value,
+                  errorJudul: "", // Clear the error when user types
                 })
               }
               placeholder="Judul"
               variant="outlined"
               margin="normal"
+              error={!!Portofolio.errorJudul} // If there is errorNamaSkill, set red border
+              helperText={Portofolio.errorJudul} // Display error message
             />
             <TextField
               label="Deskripsi"
@@ -152,11 +169,14 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
                 setPortofolio({
                   ...Portofolio,
                   deskripsi: e.target.value,
+                  errorDeskripsi: "", // Clear the error when user types
                 })
               }
               placeholder="Deskripsi"
               variant="outlined"
               margin="normal"
+              error={!!Portofolio.errorDeskripsi} // If there is errorNamaSkill, set red border
+              helperText={Portofolio.errorDeskripsi} // Display error message
             />
             <TextField
               label="Link"
@@ -166,13 +186,21 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
                 setPortofolio({
                   ...Portofolio,
                   link: e.target.value,
+                  errorLink: "", // Clear the error when user types
                 })
               }
               placeholder="Link"
               variant="outlined"
               margin="normal"
+              error={!!Portofolio.errorLink} // If there is errorNamaSkill, set red border
+              helperText={Portofolio.errorLink} // Display error message
             />
-
+            {/* Tambahkan pesan kesalahan untuk file */}
+            {Portofolio.errorFile && (
+              <Alert severity="error" sx={{ marginBottom: 1 }}>
+                {Portofolio.errorFile}
+              </Alert>
+            )}
             <div
               style={{
                 border: "1px solid #ccc",
@@ -286,6 +314,12 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
                 </>
               )}
             </div>
+            {/* Tambahkan pesan kesalahan untuk image*/}
+            {Portofolio.errorImage && (
+              <Alert severity="error" sx={{ marginBottom: 1 }}>
+                {Portofolio.errorImage}
+              </Alert>
+            )}
             <div
               style={{
                 border: "1px solid #ccc",
@@ -341,7 +375,7 @@ const UpdatePortofolio = ({data, onCancelAdd, onSuccess}) => {
                       fontSize: "14px",
                     }}
                   >
-                    {/* {Portofolio.image.split(".").pop().toUpperCase()} */}
+                    {imgIsNew ? Portofolio.image.type.split("/").pop().toUpperCase() : Portofolio.image.split(".").pop().toUpperCase()}
                   </div>
                   <p
                     style={{
